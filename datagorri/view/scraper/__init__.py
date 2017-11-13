@@ -1,0 +1,1 @@
+from datagorri.view.scraper.scraper import Scraper

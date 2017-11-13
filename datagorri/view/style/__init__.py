@@ -1,0 +1,1 @@
+from datagorri.view.style.common import style as common_style

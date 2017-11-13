@@ -1,0 +1,43 @@
+{
+    "tables": [
+        {
+            "tableIndex": 8,
+            "isRepetitive": true,
+            "toScrape": [
+                {
+                    "type": "Text",
+                    "col_index": 0,
+                    "label": "Unternehmen"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 1,
+                    "label": "Kurs"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 2,
+                    "label": "Zeit"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 3,
+                    "label": "Absolut"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 4,
+                    "label": "Perf"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 6,
+                    "label": "Umsatz"
+                }
+            ]
+        }
+    ],
+    "url": "http://www.wallstreet-online.de/indizes/dax",
+    "timestamp": 1490135080.26976,
+    "datetime": "2017-03-21 23:24:40"
+}

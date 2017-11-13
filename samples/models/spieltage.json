@@ -1,0 +1,28 @@
+{
+    "tables": [
+        {
+            "tableIndex": 0,
+            "isRepetitive": true,
+            "toScrape": [
+                {
+                    "type": "Text",
+                    "col_index": 2,
+                    "label": "Heimmannschaft"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 4,
+                    "label": "Auswaertsmannschaft"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 5,
+                    "label": "Ergebnis"
+                }
+            ]
+        }
+    ],
+    "url": "http://www.kicker.de/news/fussball/bundesliga/spieltag/1-bundesliga/2016-17/spieltag.html",
+    "timestamp": 1490132128.409923,
+    "datetime": "2017-03-21 22:35:28"
+}

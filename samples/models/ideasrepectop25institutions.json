@@ -1,0 +1,55 @@
+{
+    "tables": [
+        {
+            "tableIndex": 0,
+            "isRepetitive": true,
+            "toScrape": [
+                {
+                    "type": "Text",
+                    "col_index": 0,
+                    "label": "rank"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 1,
+                    "label": "rank_w"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 2,
+                    "label": "institution"
+                },
+                {
+                    "type": "Link",
+                    "col_index": 2,
+                    "label": "link",
+                    "link_index": 0
+                },
+                {
+                    "type": "LinkText",
+                    "col_index": 2,
+                    "label": "institution_2",
+                    "link_index": 0
+                },
+                {
+                    "type": "Text",
+                    "col_index": 3,
+                    "label": "score"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 4,
+                    "label": "authors"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 5,
+                    "label": "author_shares"
+                }
+            ]
+        }
+    ],
+    "url": "http://ideas.repec.org/top/top.usa-ma.html",
+    "timestamp": 1500385187.1147525,
+    "datetime": "2017-07-18 15:39:47"
+}

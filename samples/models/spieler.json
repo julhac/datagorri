@@ -1,0 +1,51 @@
+{
+    "tables": [
+        {
+            "tableIndex": 1,
+            "isRepetitive": true,
+            "toScrape": [
+                {
+                    "type": "Text",
+                    "col_index": 0,
+                    "label": "Nummer"
+                },
+                {
+                    "type": "ImgAlt",
+                    "col_index": 4,
+                    "label": "Nationalitaet",
+                    "img_index": 0
+                },
+                {
+                    "type": "Text",
+                    "col_index": 5,
+                    "label": "Marktwert"
+                }
+            ],
+            "childTables": [
+                {
+                    "tableIndex": 0,
+                    "isRepetitive": false,
+                    "toScrape": [
+                        {
+                            "type": "ImgAlt",
+                            "col_index": 0,
+                            "label": "Name",
+                            "row_index": 0,
+                            "img_index": 0
+                        },
+                        {
+                            "type": "Text",
+                            "col_index": 0,
+                            "label": "Position",
+                            "row_index": 1
+                        }
+                    ],
+                    "parentColIndex": 1
+                }
+            ]
+        }
+    ],
+    "url": "http://www.transfermarkt.de/fc-bayern-munchen/startseite/verein/27/saison_id/2016",
+    "timestamp": 1490132662.8704927,
+    "datetime": "2017-03-21 22:44:22"
+}

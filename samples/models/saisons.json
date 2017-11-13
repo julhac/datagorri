@@ -1,0 +1,45 @@
+{
+    "tables": [
+        {
+            "tableIndex": 3,
+            "isRepetitive": true,
+            "toScrape": [
+                {
+                    "type": "ImgAlt",
+                    "col_index": 0,
+                    "label": "Vereine",
+                    "img_index": 0
+                },
+                {
+                    "type": "Text",
+                    "col_index": 3,
+                    "label": "Kader"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 4,
+                    "label": "AvgAlter"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 5,
+                    "label": "Legionaere"
+                },
+                {
+                    "type": "LinkText",
+                    "col_index": 6,
+                    "label": "Gesamtmarktwert",
+                    "link_index": 0
+                },
+                {
+                    "type": "Text",
+                    "col_index": 7,
+                    "label": "avgMarktwert"
+                }
+            ]
+        }
+    ],
+    "url": "http://www.transfermarkt.de/1-bundesliga/startseite/wettbewerb/L1/plus/?saison_id=2016",
+    "timestamp": 1490133794.5502207,
+    "datetime": "2017-03-21 23:03:14"
+}

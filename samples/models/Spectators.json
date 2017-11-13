@@ -1,0 +1,70 @@
+{
+    "tables": [
+        {
+            "tableIndex": 3,
+            "isRepetitive": true,
+            "toScrape": [
+                {
+                    "type": "Text",
+                    "col_index": 0,
+                    "label": "Ranking"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 2,
+                    "label": "TotalCapacity"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 3,
+                    "label": "Spectators"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 4,
+                    "label": "Average"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 5,
+                    "label": "Matches"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 6,
+                    "label": "SoldOut"
+                },
+                {
+                    "type": "Text",
+                    "col_index": 7,
+                    "label": "Capacity"
+                }
+            ],
+            "childTables": [
+                {
+                    "tableIndex": 0,
+                    "isRepetitive": false,
+                    "toScrape": [
+                        {
+                            "type": "LinkText",
+                            "col_index": 1,
+                            "label": "Stadium",
+                            "row_index": 0,
+                            "link_index": 0
+                        },
+                        {
+                            "type": "Text",
+                            "col_index": 0,
+                            "label": "Team",
+                            "row_index": 1
+                        }
+                    ],
+                    "parentColIndex": 1
+                }
+            ]
+        }
+    ],
+    "url": "http://www.transfermarkt.de/serie-a/besucherzahlen/wettbewerb/IT1/saison_id/2016/plus/1",
+    "timestamp": 1496238080.3077216,
+    "datetime": "2017-05-31 15:41:20"
+}

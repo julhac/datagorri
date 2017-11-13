@@ -1,0 +1,49 @@
+{
+    "tables": [
+        {
+            "tableIndex": 16,
+            "isRepetitive": false,
+            "toScrape": [
+                {
+                    "type": "Text",
+                    "col_index": 1,
+                    "label": "Tageshoch",
+                    "row_index": 5
+                },
+                {
+                    "type": "Text",
+                    "col_index": 1,
+                    "label": "Tagestief",
+                    "row_index": 6
+                },
+                {
+                    "type": "Text",
+                    "col_index": 1,
+                    "label": "Vortag",
+                    "row_index": 7
+                },
+                {
+                    "type": "Text",
+                    "col_index": 1,
+                    "label": "Jahreshoch",
+                    "row_index": 9
+                },
+                {
+                    "type": "Text",
+                    "col_index": 1,
+                    "label": "Jahrestief",
+                    "row_index": 10
+                },
+                {
+                    "type": "Text",
+                    "col_index": 1,
+                    "label": "Anzahl Trades",
+                    "row_index": 11
+                }
+            ]
+        }
+    ],
+    "url": "http://www.wallstreet-online.de/aktien/deutsche-bank-aktie",
+    "timestamp": 1490136484.2760644,
+    "datetime": "2017-03-21 23:48:04"
+}

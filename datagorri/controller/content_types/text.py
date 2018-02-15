@@ -2,6 +2,10 @@ from datagorri.controller.content_types.content_type import ContentType
 
 
 class Text(ContentType):
+    """
+    This class defines handling if the downloaded content was basic text.
+
+    """
     type = "Text"
 
     @staticmethod

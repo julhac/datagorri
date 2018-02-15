@@ -15,7 +15,7 @@ from datagorri.controller.linklist import Linklist
 
 class Modeler(Controller):
     content_types = [Text, Img, Link]
-    dropdown_to_update=None
+    dropdown_to_update = None
     amount_summarized_examples = 3
 
     def __init__(self):
@@ -25,7 +25,8 @@ class Modeler(Controller):
 
     def on_route(self, view_class, master_frame):
         if self.view is None:
-            self.view = view_class(master_frame, config['default_url'], self.repetition_change, self.scrape_links_for_linklist)
+            self.view = view_class(master_frame, config['default_url'], self.repetition_change,
+                                   self.scrape_links_for_linklist)
 
         self.view.on_load_page_dom(self.load_page_dom)
         self.view.on_page_model_create(self.create_model)
@@ -100,14 +101,16 @@ class Modeler(Controller):
             result['label'] = result['label'][:-2]
 
         for row in table.get_rows():
-            cols = self._create_columns_for_page_dom(row, table, parent_controller_id=len(self.page_dom_tables_unsummarized))
+            cols = self._create_columns_for_page_dom(row, table,
+                                                     parent_controller_id=len(self.page_dom_tables_unsummarized))
 
             result['rows'][row.get_index()] = {
                 'label': 'Row #' + str(row.get_index()) + ':',
                 'columns': cols
             }
 
-        result['controller_id'] = len(self.page_dom_tables_unsummarized)  # do not set earlier! Otherwise child_tables controller_id wrong!
+        result['controller_id'] = len(
+            self.page_dom_tables_unsummarized)  # do not set earlier! Otherwise child_tables controller_id wrong!
         if parent_controller_id is not None and parent_controller_id > 0:
             result['parent_controller_id'] = parent_controller_id
         self.page_dom_tables_unsummarized.append(copy.deepcopy(result))
@@ -133,12 +136,14 @@ class Modeler(Controller):
 
             child_tables = {}
             for child_index, child_table_html in enumerate(col.get_html_tables()):
-                child_table = Childtable.create_from_html(child_table_html, child_index, table.get_index(), col.get_index(), row.get_index())
+                child_table = Childtable.create_from_html(child_table_html, child_index, table.get_index(),
+                                                          col.get_index(), row.get_index())
 
                 if table.is_repetitive():
                     child_table.set_repetitive(False)
 
-                child_tables[child_index] = self._create_table_for_page_dom(child_table, parent_controller_id + len(col.get_html_tables()))
+                child_tables[child_index] = self._create_table_for_page_dom(child_table, parent_controller_id + len(
+                    col.get_html_tables()))
 
             result[col.get_index()] = {
                 'label': 'Column #' + str(col.get_index()),
@@ -158,7 +163,8 @@ class Modeler(Controller):
 
         def type_in_contents(contents, content):
             for cont in contents:
-                if cont['type'] == content['type'] and (not cont['type'] == 'LinkText' or (cont['link_index'] == content['link_index'])):
+                if cont['type'] == content['type'] and \
+                        (not cont['type'] == 'LinkText' or (cont['link_index'] == content['link_index'])):
                     return True
 
             return False
@@ -219,7 +225,8 @@ class Modeler(Controller):
 
         return self
 
-    def scrape_links_for_linklist(self, controller_table_id, is_repetitive, col_index, link_index, row_index=None, parent_controller_table_id=None, parent_is_repetitive=None):
+    def scrape_links_for_linklist(self, controller_table_id, is_repetitive, col_index, link_index, row_index=None,
+                                  parent_controller_table_id=None, parent_is_repetitive=None):
         page_dom = copy.deepcopy(self.page_dom_tables_unsummarized)
 
         def add_links_from_row(row):
@@ -256,15 +263,23 @@ class Modeler(Controller):
 
                     add_links_from_row(row)
             elif row_index is not None:
-                    add_links_from_row(table['rows'][row_index])
+                add_links_from_row(table['rows'][row_index])
 
         return True
 
     @staticmethod
-    def create_view_child_table_from_html(master_frame, table, child_index, col_index, row_index, is_repetitive=False, on_repetition_change=None, on_link_adder_click=None, hide_repetition_changer=False, parent_controller_table_id=None, parent_is_repetitive=None):
-        child_table = ChildTable(master_frame, table, child_index, col_index, parent_row_index=row_index, on_repetition_change=on_repetition_change, on_link_adder_click=on_link_adder_click, hide_repetition_changer=hide_repetition_changer, parent_is_repetitive=parent_is_repetitive)
+    def create_view_child_table_from_html(master_frame, table, child_index, col_index, row_index, is_repetitive=False,
+                                          on_repetition_change=None, on_link_adder_click=None,
+                                          hide_repetition_changer=False, parent_controller_table_id=None,
+                                          parent_is_repetitive=None):
+        child_table = ChildTable(master_frame, table, child_index, col_index, parent_row_index=row_index,
+                                 on_repetition_change=on_repetition_change, on_link_adder_click=on_link_adder_click,
+                                 hide_repetition_changer=hide_repetition_changer,
+                                 parent_is_repetitive=parent_is_repetitive)
         child_table.header.set_repetitive(is_repetitive)
-        child_table.change_header_text('Child table #' + str(child_index) + (' of column ' + str(col_index)) if col_index is not None else '')
+        child_table.change_header_text(
+            'Child table #' + str(child_index) + (' of column ' + str(col_index)) if col_index is not None else '')
         return child_table
+
 
 from datagorri.view.modeler.page_dom.child_table import ChildTable

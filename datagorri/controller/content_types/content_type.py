@@ -1,4 +1,8 @@
-class ContentType():
+class ContentType:
+    """
+    The base class for content. To allow a fine grained distinction
+    the different content types inherit from this class.
+    """
     type = "ContentType"
 
     @staticmethod

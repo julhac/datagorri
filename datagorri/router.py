@@ -2,6 +2,11 @@ from datagorri.controller import Controller
 
 
 class Router:
+    """
+    We use this class to navigate through the application.
+    This is done via creating a route to the target part of the application.
+
+    """
     def __init__(self, content_frame, routes=None):
         self._current_route = ''
         self._routes = {}

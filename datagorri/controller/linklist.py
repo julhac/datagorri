@@ -2,6 +2,9 @@
 
 
 class Linklist:
+    """
+    This is a helper class to manage link list additions from outside the view.
+    """
     observers = []
 
     @staticmethod

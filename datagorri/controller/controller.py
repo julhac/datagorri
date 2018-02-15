@@ -1,3 +1,7 @@
+"""
+.. module:: controller
+"""
+
 from abc import abstractmethod
 
 

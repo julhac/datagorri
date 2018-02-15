@@ -1,3 +1,10 @@
+"""
+The Datagorri app
+
+.. moduleauthor:: Julian Hackinger <Julian.Hackinger@tum.de>
+
+"""
+
 from config.app import config
 from datagorri.view import Gui
 from datagorri.router import Router
@@ -8,6 +15,11 @@ from sys import platform
 
 class App:
     def __init__(self):
+        """
+        This starts the Datagorri application.
+        First create the used folders and then setup the GUI and show the start page.
+
+        """
         App.init_working_dirs()
 
         self._gui = Gui(config['title'], full_screen=config['full_screen'])
@@ -23,6 +35,11 @@ class App:
 
     @staticmethod
     def init_working_dirs():
+        """
+        Initializes the directories for created models, link lists and resulting data.
+        This functions therefore creates a folder on the desktop, if it is not already there.
+
+        """
         if platform == "win32" or platform == "darwin":
             homepath = os.path.expanduser("~")
             os.chdir(homepath)

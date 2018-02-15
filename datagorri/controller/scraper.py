@@ -198,6 +198,20 @@ class Scraper(Controller):
     # will return a list of dicts
     @staticmethod
     def scrape_table(table, is_repetitive, to_scrape, url, table_index, failures, warnings, pm_child_tables=[]):
+        """
+        This method scrapes a table and returns a list of dicts
+
+        :param table:
+        :param is_repetitive:
+        :param to_scrape:
+        :param url:
+        :param table_index:
+        :param failures:
+        :param warnings:
+        :param pm_child_tables:
+        :return: will return a list of dicts
+
+        """
         table_result = []
 
         for pm_to_scrape in to_scrape:
@@ -336,6 +350,13 @@ class Scraper(Controller):
 
     @staticmethod
     def log_report(failures, warnings):
+        """
+        This method writes the content of failures of warnings to the log file.
+
+        :param failures:
+        :param warnings:
+        :return: Returns always True
+        """
         Scraper.update_log('#############################')
         if len(failures) == 0 and len(warnings) == 0:
             Scraper.update_log('Report: No failures, no warnings!')

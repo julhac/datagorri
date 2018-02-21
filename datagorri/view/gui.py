@@ -7,6 +7,7 @@ from datagorri.view.style import common_style as style
 path = os.path.dirname(os.path.abspath(__file__))
 pathicon = path+"\\favicon.ico"
 
+
 class Gui:
 
     def __init__(self, title, full_screen=True):

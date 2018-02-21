@@ -110,7 +110,7 @@ class Scraper(Controller):
         warnings = []  # Something that could be wrong
         result = []
 
-        #if extension == "choose file extension":
+        # if extension == "choose file extension":
         #    Scraper.update_log("Warning: Choose file extension!")
         #    return
 
@@ -146,9 +146,10 @@ class Scraper(Controller):
                     continue
 
                 table_result = Scraper.scrape_table(tables[pm_table['tableIndex']], pm_table['isRepetitive'],
-                                                   pm_table['toScrape'], url, pm_table['tableIndex'], failures, warnings,
-                                                   pm_child_tables=pm_table[
-                                                       'childTables'] if 'childTables' in pm_table else [])
+                                                    pm_table['toScrape'], url, pm_table['tableIndex'], failures,
+                                                    warnings,
+                                                    pm_child_tables=pm_table[
+                                                        'childTables'] if 'childTables' in pm_table else [])
 
                 page_result = Scraper.add_scraped_table_to_page_scraping(table_result, page_result,
                                                                          pm_table['isRepetitive'])
@@ -165,9 +166,9 @@ class Scraper(Controller):
             filename = "result_" + str(date)
 
         Csv.create_file(config['results_dir'] + filename + ".csv", result)
-        #if extension == ".json":
+        # if extension == ".json":
         #    Json.create_file(config['results_dir'] + filename + ".json", result)
-        #else:
+        # else:
         #    Csv.create_file(config['results_dir'] + filename + ".csv", result)
 
         Scraper.update_log(' ')
@@ -222,9 +223,10 @@ class Scraper(Controller):
 
             if not is_repetitive:
                 table_result.append({})
-                suc = Scraper.get_scrape_val(table, url, table_index, pm_to_scrape['col_index'], pm_to_scrape['row_index'],
-                                            pm_to_scrape['type'], failures, warnings, link_index=link_index,
-                                            img_index=img_index)
+                suc = Scraper.get_scrape_val(table, url, table_index, pm_to_scrape['col_index'],
+                                             pm_to_scrape['row_index'],
+                                             pm_to_scrape['type'], failures, warnings, link_index=link_index,
+                                             img_index=img_index)
                 if not suc:
                     continue
 
@@ -232,8 +234,8 @@ class Scraper(Controller):
             else:
                 for row_index, row in enumerate(table.get_rows()):
                     suc = Scraper.get_scrape_val(table, url, table_index, pm_to_scrape['col_index'], row_index,
-                                                pm_to_scrape['type'], failures, warnings, link_index=link_index,
-                                                img_index=img_index)
+                                                 pm_to_scrape['type'], failures, warnings, link_index=link_index,
+                                                 img_index=img_index)
                     if not suc:
                         continue
 
@@ -263,17 +265,17 @@ class Scraper(Controller):
                         if single_scraped_child is not False:
                             scraped_child += single_scraped_child
 
-                if len(table_result) > 1 and len(scraped_child) == len(table_result): # parent is repetitive, child not
+                if 1 < len(table_result) == len(scraped_child):  # parent is repetitive, child not
                     for i in range(0, len(table_result)):
                         table_result[i].update(scraped_child[i])
 
-                elif len(table_result) == 0: # nothing from parent
+                elif len(table_result) == 0:  # nothing from parent
                     table_result = scraped_child
 
-                elif len(table_result) == 1 and len(scraped_child) == 1: # parent and child are not repetitive
+                elif len(table_result) == 1 and len(scraped_child) == 1:  # parent and child are not repetitive
                     table_result[0].update(scraped_child[0])
 
-                elif len(table_result) == 1 and len(scraped_child) > 1: # parent is not repetitive, child is
+                elif len(table_result) == 1 and len(scraped_child) > 1:  # parent is not repetitive, child is
                     for single_scraped_child in scraped_child:
                         single_scraped_child.update(table_result)
 
@@ -307,12 +309,12 @@ class Scraper(Controller):
 
         further_pm_child_tables = pm_child_table['childTables'] if 'childTables' in pm_child_table else []
         return Scraper.scrape_table(child_table, pm_child_table['isRepetitive'], pm_child_table['toScrape'],
-                                   url, pm_child_table['tableIndex'], failures, warnings,
-                                   further_pm_child_tables)
+                                    url, pm_child_table['tableIndex'], failures, warnings,
+                                    further_pm_child_tables)
 
     @staticmethod
     def get_scrape_val(table, url, table_index, col_index, row_index, type, failures, warnings, link_index=None,
-                      img_index=None):
+                       img_index=None):
         rows = table.get_rows()
 
         if len(rows) <= row_index:

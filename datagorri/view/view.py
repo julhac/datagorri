@@ -3,6 +3,7 @@ from datagorri.view.component import Component
 
 
 class View(Component):
+
     def __init__(self, master_frame):
         Component.__init__(self, master_frame)
 

@@ -2,6 +2,7 @@ import tkinter
 
 
 class ScrollableComponent:
+
     def __init__(self, master_frame):
         self.canvas = tkinter.Canvas(
             master_frame,

@@ -9,10 +9,10 @@ class Csv:
     @staticmethod
     def create_file(path, list_to_save):
         """
-        This method takes a list and saves it at a given path as csv file.
+        This method takes a dictionary of data and saves it at a given path as csv file.
 
-        :param path: Save location
-        :param list_to_save: Dictionary to save
+        :param path: (string) Save location
+        :param list_to_save: (dictionary) Data to save
         :return: -
 
         """

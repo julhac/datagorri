@@ -14,6 +14,9 @@ from datagorri.controller.linklist import Linklist
 
 
 class Modeler(Controller):
+    """
+    The class provides methods defining the Modeler's behavior.
+    """
     content_types = [Text, Img, Link]
     dropdown_to_update = None
     amount_summarized_examples = 3
@@ -200,6 +203,11 @@ class Modeler(Controller):
         return result
 
     def create_model(self):
+        """
+        This methods creates a Json file containing a page model in the page model directory
+        :return: (object) the self object
+
+        """
         pm = self.view.get_page_model()
         if pm is False:
             return self
@@ -209,7 +217,7 @@ class Modeler(Controller):
         timestamp = time.time()
         date = datetime.datetime.fromtimestamp(
             timestamp
-        ).strftime('%Y-%m-%d %H:%M:%S')
+            ).strftime('%Y-%m-%d %H:%M:%S')
 
         result = {
             'tables': pm,
@@ -282,4 +290,4 @@ class Modeler(Controller):
         return child_table
 
 
-from datagorri.view.modeler.page_dom.child_table import ChildTable
+# from datagorri.view.modeler.page_dom.child_table import ChildTable ## MARC: Does not seem to do anything

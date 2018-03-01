@@ -9,10 +9,10 @@ class Json:
     @staticmethod
     def create_file(path, dict_to_save):
         """
-        This method saves a dictionary at the provided location as json file.
+        This method saves a dictionary of data at the provided location as json file.
 
         :param path: (string) path to save the file
-        :param dict_to_save: (dictionary)
+        :param dict_to_save: (dictionary) Data to save
         :return: -
 
         """

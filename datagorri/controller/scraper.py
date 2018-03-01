@@ -15,6 +15,11 @@ from datagorri.controller.linklist import Linklist
 
 
 class Scraper(Controller):
+    """
+    The class scraper provides the methods to scrape the content of tables on specified websites using the previously
+    generated page models
+
+    """
     do_on_log_update = []
     links_from_modeler = []
 
@@ -37,14 +42,31 @@ class Scraper(Controller):
 
     @staticmethod
     def get_page_models(dir=config['page_models_dir']):
+        """
+        Returns a list of all page_models at the given path
+        :param dir: (string) the directory containing the page_models
+        :return: (list) a list containing the page models
+
+        """
         return [f for f in listdir(dir) if isfile(join(dir, f)) and ".json" in f]
 
     @staticmethod
     def get_link_lists(dir=config['link_lists_dir']):
+        """
+        Returns a list of all link_lists at the given path
+        :param dir: (string) the directory containing the list of links
+        :return: (list) a list containing the link lists
+
+        """
         return [f for f in listdir(dir) if isfile(join(dir, f)) and ".txt" in f]
 
     @staticmethod
     def get_default_link_list_text():
+        """
+
+        :return: (string=
+
+        """
         default_links = ''
         for link_from_modeler in Scraper.links_from_modeler:
             default_links += link_from_modeler + '\n'
@@ -106,6 +128,17 @@ class Scraper(Controller):
 
     @staticmethod
     def scrape(page_model_file, urls, filename, extension):
+        """
+        This method takes a page_model a list of urls and scrapes the content of the specified websites according
+        to the model. The content is then saved in a .csv file.
+
+        :param page_model_file: (string) path to the page_model file
+        :param urls: (list) list of urls to scrape
+        :param filename: (string) the filename of the generated file
+        :param extension: (string) the file extension
+        :return: (boolean) Returns True
+
+        """
         failures = []  # Something that definitely went wrong
         warnings = []  # Something that could be wrong
         result = []
@@ -128,7 +161,8 @@ class Scraper(Controller):
             needed_time = time.time()
             Scraper.update_log('Try: Load page')
             page = Scraper.load_page(url, failures, warnings)
-            if page is False: continue
+            if page is False:
+                continue
             needed_time = time.time() - needed_time
             Scraper.update_log(
                 'Success: Page has title: ' + page.get_title() + ' (needed time: ' + str(needed_time)[:4] + ' sec.)')
@@ -203,13 +237,13 @@ class Scraper(Controller):
         This method scrapes a table and returns a list of dicts
 
         :param table:
-        :param is_repetitive:
+        :param is_repetitive: (boolean)
         :param to_scrape:
-        :param url:
+        :param url: (string) the url to scrape
         :param table_index:
-        :param failures:
-        :param warnings:
-        :param pm_child_tables:
+        :param failures: (list) list of failures
+        :param warnings: (list) list of warnings
+        :param pm_child_tables: (list)
         :return: will return a list of dicts
 
         """
@@ -355,9 +389,10 @@ class Scraper(Controller):
         """
         This method writes the content of failures of warnings to the log file.
 
-        :param failures:
-        :param warnings:
+        :param failures: (list) list of failures
+        :param warnings: (list) list of warnings
         :return: Returns always True
+
         """
         Scraper.update_log('#############################')
         if len(failures) == 0 and len(warnings) == 0:
@@ -390,10 +425,22 @@ class Scraper(Controller):
 
     @staticmethod
     def on_log_update(func):
+        """
+        Appends a given function to the do_on_log_update list
+        :param func: (function)
+        :return: -
+
+        """
         Scraper.do_on_log_update.append(func)
 
     @staticmethod
     def update_log(text):
+        """
+        Takes a string and updates the log with it
+        :param text: (string) text
+        :return: (boolean) True
+
+        """
         for observer_function in Scraper.do_on_log_update:
             observer_function(text)
 
@@ -401,11 +448,18 @@ class Scraper(Controller):
 
     @staticmethod
     def get_links_by_range(base_url, range_from, range_to):
+        """
+        This method generates and return a list of URLs based on a given base url and a range of id values appended
+        to the end of the url
+        :param base_url: (string) the url
+        :param range_from: (int) lowest url id
+        :param range_to: (int) highest url id
+        :return: (list) list of the generated urls
+
+        """
         # swap if from > to:
         if int(range_to) < int(range_from):
-            tmp = range_from
-            range_from = range_to
-            range_to = tmp
+            range_to, range_from = range_from, range_to
 
         urls = []
 
@@ -417,6 +471,13 @@ class Scraper(Controller):
 
     @staticmethod
     def save_linklist(urls, name=""):
+        """
+        This method saves a list of links in a .txt file at the link_list directory
+        :param urls: (list) list of urls
+        :param name: (string) the filename
+        :return: (string) return the filename of the created file
+
+        """
         path = config['link_lists_dir']
         if name != "":
             filename = name + ".txt"
@@ -440,6 +501,12 @@ class Scraper(Controller):
 
     @staticmethod
     def get_linklist(name):
+        """
+        This method reads from a given filename in the link_list directory and writes the content into a list.
+        :param name: (string) the name of the file
+        :return: (list) a list containing the urls
+
+        """
         path = config['link_lists_dir']
         try:
             file = open(path + name + '.txt')

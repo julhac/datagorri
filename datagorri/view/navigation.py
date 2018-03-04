@@ -21,8 +21,8 @@ class Navigation(Component):
             self._tabs[self.active_tab].configure(bg=style['nav']['tab']['bg'], fg=style['nav']['tab']['color'])
             self._tabs[self.active_tab].configure(bg=style['nav']['tab']['bg'], fg=style['nav']['tab']['color'], cursor="hand2")
 
-        for function in self.do_on_tab_click:
-            function(label)
+        for func in self.do_on_tab_click:
+            func(label)
 
         self.active_tab = label
         self._tabs[self.active_tab].configure(bg='#f0f0f0', fg='#000000', cursor='')
@@ -40,8 +40,8 @@ class Navigation(Component):
 
         return self
 
-    def on_click(self, function):
-        self.do_on_tab_click.append(function)
+    def on_click(self, func):
+        self.do_on_tab_click.append(func)
         return self
 
     def _add_item(self, label):

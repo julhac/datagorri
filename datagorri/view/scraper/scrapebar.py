@@ -21,9 +21,11 @@ class Scrapebar(Component):
         )
         self._filename.grid(row=0, column=0, sticky="NEWS")
 
-#       filetype_options = ['.csv'] # include ".json": filetype_options = ['.csv', '.json'] ### Include if you want to have JSON as an output option
+#       filetype_options = ['.csv'] # include ".json": filetype_options = ['.csv', '.json'] ### Include if you want to
+        # have JSON as an output option
         self._selected_filetype = tkinter.StringVar()
-#       self._filetypes = tkinter.OptionMenu(self.get_frame(), self._selected_filetype, *filetype_options) ### Include if you want to have JSON as an output option
+#       self._filetypes = tkinter.OptionMenu(self.get_frame(), self._selected_filetype, *filetype_options) ### Include
+        # if you want to have JSON as an output option
 #       self._filetypes.configure(bg='#f0f0f0') ### Include if you want to have JSON as an output option
 #       self._filetypes.grid(row=0, column=2, sticky="NEWS") ### Include if you want to have JSON as an output option
         self.select_filetype('.csv')
@@ -40,10 +42,15 @@ class Scrapebar(Component):
         )
         self._scrape_btn.grid(row=0, column=1, sticky="NEWS")
 
-    def on_scrape(self, function):
+    def on_scrape(self, func):
+        """
+        Handles the scrape button onclick action
+        :param func: (function)
+        :return: -
+        """
         def handle_click(event):
             self.clickSimulate(self._scrape_btn)
-            function(event)
+            func(event)
             self.clickSimulateEnd(self._scrape_btn)
         self._scrape_btn.bind('<Button-1>', handle_click)
 
@@ -55,9 +62,18 @@ class Scrapebar(Component):
         return self._selected_filetype.get()
 
     def get_filename(self):
+        """
+        Returns the filename
+        :return: (string) the filename
+        """
         return self._filename.get()
 
     def set_filename(self, name):
+        """
+        Sets the filename
+        :param name: (string) the filename
+        :return: (object)
+        """
         self._filename.delete(0, tkinter.END)
         self._filename.insert(0, name)
         return self

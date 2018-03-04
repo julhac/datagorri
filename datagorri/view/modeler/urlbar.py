@@ -26,8 +26,8 @@ class Urlbar(Component):
     def get(self):
         return self.input.get()
 
-    def on_click(self, function):
-        self.button.bind('<Button-1>', lambda event: function())
+    def on_click(self, func):
+        self.button.bind('<Button-1>', lambda event: func())
 
     def view_page_load_error(self):
         self.error_label = tkinter.Label(

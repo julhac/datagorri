@@ -15,12 +15,26 @@ class Page:
         return self.html_as_bs4
 
     def get_html(self):
+        """
+        Returns the html
+        :return: (string)
+        """
         return self.html
 
     def get_title(self):
+        """
+        Returns the title
+        :return: (string)
+
+        """
         return self.get_html_as_bs4().title.text
 
     def get_tables(self):
+        """
+        Finds all parent tables located on in html of a website and returns them
+        :return: (list) list of found tables
+        
+        """
         tables = []
 
         soup = self.get_html_as_bs4()
@@ -37,6 +51,13 @@ class Page:
 
     @staticmethod
     def create_by_url(url, headers=config['request_headers']):
+        """
+        Returns the received html data from a given url
+        :param url: (string) the url
+        :param headers: the headers for the content request
+        :return: (Page) the html content of the website
+
+        """
         #cache_file = 'cache/pages/' + hashlib.md5(url.encode('utf-8')).hexdigest() + '.json'
 
         #if use_caching and os.path.exists(cache_file):
@@ -46,6 +67,7 @@ class Page:
 
         try:
             page = requests.get(url, headers=headers)
+            print('Page encoding: ' + page.encoding)
         except requests.exceptions.RequestException as e:
             return False
 
@@ -56,6 +78,14 @@ class Page:
 
     @staticmethod
     def create_cache_file(page, cache_file, url):
+        """
+        This method generates a cache file containing a dictionary with the content in json format
+        :param page: (Page) the page
+        :param cache_file: (string) the name of the cache file
+        :param url: (string) the name of the corresponding url
+        :return: -
+
+        """
         content = dict(
             title=page.get_title(),
             html=page.get_html(),
@@ -63,6 +93,5 @@ class Page:
             timestamp=time.time()
         )
         j = json.dumps(str(content), indent=4)
-        f = open(cache_file, 'w+')
-        f.write(j)
-        f.close()
+        with open(cache_file, 'w+') as f:
+            f.write(j)

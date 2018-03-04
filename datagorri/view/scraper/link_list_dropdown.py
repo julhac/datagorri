@@ -21,7 +21,8 @@ class LinkListDropDown(Component):
 
             len_longest_name = len(max(linklist_files, "                                          ", key=len))
         if len(self._linklists) > 0:
-            self._link_list_option_menu = tkinter.OptionMenu(self.get_frame(), self._selected, *self._linklists.keys(), command=lambda e: self._handle_select())
+            self._link_list_option_menu = tkinter.OptionMenu(self.get_frame(), self._selected, *self._linklists.keys(),
+                                                             command=lambda e: self._handle_select())
             self._link_list_option_menu.config(width=len_longest_name)
             self._link_list_option_menu.configure(bg=style['bg'])
             self._link_list_option_menu.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
@@ -31,24 +32,41 @@ class LinkListDropDown(Component):
             self.no_links_label.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
 
     def select(self, name):
+        """
+        Handles the selection process
+        :param name: (string the name)
+        :return: (object)
+        """
         self._selected.set(name)
         self._handle_select()
         return self
 
-    def on_select(self, function):
-        self._do_on_select.append(function)
+    def on_select(self, func):
+        self._do_on_select.append(func)
         return self
 
     def _handle_select(self):
-        for function in self._do_on_select:
-            function(self.get_selected())
+        """
+        Handles the selection
+        :return: (object)
+        """
+        for func in self._do_on_select:
+            func(self.get_selected())
 
         return self
 
     def get_selected(self):
+        """
+        Returns the selecte item
+        :return:
+        """
         return self._selected.get()
 
     def get_all(self):
+        """
+        Returns all links of an object in a list
+        :return: (list) list of links
+        """
         link_lists = []
         for linklist in self._linklists:
             if linklist is not None:
@@ -57,6 +75,10 @@ class LinkListDropDown(Component):
         return link_lists
 
     def refresh(self):
+        """
+        Handles the refresh process of the linklist field
+        :return: (object)
+        """
         linklist_files = ScraperController.get_link_lists()
 
         if self.no_links_label is not None:

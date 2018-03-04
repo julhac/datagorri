@@ -1,8 +1,8 @@
 import tkinter
 import time
-from datagorri.view.component     import Component
+from datagorri.view.component import Component
 from datagorri.view.style.scraper import style
-from tkinter.scrolledtext            import ScrolledText
+from tkinter.scrolledtext import ScrolledText
 from datagorri.controller.scraper import Scraper as ScraperController
 
 
@@ -58,10 +58,15 @@ class LinkList(Component):
         )
         self._new_file_btn.grid(row=0, column=1, sticky="NEWS")
 
-    def on_save(self, function):
+    def on_save(self, func):
+        """
+        Handles the process after the user clicked on save
+        :param func: (function)
+        :return: (object)
+        """
         def handle_click(event):
             self.clickSimulate(self._new_file_btn)
-            function(event)
+            func(event)
             time.sleep(0.15)
             self.clickSimulateEnd(self._new_file_btn)
         self._new_file_btn.bind('<Button-1>', handle_click)

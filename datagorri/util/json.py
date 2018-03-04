@@ -17,9 +17,8 @@ class Json:
 
         """
         j = json.dumps(dict_to_save, indent=4, ensure_ascii=False)
-        f = open(path, 'w+')  # Maybe change to with open...
-        f.write(j)
-        f.close()
+        with open(path, 'w+') as f:
+            f.write(j)
 
     @staticmethod
     def load_json_file(path):

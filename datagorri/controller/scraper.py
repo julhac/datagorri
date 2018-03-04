@@ -108,6 +108,14 @@ class Scraper(Controller):
 
     @staticmethod
     def load_page(url, failures, warnings):
+        """
+        This method tries to load the given page and return it
+        :param url: (string) the url of the page
+        :param failures: (list) list of failures
+        :param warnings: (list) list of warnings
+        :return: (Page)
+
+        """
         page = Page.create_by_url(url)
         max_tries = 5
 
@@ -188,7 +196,7 @@ class Scraper(Controller):
                 page_result = Scraper.add_scraped_table_to_page_scraping(table_result, page_result,
                                                                          pm_table['isRepetitive'])
 
-            result += page_result
+            result += page_result  # Scraping results in a dic
 
         if filename == "":
             timestamp = time.time()

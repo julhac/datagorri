@@ -59,10 +59,10 @@ class Img(ContentType):
     @staticmethod
     def get_src_val(col, img_index):
         """
-
-        :param col:
-        :param img_index:
-        :return:
+        Returns the source url of an image or False
+        :param col: (Column) the the column
+        :param img_index: (int) the number index in the column
+        :return: (string or False)
         """
         images = col.get_images()
         if len(images) - 1 < img_index:

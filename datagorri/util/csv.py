@@ -1,4 +1,4 @@
-from unidecode import unidecode
+import csv
 
 
 class Csv:
@@ -16,29 +16,22 @@ class Csv:
         :return: -
 
         """
+        # With Latin-1 encoding Excel displays the umlauts correct
+        with open(path, 'w', encoding='Latin-1') as f:
 
-        # Maybe change to with open.. (no f.close() present)
-        f = open(path, 'w')
+            headers = []
 
-        headers = []
+            for entry in list_to_save:
+                for key, val in entry.items():
+                    if key not in headers:
+                        headers.append(key)
 
-        for entry in list_to_save:
-            for key, val in entry.items():
-                if not key in headers:
-                    headers.append(key)
-
-        headline = ";".join(headers) + '\n'
-        f.write(headline)
-
-        for entry in list_to_save:
-            line = ''
-            for header in headers:
-                if header in entry:
-                    line += entry[header]
-                line += ';'
+            writer = csv.DictWriter(f, fieldnames=headers, delimiter=';')
 
             try:
-                line = unidecode(line)
-                f.write(line + "\n")
+                writer.writeheader()
+                writer.writerows(list_to_save)
+
             except Exception as e:
-                print(e)
+                print('file {}, {}'.format(path, e))
+

@@ -35,7 +35,11 @@ class Content:
             self.label.set(default_label)
         self.label_entry = tkinter.Entry(master_frame, textvariable=self.label)
         self.label_entry.grid(row=at_grid_row, column=3, sticky=tkinter.E)
+        self.label_entry.bind("<Key>", lambda event: self._auto_select_scrape_checkbox(event))
 
+    def _auto_select_scrape_checkbox(self, event):
+        self.scrape_checkbutton.select()
+        
     def on_link_adder_click(self, function):
         self.do_on_link_adder_click.append(function)
 

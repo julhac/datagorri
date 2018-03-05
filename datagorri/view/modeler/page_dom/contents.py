@@ -90,6 +90,10 @@ class Contents(Component):
                     empty_placeholder_frame = tkinter.Frame(col_frame, height=10)
                     empty_placeholder_frame.grid(row=at_grid_row, column=0)
 
+    def handle_scrape_all(self, select):
+        for content in self.contents:
+            content.handle_scrape_all(select)
+                    
     def change_repetition_style(self, repetitive):
         if self.repetitive == repetitive:  # style already in use?
             return True

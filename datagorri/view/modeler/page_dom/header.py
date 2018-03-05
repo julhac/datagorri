@@ -6,10 +6,16 @@ class Header(Component):
     """
     This class represents the clickable header content.
     """
-    def __init__(self, master_frame, label, repetitive=True, on_repetition_change=None):
+    def __init__(self, master_frame, label, repetitive=True, on_repetition_change=None, on_scrape_all=None):
         Component.__init__(self, master_frame)
         self.get_frame().configure(padx=16)
 
+        self.scrape_all = tkinter.BooleanVar()
+        self.scrape_all.set(False)
+        self.do_on_scrape_all = []
+        if on_scrape_all is not None:
+            self.add_scrape_all_handler(on_scrape_all)
+        
         self.repetitive = tkinter.BooleanVar()
         self.set_repetitive(repetitive)
         self.do_on_repetition_change = []
@@ -25,8 +31,17 @@ class Header(Component):
             padx=0,
             pady=8
         )
-
         self.label.grid(row=0, column=0, sticky=tkinter.W)
+        
+        self.scrape_all_checkbutton = tkinter.Checkbutton(
+            self.get_frame(),
+            text="Scrape all",
+            variable=self.scrape_all,
+            bg="#555555",
+            command=self._handle_scrape_all,
+            padx=5
+        )
+        self.scrape_all_checkbutton.grid(row=0, column=1, sticky=tkinter.W)
 
         self.repetitive_checkbutton = tkinter.Checkbutton(
             self.get_frame(),
@@ -36,7 +51,7 @@ class Header(Component):
             command=self._handle_repetition_change,
             padx=5
         )
-        self.repetitive_checkbutton.grid(row=0, column=1, sticky='w')
+        self.repetitive_checkbutton.grid(row=0, column=2, sticky='w')
 
         self.get_frame().columnconfigure(0, weight=1)
 
@@ -44,7 +59,17 @@ class Header(Component):
 
     def hide_style_change(self):
         self.repetitive_checkbutton.pack_forget()
-
+        
+    def _handle_scrape_all(self):
+        self.scrape_all_checkbutton.update()
+        for function in self.do_on_scrape_all:
+            function(self.scrape_all.get())
+        return True
+    
+    def add_scrape_all_handler(self, function):
+        self.do_on_scrape_all.append(function)
+        return self
+        
     def _handle_repetition_change(self):
         self.repetitive_checkbutton.update()
         if self.on_repetition_change is not None:

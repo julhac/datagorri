@@ -2,6 +2,9 @@ import tkinter
 
 
 class Content:
+    """
+    This class represents a line showing the summary of one column (includes type, sample values of first three rows, a scrape checkbox and a output label textfield)
+    """
     def __init__(self, master_frame, type, examples, at_grid_row, default_label='', col_index=None, row_index=None, img_index=None,
                  link_index=None, add_link_adder=False, is_repetitive=None, table=None, controller_table_id=None, parent_controller_table_id=None, parent_is_repetitive=None):
         self.type = type
@@ -35,9 +38,12 @@ class Content:
             self.label.set(default_label)
         self.label_entry = tkinter.Entry(master_frame, textvariable=self.label)
         self.label_entry.grid(row=at_grid_row, column=3, sticky=tkinter.E)
-        self.label_entry.bind("<Key>", lambda event: self._auto_select_scrape_checkbox(event))
+        self.label_entry.bind("<Key>", lambda event: self._auto_select_scrape_checkbox(event)) #5 bind typing to select scrape checkbox
 
     def _auto_select_scrape_checkbox(self, event):
+        """
+        Selects the scrape checkbox.
+        """
         self.scrape_checkbutton.select()
         
     def on_link_adder_click(self, function):

@@ -7,6 +7,9 @@ style = style['urlbar']
 
 
 class Resultbar(Component):
+    """
+    This is the result bar. It contains a textfield where the user can enter a file name for the page model, and a button to generate the page model.
+    """
     def __init__(self, master_frame, default_page_model_name=None):
         Component.__init__(self, master_frame)
 
@@ -19,6 +22,7 @@ class Resultbar(Component):
 
         self.get_frame().columnconfigure(0, weight=1)
 
+        # textfield to enter the filename
         self.label_entry = tkinter.Entry(
             self.get_frame(),
             textvariable=self.label,
@@ -31,6 +35,7 @@ class Resultbar(Component):
         )
         self.label_entry.grid(row=0, column=0, sticky="news")
 
+        # button to start generation process
         self.button = tkinter.Label(
             self.get_frame(),
             text='GENERATE PAGE MODEL',

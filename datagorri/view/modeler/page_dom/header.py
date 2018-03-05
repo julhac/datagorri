@@ -3,6 +3,9 @@ from datagorri.view.component import Component
 
 
 class Header(Component):
+    """
+    This class represents the clickable header content.
+    """
     def __init__(self, master_frame, label, repetitive=True, on_repetition_change=None):
         Component.__init__(self, master_frame)
         self.get_frame().configure(padx=16)

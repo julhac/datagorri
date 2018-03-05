@@ -7,6 +7,9 @@ style = style['urlbar']
 
 
 class Urlbar(Component):
+    """
+    This class represents the URL bar. It contains a textfield for the URL and a button to load the tables from that URL.
+    """
     def __init__(self, master_frame, default_url=''):
         Component.__init__(self, master_frame)
         self.default_input_text = default_url
@@ -14,10 +17,12 @@ class Urlbar(Component):
         self.change_bg(style['bg'])
         self.get_frame().configure(pady=style['pady'], padx=style['padx'])
 
+        # textfield to enter the URL
         self.input = Urlbar.create_input(self.frame, default_url)
         self.input.grid(row=0, column=0, sticky="nswe")
         self.get_frame().columnconfigure(0, weight=1)
 
+        # button to start load action
         self.button = Urlbar.create_button(self.frame, 'START')
         self.button.grid(row=0, column=1)
 

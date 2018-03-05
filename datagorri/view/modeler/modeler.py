@@ -8,6 +8,9 @@ from datagorri.view.scrollable_component import ScrollableComponent
 
 
 class Modeler(View):
+    """
+    This class represents the modeler view. It builds the URL bar and contains the page DOM and result bar after parsing the url.
+    """
     def __init__(self, master_frame, default_url='', on_repetition_change=None, on_link_adder_click=None):
         View.__init__(self, master_frame)
 
@@ -23,6 +26,11 @@ class Modeler(View):
         self.page_dom_scrollable_container = None
 
     def show_page_dom(self, page_dom):
+        """
+        Shows the page DOM as result of parsing the URLs page.
+        
+        params (): page DOM to show
+        """
         self.url.hide_status()
         if self.page_dom is not None:
             self.page_dom_scrollable_container.canvas.destroy()
@@ -45,6 +53,9 @@ class Modeler(View):
         self.page_dom.pack(fill=tkinter.BOTH, expand=1)
 
     def get_page_model(self):
+        """
+        Gathers all information from the subcomponents which are necessary for the page model.
+        """
         result = []
 
         for table in self.table_components:

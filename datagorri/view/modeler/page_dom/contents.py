@@ -5,6 +5,9 @@ from datagorri.controller.modeler import Modeler as ModelerController
 
 
 class Contents(Component):
+    """
+    This class builds a line for each column using the Content class. 
+    """
     def __init__(self, master_frame, rows, repetitive=True, on_repetition_change=None, controller_table_id=None, on_link_adder_click=None, parent_controller_table_id=None, parent_is_repetitive=None):
         Component.__init__(self, master_frame)
         self.get_frame().configure(padx=20)
@@ -22,6 +25,12 @@ class Contents(Component):
         self.show_content(rows, self.repetitive)
 
     def show_content(self, rows, repetitive):
+        """
+        Builds the components to show for the given table rows
+        
+        params (Rows): all rows of the table
+        params (boolean): is the table repetitive
+        """
         for row_index, row in rows.items():
             row_frame = Contents.create_row_frame(self.get_frame(), row['label'])
             row_frame.pack(side=tkinter.TOP, fill=tkinter.X)

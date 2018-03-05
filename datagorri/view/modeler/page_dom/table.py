@@ -26,8 +26,10 @@ class Table(Component):
         self.header.change_cursor(Component.CURSOR_CLICKABLE)
         self.header.change_bg_on_hover('#444444')
         self.header.on_click(lambda e: self.handle_header_click())
+        self.header.add_scrape_all_handler(lambda select: self.handle_scrape_all(select))
         if on_repetition_change is not None:
             self.header.on_repetition_change(lambda is_repetitive: on_repetition_change(table['controller_id'], is_repetitive, self.handle_repetition_change))
+        
 
         self.content = Contents(self.get_frame(), table['rows'], table['is_repetitive'], on_repetition_change, controller_table_id=self.controller_table_id, on_link_adder_click=on_link_adder_click, parent_controller_table_id=self.parent_controller_id)
 
@@ -79,6 +81,12 @@ class Table(Component):
 
         return result
 
+    def handle_scrape_all(self, select):
+        """
+        selects/deselects all scrape checkboxes
+        """
+        self.content.handle_scrape_all(select)
+        
     def handle_repetition_change(self, new_rows):
         """
         changes the Contents part when the repetitive rows checkbox value is changed

@@ -135,7 +135,7 @@ class Scraper(Controller):
         return page
 
     @staticmethod
-    def scrape(page_model_file, urls, filename, extension):
+    def scrape(page_model_file, urls, filename, extension, delimiter):
         """
         This method takes a page_model a list of urls and scrapes the content of the specified websites according
         to the model. The content is then saved in a .csv file.
@@ -154,6 +154,11 @@ class Scraper(Controller):
         # if extension == "choose file extension":
         #    Scraper.update_log("Warning: Choose file extension!")
         #    return
+
+        # Force the delimiter to be 1 char long
+        if len(delimiter) != 1:
+            Scraper.update_log('Failure: The delimiter must be 1 character long!')
+            return
 
         page_model = Scraper.load_page_model(page_model_file + '.json')
         if not page_model:
@@ -207,7 +212,7 @@ class Scraper(Controller):
             date = date.replace(' ', '_')
             filename = "result_" + str(date)
 
-        Csv.create_file(config['results_dir'] + filename + ".csv", result)
+        Csv.create_file(config['results_dir'] + filename + ".csv", result, delimiter)
         # if extension == ".json":
         #    Json.create_file(config['results_dir'] + filename + ".json", result)
         # else:

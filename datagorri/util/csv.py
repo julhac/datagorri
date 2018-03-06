@@ -7,12 +7,13 @@ class Csv:
 
     """
     @staticmethod
-    def create_file(path, list_to_save):
+    def create_file(path, list_to_save, delimiter):
         """
         This method takes a dictionary of data and saves it at a given path as csv file.
 
         :param path: (string) Save location
         :param list_to_save: (dictionary) Data to save
+        :param delimiter: (string) the delimiter
         :return: -
 
         """
@@ -26,7 +27,7 @@ class Csv:
                     if key not in headers:
                         headers.append(key)
 
-            writer = csv.DictWriter(f, fieldnames=headers, delimiter=';')
+            writer = csv.DictWriter(f, fieldnames=headers, delimiter=delimiter)
 
             try:
                 writer.writeheader()

@@ -45,7 +45,6 @@ class RangeAdder(Component):
         self._from.grid(row=6, column=0, sticky="news")
         self._from.insert(0, '0')
 
-
         tkinter.Label(self.get_frame(), text='TO:', bg='#cccccc').grid(row=5, column=1, sticky='NW', padx=10)
         self._to=tkinter.Entry(
             self.get_frame(),

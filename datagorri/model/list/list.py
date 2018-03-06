@@ -49,7 +49,7 @@ class List:
             
         # get all elements (li)
         for index, li in enumerate(list.bs4.find_all("li")):
-            elem = Element.create_from_html(str(li))
+            elem = ListElement.create_from_html(str(li))
             elem.set_index(len(list.get_elements()))
             list.get_elements().append(elem)
             

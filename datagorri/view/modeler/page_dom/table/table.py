@@ -1,6 +1,6 @@
 import tkinter
-from datagorri.view.modeler.page_dom.header  import Header
-from datagorri.view.modeler.page_dom.contents import Contents
+from datagorri.view.modeler.page_dom.table.header import Header
+from datagorri.view.modeler.page_dom.table.contents import Contents
 from datagorri.view.component                 import Component
 
 

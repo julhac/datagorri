@@ -10,7 +10,7 @@ class ScrollableComponent:
             highlightthickness=0,
             bg='#dedede',
         )
-        self.vertical_scrollbar = tkinter.Scrollbar(master_frame, orient=tkinter.VERTICAL, command=self.canvas.yview)
+        self.vertical_scrollbar = tkinter.Scrollbar(master_frame, orient=tkinter.VERTICAL)
         self.canvas_frame = tkinter.Frame(self.canvas, background="#ffffff")
         self.canvas_frame_id=self.canvas.create_window((0, 0), window=self.canvas_frame, anchor="nw")
 
@@ -19,9 +19,16 @@ class ScrollableComponent:
 
         self.vertical_scrollbar.pack(side="right", fill="y")
         self.canvas.pack(side="left", fill="both", expand=True)
+        self.vertical_scrollbar.config(command=self.canvas.yview)
 
         self.canvas_frame.bind('<Configure>', self.configure_canvas_frame)
-        self.canvas.bind('<Configure>',self.configure_canvas)
+        self.canvas.bind('<Configure>', self.configure_canvas)
+
+        def on_mousewheel(event):
+            scroll = -1 if event.delta > 0 else 1
+            self.canvas.yview_scroll(scroll, "units")
+
+        self.canvas.bind_all("<MouseWheel>", on_mousewheel)
 
     def configure_canvas_frame(self,event):
         size = (self.canvas_frame.winfo_reqwidth(), self.canvas_frame.winfo_reqheight())
@@ -35,3 +42,5 @@ class ScrollableComponent:
 
     def get_frame(self):
         return self.canvas_frame
+
+

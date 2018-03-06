@@ -67,7 +67,7 @@ class Page:
 
         try:
             page = requests.get(url, headers=headers)
-            print('Page encoding: ' + page.encoding)
+
         except requests.exceptions.RequestException as e:
             return False
 

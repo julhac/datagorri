@@ -30,6 +30,19 @@ class Scrapebar(Component):
 #       self._filetypes.grid(row=0, column=2, sticky="NEWS") ### Include if you want to have JSON as an output option
         self.select_filetype('.csv')
 
+        tkinter.Label(self.get_frame(), text='Delimiter:', bg='#cccccc').grid(row=0, column=1, sticky="NEWS", padx=10)
+        self._delimiter = tkinter.Entry(
+            self.get_frame(),
+            bg=style['input']['bg'],
+            fg=style['input']['color'],
+            width=5,
+            selectborderwidth=0,
+            bd=0,
+            highlightthickness=0
+        )
+        self._delimiter.grid(row=0, column=2, sticky="NEWS")
+        self._delimiter.insert(0, ';')
+
         self._scrape_btn = tkinter.Label(
             self.get_frame(),
             text='SCRAPE',
@@ -40,7 +53,7 @@ class Scrapebar(Component):
             padx=style['button']['padx'],
             pady=style['button']['pady']
         )
-        self._scrape_btn.grid(row=0, column=1, sticky="NEWS")
+        self._scrape_btn.grid(row=0, column=3, sticky="NEWS", padx=(10, 0))
 
     def on_scrape(self, func):
         """
@@ -77,3 +90,10 @@ class Scrapebar(Component):
         self._filename.delete(0, tkinter.END)
         self._filename.insert(0, name)
         return self
+
+    def get_delimiter(self):
+        """
+        Returns the delimiter value
+        :return: (string) the delimiter
+        """
+        return self._delimiter.get()

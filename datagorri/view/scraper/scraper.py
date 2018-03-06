@@ -109,5 +109,5 @@ class Scraper(View):
     def _handle_scraping(self):
         self.log.log('Start scraping')
         ScraperController.scrape(self.page_model.get_selected(), self.link_list.get(), self._scrapebar.get_filename(),
-                                self._scrapebar.get_filetype())
+                                 self._scrapebar.get_filetype(), self._scrapebar.get_delimiter())
         return self

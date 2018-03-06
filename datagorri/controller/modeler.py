@@ -48,10 +48,15 @@ class Modeler(Controller):
             self.view.show_load_page_error()
             return False
 
-        page_dom = dict()
+        page_dom_tables = dict()
         tables = page.get_tables()
         for table in tables:
-            page_dom[table.get_index()] = self._create_table_for_page_dom(table)
+            page_dom_tables[table.get_index()] = self._create_table_for_page_dom(table)
+            
+        page_dom_lists = dict()
+        lists = page.get_lists()
+        for list in lists:
+            page_dom_lists[list.get_index()] = self._create_list_for_page_dom(list)
 
         config["current_url"] = self.url
         config["base_url"] = 'http://' + urlparse(config["current_url"])[1]
@@ -67,7 +72,7 @@ class Modeler(Controller):
         default_page_model_name = domain.replace('.', '_') + '_' + str(date)
         self.view.set_page_model_name(default_page_model_name)
 
-        self.view.show_page_dom(page_dom)
+        self.view.show_page_dom(page_dom_tables, page_dom_lists)
         self.view.on_page_model_create(self.create_model)
         return self
 
@@ -84,6 +89,27 @@ class Modeler(Controller):
 
         return True
 
+    def _create_list_for_page_dom(self, list1, parent_controller_id=None):
+        result = dict()
+        result['label'] = '#' + str(list1.get_index())
+        result['elements'] = dict()
+        
+        for element in list1.get_elements():
+            elements = []
+            for type in Modeler.content_types:
+                if type.is_applicable_to(element):
+                    content = type.get_content(element)
+                    if isinstance(content, list):
+                        for single_type_return in content:
+                            elements.append(single_type_return)
+                    else:
+                        elements.append(content)
+            result['elements'][element.get_index()] = {
+                'label': 'ListElement #' +  str(element.get_index()),
+                'elements': elements,
+            }
+        return result
+        
     def _create_table_for_page_dom(self, table, parent_controller_id=None):
         result = dict()
         result['label'] = '#' + str(table.get_index())

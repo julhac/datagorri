@@ -5,6 +5,7 @@ class Element:
     This class represents a line of the elements (including, id, type, value, scrape checkbox and output label textfield)
     """
     def __init__(self, master_frame, index, type, value, at_grid_row):
+        self.index = index
         self.type = type
         self.value = value
         

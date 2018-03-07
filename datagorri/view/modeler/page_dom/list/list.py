@@ -39,14 +39,22 @@ class List(Component):
                     'label': element.get_label()
                 }
                 
-                if content.type == 'ImgAlt' or content.type == 'ImgSrc':
-                    scrape['img_index'] = content.img_index
+                if element.type == 'ImgAlt' or element.type == 'ImgSrc':
+                    scrape['img_index'] = element.img_index
 
-                if content.type == 'Link' or content.type == 'LinkText':
-                    scrape['link_index'] = content.link_index
+                if element.type == 'Link' or element.type == 'LinkText':
+                    scrape['link_index'] = element.link_index
 
                 to_scrape.append(scrape)
-        # TODO
+                
+        # TODO nested lists
+                
+        result = {
+            'listIndex': self.list_index,
+            'toScrape': to_scrape
+        }
+        
+        return result
                 
     def handle_scrape_all(self, select):
         """

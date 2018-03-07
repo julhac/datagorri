@@ -247,7 +247,8 @@ class Modeler(Controller):
             ).strftime('%Y-%m-%d %H:%M:%S')
 
         result = {
-            'tables': pm,
+            'tables': pm['tables'],
+            'lists': pm['lists'],
             'url': self.url,
             "timestamp": timestamp,
             "datetime": date

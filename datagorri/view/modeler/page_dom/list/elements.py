@@ -20,7 +20,6 @@ class Elements(Component):
         at_grid_row = 1
         for elem_index, element in elements.items():
             for content in element['elements']:
-                print(element)
                 elem_view = Element(
                     frame,
                     content['index'],
@@ -59,7 +58,7 @@ class Elements(Component):
         tkinter.Label(master_frame, text='Index', font=list_head_font).grid(row=0, sticky=tkinter.W)
         tkinter.Label(master_frame, text='Type', font=list_head_font).grid(row=0, column=1, sticky=tkinter.W)
         tkinter.Label(master_frame, text='Value', font=list_head_font).grid(row=0, column=2, sticky=tkinter.W)
-        tkinter.Label(master_frame, text='Scrape', font=list_head_font).grid(row=0, column=3, sticky=tkinter.E)
-        tkinter.Label(master_frame, text='Output-Label', font=list_head_font).grid(row=0, column=4, sticky=tkinter.E)
+        tkinter.Label(master_frame, text='Scrape', font=list_head_font).grid(row=0, column=3, sticky=tkinter.W)
+        tkinter.Label(master_frame, text='Output-Label', font=list_head_font).grid(row=0, column=4, sticky=tkinter.W)
 
         return True

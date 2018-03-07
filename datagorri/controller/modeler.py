@@ -52,11 +52,12 @@ class Modeler(Controller):
         tables = page.get_tables()
         for table in tables:
             page_dom_tables[table.get_index()] = self._create_table_for_page_dom(table)
-            
+        
         page_dom_lists = dict()
-        lists = page.get_lists()
-        for list in lists:
-            page_dom_lists[list.get_index()] = self._create_list_for_page_dom(list)
+        if self.view.is_include_lists(): # only load lists when checkbox marked
+            lists = page.get_lists()
+            for list in lists:
+                page_dom_lists[list.get_index()] = self._create_list_for_page_dom(list)
 
         config["current_url"] = self.url
         config["base_url"] = 'http://' + urlparse(config["current_url"])[1]

@@ -94,6 +94,9 @@ class Modeler(View):
     def get_url_to_load(self):
         return self.url.get()
 
+    def is_include_lists(self):
+        return self.url.is_include_lists()
+        
     def set_page_model_name(self, name):
         self.pm.set_name(name)
         return self

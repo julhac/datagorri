@@ -46,7 +46,8 @@ class Modeler(View):
         self.page_dom_scrollable_container = ScrollableComponent(self.page_dom)
 
         for table_index, table in page_dom.items():
-            table_view = Table(self.page_dom_scrollable_container.canvas_frame, table, table_index, self.on_repetition_change, on_link_adder_click=self.on_link_adder_click)
+            table_view = Table(self.page_dom_scrollable_container.canvas_frame, table, table_index,
+                               self.on_repetition_change, on_link_adder_click=self.on_link_adder_click)
             table_view.get_frame().pack(side=tkinter.TOP, fill=tkinter.X)
             self.table_components.append(table_view)
 

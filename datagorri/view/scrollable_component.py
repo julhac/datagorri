@@ -24,19 +24,26 @@ class ScrollableComponent:
         self.canvas_frame.bind('<Configure>', self.configure_canvas_frame)
         self.canvas.bind('<Configure>', self.configure_canvas)
 
-        def on_mousewheel(event):
-            scroll = -1 if event.delta > 0 else 1
-            self.canvas.yview_scroll(scroll, "units")
+        self.canvas.bind('<Enter>', self._bound_to_mousewheel)
+        self.canvas.bind('<Leave>', self._unbound_to_mousewheel)
 
-        self.canvas.bind_all("<MouseWheel>", on_mousewheel)
+    def _bound_to_mousewheel(self, event):
+        self.canvas.bind_all("<MouseWheel>", self.on_mousewheel)
 
-    def configure_canvas_frame(self,event):
+    def _unbound_to_mousewheel(self, event):
+        self.canvas.unbind_all("MouseWheel")
+
+    def on_mousewheel(self, event):
+        scroll = -1 if event.delta > 0 else 1
+        self.canvas.yview_scroll(scroll, "units")
+
+    def configure_canvas_frame(self, event):
         size = (self.canvas_frame.winfo_reqwidth(), self.canvas_frame.winfo_reqheight())
         self.canvas.config(scrollregion="0 0 %s %s" % size)
         if self.canvas_frame.winfo_reqwidth() != self.canvas.winfo_width():
             self.canvas.config(width=self.canvas_frame.winfo_reqwidth())
 
-    def configure_canvas(self,event):
+    def configure_canvas(self, event):
         if self.canvas_frame.winfo_reqwidth() != self.canvas.winfo_width():
             self.canvas.itemconfigure(self.canvas_frame_id, width=self.canvas.winfo_width())
 

@@ -12,7 +12,7 @@ class ScrollableComponent:
         )
         self.vertical_scrollbar = tkinter.Scrollbar(master_frame, orient=tkinter.VERTICAL, command=self.canvas.yview)
         self.canvas_frame = tkinter.Frame(self.canvas, background="#ffffff")
-        self.canvas_frame_id=self.canvas.create_window((0, 0), window=self.canvas_frame, anchor="nw")
+        self.canvas_frame_id = self.canvas.create_window((0, 0), window=self.canvas_frame, anchor="nw")
 
         self.canvas.configure(yscrollcommand=self.vertical_scrollbar.set)
         self.canvas.configure(height=self.get_frame().winfo_screenheight()*10)
@@ -23,14 +23,14 @@ class ScrollableComponent:
         self.canvas_frame.bind('<Configure>', self.configure_canvas_frame)
         self.canvas.bind('<Configure>', self.configure_canvas)
 
-        self.canvas.bind('<Enter>', self._bound_to_mousewheel)
-        self.canvas.bind('<Leave>', self._unbound_to_mousewheel)
+        self.canvas_frame.bind('<Enter>', self._bound_to_mousewheel)
+        self.canvas_frame.bind('<Leave>', self._unbound_to_mousewheel)
 
     def _bound_to_mousewheel(self, event):
-        self.canvas.bind_all("<MouseWheel>", self.on_mousewheel)
+        self.canvas_frame.bind_all("<MouseWheel>", self.on_mousewheel)
 
     def _unbound_to_mousewheel(self, event):
-        self.canvas.unbind_all("MouseWheel")
+        self.canvas_frame.unbind_all("MouseWheel")
 
     def on_mousewheel(self, event):
         scroll = -1 if event.delta > 0 else 1

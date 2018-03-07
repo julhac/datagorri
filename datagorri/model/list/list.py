@@ -4,9 +4,11 @@ from datagorri.model.list.listelement import ListElement
 class List:
     def __init__(self):
         self._index = ''
+        self.type_index = ''
         self.html = ''
         self.elements = []
         self.css_classes = ''
+        self.type = ''
         self.bs4 = None
         
     def get_index(self):
@@ -16,9 +18,16 @@ class List:
         self._index = index
         return self
         
+    def get_type_index(self):
+        return self.type_index
+        
+    def set_type_index(self, index):
+        self.type_index = index
+        return self
+        
     def get_html(self):
         return self.html
-       
+        
     def set_html(self, html):
         self.html = html
         
@@ -34,6 +43,12 @@ class List:
     def set_css_classes(self, css):
         self.css_classes = css
         
+    def get_type(self):
+        return self.type
+        
+    def set_type(self, type):
+        self.type = type
+        
     def as_bs4(self):
         return self.bs4
         
@@ -46,11 +61,11 @@ class List:
         
         if list.bs4.has_attr('class'):
             list.set_css_classes(list.bs4['class'])
-            
+        
         # get all elements (li)
-        for index, li in enumerate(list.bs4.find_all("li")):
+        for index, li in enumerate(list.bs4.find_all(["li","dt","dd"])):
             elem = ListElement.create_from_html(str(li))
             elem.set_index(len(list.get_elements()))
             list.get_elements().append(elem)
-            
+        
         return list

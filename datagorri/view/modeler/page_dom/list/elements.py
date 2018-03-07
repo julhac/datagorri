@@ -14,7 +14,7 @@ class Elements(Component):
         self.elements = []
         
         frame = tkinter.Frame(self.get_frame())
-        frame.pack(side=tkinter.TOP, fill = tkinter.BOTH)
+        frame.pack(side=tkinter.TOP, fill = tkinter.X)
         
         Elements.create_contents_header(frame)
         at_grid_row = 1

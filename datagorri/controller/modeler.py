@@ -92,7 +92,7 @@ class Modeler(Controller):
 
     def _create_list_for_page_dom(self, list1, parent_controller_id=None):
         result = dict()
-        result['label'] = '#' + str(list1.get_index())
+        result['label'] = str(list1.get_type()) + ' #' + str(list1.get_type_index())
         result['elements'] = dict()
         
         for element in list1.get_elements():
@@ -113,7 +113,7 @@ class Modeler(Controller):
         
     def _create_table_for_page_dom(self, table, parent_controller_id=None):
         result = dict()
-        result['label'] = '#' + str(table.get_index())
+        result['label'] = 'Table #' + str(table.get_index())
         result['is_repetitive'] = table.is_repetitive()
         result['rows'] = dict()
 

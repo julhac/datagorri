@@ -54,28 +54,47 @@ class Page:
         """
         Finds all lists (ordered and unordered) located on the html of a website and returns them
         :return: (list) list of found lists
-        """
+        """        
         lists = []
-        
+
         soup = self.get_html_as_bs4()
+        
         # get all ordered lists (ol)
+        olists = []
         for index, olist in enumerate(soup.find_all("ol")):
             # skip if list has parent list
             if len(olist.find_parents("ol")) != 0 or len(olist.find_parents("ul")) != 0:
                 continue
             list = List.create_from_html(str(olist))
             list.set_index(len(lists))
+            list.set_type('Ordered List')
+            list.set_type_index(len(olists))
+            olists.append(list)
             lists.append(list)
             
         # get all unordered lists (ul)
+        ulists = []
         for index, ulist in enumerate(soup.find_all("ul")):
             # skip if list has parent list
             if len(ulist.find_parents("ol")) != 0 or len(ulist.find_parents("ul")) != 0:
                 continue
             list = List.create_from_html(str(ulist))
             list.set_index(len(lists))
+            list.set_type('Unordered List')
+            list.set_type_index(len(ulists))
+            ulists.append(list)
             lists.append(list)
             
+        # get all definition lists (dl)
+        dlists = []
+        for index, dlist in enumerate(soup.find_all("dl")):
+            list = List.create_from_html(str(dlist))
+            list.set_index(len(lists))
+            list.set_type('Definition List')
+            list.set_type_index(len(dlists))
+            dlists.append(list)
+            lists.append(list)
+          
         return lists
         
     @staticmethod

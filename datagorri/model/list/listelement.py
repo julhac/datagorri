@@ -1,6 +1,9 @@
 from bs4 import BeautifulSoup
 
 class ListElement:
+    """
+    Stellt die Tags li sowie dt und dd dar.
+    """
     def __init__(self):
         self._index = ''
         self.html = ''
@@ -90,6 +93,12 @@ class ListElement:
             if len(ul.find_parents("ul")) == 0:
                 continue
             nestedList = List.create_from_html(str(ul))
+            element.get_child_lists().append(nestedList)
+            
+        for index, dl in enumerate(element.bs4.find_all("dl")):
+            if dl.find_parents("dl") == 0:
+                continue
+            nestedList = List.create_from_html(str(dl))
             element.get_child_lists().append(nestedList)
         
         return element

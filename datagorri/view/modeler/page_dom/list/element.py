@@ -12,13 +12,12 @@ class Element:
         self.scrape = tkinter.BooleanVar()
         self.label = tkinter.StringVar()
         
-        master_frame.columnconfigure(1, weight=1)
+        master_frame.columnconfigure(2, weight=1)
 
         list_head_font = "Helvetica 14"
         tkinter.Label(master_frame, text=index, font=list_head_font).grid(row=at_grid_row, sticky=tkinter.W)
         tkinter.Label(master_frame, text=type, font=list_head_font).grid(row=at_grid_row, column=1, sticky=tkinter.W)
-        tkinter.Label(master_frame, text=value, font=list_head_font).grid(row=at_grid_row, column=2,
-                                                                              sticky=tkinter.W)
+        tkinter.Label(master_frame, text=value, font=list_head_font).grid(row=at_grid_row, column=2, sticky=tkinter.W)
         
         self.scrape_checkbutton = tkinter.Checkbutton(master_frame, variable=self.scrape)
         self.scrape_checkbutton.grid(row=at_grid_row, column=3)

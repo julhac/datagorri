@@ -25,7 +25,9 @@ class Elements(Component):
                     content['index'],
                     content['type'],
                     content['value'],
-                    at_grid_row
+                    at_grid_row,
+                    img_index=content['img_index'] if 'img_index' in content else None,
+                    link_index=content['link_index'] if 'link_index' in content else None,
                 )
                 self.elements.append(elem_view)
                 at_grid_row += 1

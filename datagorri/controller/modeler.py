@@ -317,5 +317,4 @@ class Modeler(Controller):
             'Child table #' + str(child_index) + (' of column ' + str(col_index)) if col_index is not None else '')
         return child_table
 
-
-# from datagorri.view.modeler.page_dom.child_table import ChildTable ## MARC: Does not seem to do anything
+from datagorri.view.modeler.page_dom.table.child_table import ChildTable ## LUKAS: yes it does (see line 311)

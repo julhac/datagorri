@@ -10,7 +10,7 @@ class ScrollableComponent:
             highlightthickness=0,
             bg='#dedede',
         )
-        self.vertical_scrollbar = tkinter.Scrollbar(master_frame, orient=tkinter.VERTICAL)
+        self.vertical_scrollbar = tkinter.Scrollbar(master_frame, orient=tkinter.VERTICAL, command=self.canvas.yview)
         self.canvas_frame = tkinter.Frame(self.canvas, background="#ffffff")
         self.canvas_frame_id=self.canvas.create_window((0, 0), window=self.canvas_frame, anchor="nw")
 
@@ -19,7 +19,6 @@ class ScrollableComponent:
 
         self.vertical_scrollbar.pack(side="right", fill="y")
         self.canvas.pack(side="left", fill="both", expand=True)
-        self.vertical_scrollbar.config(command=self.canvas.yview)
 
         self.canvas_frame.bind('<Configure>', self.configure_canvas_frame)
         self.canvas.bind('<Configure>', self.configure_canvas)

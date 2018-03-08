@@ -4,9 +4,9 @@ from config.app import config
 from datagorri.controller import Controller
 from datagorri.model.page import Page
 from datagorri.util.csv import Csv
-from datagorri.controller.content_types.text import Text as TextCol
-from datagorri.controller.content_types.img import Img as ImgCol
-from datagorri.controller.content_types.link import Link as LinkCol
+from datagorri.controller.content_types.text import Text as TextTag
+from datagorri.controller.content_types.img import Img as ImgTag
+from datagorri.controller.content_types.link import Link as LinkTag
 from datagorri.model.table import Table
 from os import listdir
 from os.path import isfile, join
@@ -148,7 +148,8 @@ class Scraper(Controller):
         """
         failures = []  # Something that definitely went wrong
         warnings = []  # Something that could be wrong
-        result = []
+        result_tables = []
+        result_lists = []
 
         # if extension == "choose file extension":
         #    Scraper.update_log("Warning: Choose file extension!")
@@ -181,7 +182,7 @@ class Scraper(Controller):
             Scraper.update_log(' ')
 
             # a list of dicts, may have only one dict if only non-repetitive tables scraped
-            page_result = []
+            table_page_result = []
             for pm_table in page_model['tables']:
                 Scraper.update_log('Try: Scrape table #' + str(pm_table['tableIndex']))
 
@@ -197,11 +198,24 @@ class Scraper(Controller):
                                                     pm_child_tables=pm_table[
                                                         'childTables'] if 'childTables' in pm_table else [])
 
-                page_result = Scraper.add_scraped_table_to_page_scraping(table_result, page_result,
-                                                                         pm_table['isRepetitive'])
+                table_page_result = Scraper.add_scraped_table_to_page_scraping(table_result, table_page_result, pm_table['isRepetitive'])
+            
+            result_tables += table_page_result  # Scraping results in a dict
 
-            result += page_result  # Scraping results in a dic
-
+            list_page_result = []
+            for pm_list in page_model['lists']:
+                Scraper.update_log('Try: Scrape list #' + str(pm_list['listIndex']))
+                
+                lists = page.get_lists()
+                if len(lists) - 1 < pm_list['listIndex']:
+                    Scraper.update_log('Fail: Page has no list with index: ' + str(pm_list['listIndex']))
+                    failures.append('Page with URL ' + url + ' has no table with index: ' + str(pm_list['listIndex']))
+                    continue
+                list_result = Scraper.scrape_list(lists[pm_list['listIndex']], pm_list['toScrape'], url, pm_list['listIndex'], failures, warnings)
+                list_page_result = Scraper.add_scraped_list_to_page_scraping(list_result, list_page_result)
+            
+            result_lists += list_page_result  # Scraping results in a dict
+        
         if filename == "":
             timestamp = time.time()
             date = datetime.datetime.fromtimestamp(
@@ -211,7 +225,7 @@ class Scraper(Controller):
             date = date.replace(' ', '_')
             filename = "result_" + str(date)
 
-        Csv.create_file(config['results_dir'] + filename + ".csv", result, delimiter)
+        Csv.create_file(config['results_dir'] + filename + ".csv", result_tables, result_lists, delimiter)
         # if extension == ".json":
         #    Json.create_file(config['results_dir'] + filename + ".json", result)
         # else:
@@ -224,7 +238,56 @@ class Scraper(Controller):
         Scraper.log_report(failures, warnings)
 
         return True
+    
+    @staticmethod
+    def add_scraped_list_to_page_scraping(list_result, page_result):
+        if len(page_result) == 0:  # no lists on this page scraped so far
+            return list_result
 
+        new_page_result = []
+
+        for single_page_result in page_result:
+            for single_list_result in list_result:
+                new_entry = single_page_result.copy()
+                new_entry.update(single_list_result)
+                new_page_result.append(new_entry)
+
+        page_result = new_page_result
+
+        return page_result
+    
+    @staticmethod
+    def scrape_list(list, to_scrape, url, list_index, failures, warnings):
+        """
+        This method scrapes a list and returns a list of dicts
+        
+        :param list: (List) the list to scrape
+        :param to_scrape: (dict) elements to scrape according to the model
+        :param url: (string) the url to scrape
+        :param list_index: the index of the list to scrape
+        :param failures: (list) list of current failures
+        :param warnings: (list) list of current warnings
+        :return: (list) list of dicts to print in the result file
+        """
+        list_result = []
+        
+        for pm_to_scrape in to_scrape:
+            Scraper.update_log('Try: Scrape: ' + str(pm_to_scrape))
+            
+            img_index = pm_to_scrape['img_index'] if 'img_index' in pm_to_scrape else None
+            link_index = pm_to_scrape['link_index'] if 'link_index' in pm_to_scrape else None
+            
+            list_result.append({})
+            cont = Scraper.get_list_scrape_val(list, url, list_index, pm_to_scrape['elem_index'], pm_to_scrape['type'], failures, warnings, link_index=link_index, img_index=img_index)
+            if not cont:
+                continue
+            list_result[0][pm_to_scrape['label']] = cont
+        
+        for single_result in list_result:
+            single_result['from_url'] = url
+        
+        return list_result
+        
     @staticmethod
     def add_scraped_table_to_page_scraping(table_result, page_result, is_repetitive):
         if len(page_result) == 0:  # no tables on this page scraped so far
@@ -269,7 +332,7 @@ class Scraper(Controller):
 
             if not is_repetitive:
                 table_result.append({})
-                suc = Scraper.get_scrape_val(table, url, table_index, pm_to_scrape['col_index'],
+                suc = Scraper.get_table_scrape_val(table, url, table_index, pm_to_scrape['col_index'],
                                              pm_to_scrape['row_index'],
                                              pm_to_scrape['type'], failures, warnings, link_index=link_index,
                                              img_index=img_index)
@@ -279,7 +342,7 @@ class Scraper(Controller):
                 table_result[0][pm_to_scrape['label']] = suc
             else:
                 for row_index, row in enumerate(table.get_rows()):
-                    suc = Scraper.get_scrape_val(table, url, table_index, pm_to_scrape['col_index'], row_index,
+                    suc = Scraper.get_table_scrape_val(table, url, table_index, pm_to_scrape['col_index'], row_index,
                                                  pm_to_scrape['type'], failures, warnings, link_index=link_index,
                                                  img_index=img_index)
                     if not suc:
@@ -357,9 +420,33 @@ class Scraper(Controller):
         return Scraper.scrape_table(child_table, pm_child_table['isRepetitive'], pm_child_table['toScrape'],
                                     url, pm_child_table['tableIndex'], failures, warnings,
                                     further_pm_child_tables)
-
+    
     @staticmethod
-    def get_scrape_val(table, url, table_index, col_index, row_index, type, failures, warnings, link_index=None,
+    def get_list_scrape_val(list, url, list_index, element_index, type, failures, warnings, link_index=None, img_index=None):
+        elements = list.get_elements()
+        
+        if len(elements) <= element_index:
+            Scraper.update_log('Warning: List has not enough elements: ' + str(len(elements)) + ' actually, but model requires ' + str(element_index + 1))
+            failures.append('Element scraping failed for list with index ' + str(list_index) + ' and url ' + url + '. List has not enough elements: ' + str(len(elements)) + 'actually, but model requires ' + str(element_index + 1))
+            return False
+        
+        element = elements[element_index]
+        
+        if type == 'Text':
+            return TextTag.get_val(element)
+        elif type == 'ImgAlt':
+            return ImgTag.get_alt_val(element, img_index)
+        elif type == 'ImgSrc':
+            return ImgTag.get_src_val(element, img_index)
+        elif type == 'LinkText':
+            return LinkTag.get_text_val(element, link_index)
+        elif type == 'Link':
+            return LinkTag.get_href_val(element, link_index)
+
+        return False
+    
+    @staticmethod
+    def get_table_scrape_val(table, url, table_index, col_index, row_index, type, failures, warnings, link_index=None,
                        img_index=None):
         rows = table.get_rows()
 
@@ -384,15 +471,15 @@ class Scraper(Controller):
         col = cols[col_index]
 
         if type == 'Text':
-            return TextCol.get_val(col)
+            return TextTag.get_val(col)
         elif type == 'ImgAlt':
-            return ImgCol.get_alt_val(col, img_index)
+            return ImgTag.get_alt_val(col, img_index)
         elif type == 'ImgSrc':
-            return ImgCol.get_src_val(col, img_index)
+            return ImgTag.get_src_val(col, img_index)
         elif type == 'LinkText':
-            return LinkCol.get_text_val(col, link_index)
+            return LinkTag.get_text_val(col, link_index)
         elif type == 'Link':
-            return LinkCol.get_href_val(col, link_index)
+            return LinkTag.get_href_val(col, link_index)
 
         return False
 

@@ -7,6 +7,7 @@ class List:
         self.type_index = ''
         self.html = ''
         self.elements = []
+        self.child_lists = []
         self.css_classes = ''
         self.type = ''
         self.bs4 = None
@@ -37,6 +38,12 @@ class List:
     def set_elements(self, elems):
         self.elements = elems
         
+    def get_child_lists(self):
+        return self.child_lists
+        
+    def set_child_list(self, lists):
+        self.child_lists = lists
+        
     def get_css_classes(self):
         return self.css_classes
         
@@ -62,8 +69,18 @@ class List:
         if list.bs4.has_attr('class'):
             list.set_css_classes(list.bs4['class'])
         
-        # get all elements (li)
+        # look for nested lists
+        for index, xl in enumerate(list.bs4.find_all(["ol","ul","dl"])):
+            if len(xl.find_parents(["ol","ul","dl"])) == 0:
+                continue
+            nestedList = List.create_from_html(str(xl))
+            list.get_child_lists().append(nestedList)
+        
+        # get all elements (li, dt, dd)
         for index, li in enumerate(list.bs4.find_all(["li","dt","dd"])):
+            # exclude list elements from nested lists
+            if len(li.find_parents(["li","dt","dd"])) != 0:
+                continue
             elem = ListElement.create_from_html(str(li))
             elem.set_index(len(list.get_elements()))
             list.get_elements().append(elem)

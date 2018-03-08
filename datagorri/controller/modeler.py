@@ -1,17 +1,17 @@
 import copy
 import datetime
 import time
-from datagorri.controller import Controller
-from urllib.parse import urlparse
 from config.app import config
+from datagorri.controller import Controller
 from datagorri.controller.content_types.img import Img
 from datagorri.controller.content_types.link import Link
 from datagorri.controller.content_types.text import Text
-from datagorri.model.page import Page
-from datagorri.util.json import Json
-from datagorri.model.table.childtable import Childtable
 from datagorri.controller.linklist import Linklist
-
+from datagorri.model.page import Page
+from datagorri.model.list.nestedlist import Nestedlist
+from datagorri.model.table.childtable import Childtable
+from datagorri.util.json import Json
+from urllib.parse import urlparse
 
 class Modeler(Controller):
     """
@@ -90,7 +90,7 @@ class Modeler(Controller):
 
         return True
 
-    def _create_list_for_page_dom(self, list1, parent_controller_id=None):
+    def _create_list_for_page_dom(self, list1):
         result = dict()
         result['label'] = str(list1.get_type()) + ' #' + str(list1.get_type_index())
         result['elements'] = dict()
@@ -105,10 +105,20 @@ class Modeler(Controller):
                             elements.append(single_type_return)
                     else:
                         elements.append(content)
+                        
+            nested_lists = {}
+            for child_index, nested_list_html in enumerate(element.get_html_lists()):
+                nested_list = Nestedlist.create_from_html(nested_list_html, child_index, list1.get_index(), element.get_index())
+                nested_lists[child_index] = self._create_list_for_page_dom(nested_list)
+                       
             result['elements'][element.get_index()] = {
                 'label': 'ListElement #' +  str(element.get_index()),
                 'elements': elements,
             }
+            
+            if len(nested_lists) > 0:
+                result['elements'][element.get_index()]['nested_lists'] = nested_lists
+                                
         return result
         
     def _create_table_for_page_dom(self, table, parent_controller_id=None):
@@ -147,7 +157,7 @@ class Modeler(Controller):
 
         if table.is_repetitive():
             result['rows'] = Modeler.summarize_rows_for_page_dom(result['rows'])
-
+            
         return result
 
     def _create_columns_for_page_dom(self, row, table, parent_controller_id):
@@ -304,6 +314,12 @@ class Modeler(Controller):
         return True
 
     @staticmethod
+    def create_view_nested_list_from_html(master_frame, list, child_index, parent_element_index):
+        nested_list = NestedList(master_frame, list, child_index, parent_element_index)
+        nested_list.change_header_text('Nested list #' + str(child_index) + ' of element ' + str(parent_element_index))
+        return nested_list
+        
+    @staticmethod
     def create_view_child_table_from_html(master_frame, table, child_index, col_index, row_index, is_repetitive=False,
                                           on_repetition_change=None, on_link_adder_click=None,
                                           hide_repetition_changer=False, parent_controller_table_id=None,
@@ -317,4 +333,6 @@ class Modeler(Controller):
             'Child table #' + str(child_index) + (' of column ' + str(col_index)) if col_index is not None else '')
         return child_table
 
-from datagorri.view.modeler.page_dom.table.child_table import ChildTable ## LUKAS: yes it does (see line 311)
+# keep at bottom of file so there is no circular dependency on startup!!
+from datagorri.view.modeler.page_dom.list.nested_list import NestedList ## used in create_view_nested_list_from_html (line 318)
+from datagorri.view.modeler.page_dom.table.child_table import ChildTable ## used in create_view_child_table_from_html (line 327)

@@ -97,3 +97,7 @@ class List(Component):
     def on_hover(self, frame, bg_color=None):
         Component.on_hover(self, self.get_frame(), bg_color=bg_color)
         self.header.on_hover(bg_color)
+        
+    def change_header_text(self, text):
+        self.header.label['text'] = text
+        

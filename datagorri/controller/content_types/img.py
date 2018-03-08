@@ -9,47 +9,49 @@ class Img(ContentType):
     type = "Img"
 
     @staticmethod
-    def is_applicable_to(col):
+    def is_applicable_to(tag):
         """
         Returns True or False depending of the column contains images.
 
-        :param col: (Column) the column
+        :param tag: (Column or ListElement) the column or list element
         :return: (boolean)
         """
-        return len(col.get_images()) > 0
+        return len(tag.get_images()) > 0
 
     @staticmethod
-    def get_content(col):
+    def get_content(tag):
         """
         Returns the content of Images of a column in a list
-        :param col: (Column) the column
+        :param tag: (Column or ListElement) the column or list element
         :return: (list)
         """
         returns = []
 
-        for img_index, img in enumerate(col.get_images()):
+        for img_index, img in enumerate(tag.get_images()):
             returns.append({
+                'index': tag.get_index(),
                 'type': Img.type + 'Alt',
-                'value': Img.get_alt_val(col, img_index),
+                'value': Img.get_alt_val(tag, img_index),
                 'img_index': img_index
             })
             returns.append({
+                'index': tag.get_index(),
                 'type': Img.type + 'Src',
-                'value': Img.get_src_val(col, img_index),
+                'value': Img.get_src_val(tag, img_index),
                 'img_index': img_index
             })
 
         return returns
 
     @staticmethod
-    def get_alt_val(col, img_index):
+    def get_alt_val(tag, img_index):
         """
         Returns the alternative string of an image or False
-        :param col: (Column) the column
+        :param tag: (Column or ListElement) the column or list element
         :param img_index: (int) the number index in the column
         :return: (string or False)
         """
-        images = col.get_images()
+        images = tag.get_images()
         if len(images) -1 < img_index:
             return False
 
@@ -57,14 +59,14 @@ class Img(ContentType):
         return img['alt'].strip().replace('\n', '').replace('\r', '')
 
     @staticmethod
-    def get_src_val(col, img_index):
+    def get_src_val(tag, img_index):
         """
         Returns the source url of an image or False
-        :param col: (Column) the the column
+        :param tag: (Column or ListElement) the column or list element
         :param img_index: (int) the number index in the column
         :return: (string or False)
         """
-        images = col.get_images()
+        images = tag.get_images()
         if len(images) - 1 < img_index:
             return False
 

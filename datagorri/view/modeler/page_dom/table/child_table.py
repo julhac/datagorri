@@ -1,4 +1,4 @@
-from datagorri.view.modeler.page_dom.table import Table
+from datagorri.view.modeler.page_dom.table.table import Table
 
 
 class ChildTable(Table):

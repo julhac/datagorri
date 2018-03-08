@@ -1,7 +1,7 @@
 from datagorri.controller.modeler import Modeler as ModelerController
 from datagorri.controller.scraper import Scraper as ScraperController
-from datagorri.view.modeler import Modeler as ModelerView
-from datagorri.view.scraper import Scraper as ScraperView
+from datagorri.view.modeler.modeler import Modeler as ModelerView
+from datagorri.view.scraper.scraper import Scraper as ScraperView
 
 
 routes = {

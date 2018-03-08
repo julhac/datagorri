@@ -1,6 +1,7 @@
 import tkinter
 import time
-from datagorri.view.modeler.page_dom.table import Table
+from datagorri.view.modeler.page_dom.table.table import Table
+from datagorri.view.modeler.page_dom.list.list import List
 from datagorri.view.modeler.resultbar import Resultbar
 from datagorri.view.modeler.urlbar import Urlbar
 from datagorri.view import View
@@ -21,11 +22,12 @@ class Modeler(View):
 
         self.pm = Resultbar(self.get_frame(), '')
         self.table_components = []
+        self.list_components = []
 
         self.page_dom = None
         self.page_dom_scrollable_container = None
 
-    def show_page_dom(self, page_dom):
+    def show_page_dom(self, page_dom_tables, page_dom_lists):
         """
         Shows the page DOM as result of parsing the URLs page.
         
@@ -45,48 +47,80 @@ class Modeler(View):
         self.page_dom = tkinter.Frame(self.get_frame())
         self.page_dom_scrollable_container = ScrollableComponent(self.page_dom)
 
-        for table_index, table in page_dom.items():
+        for table_index, table in page_dom_tables.items():
             table_view = Table(self.page_dom_scrollable_container.canvas_frame, table, table_index, self.on_repetition_change, on_link_adder_click=self.on_link_adder_click)
             table_view.get_frame().pack(side=tkinter.TOP, fill=tkinter.X)
             self.table_components.append(table_view)
+            
+        for list_index, list in page_dom_lists.items():
+            list_view = List(self.page_dom_scrollable_container.canvas_frame, list, list_index)
+            list_view.get_frame().pack(side=tkinter.TOP, fill=tkinter.X)
+            self.list_components.append(list_view)
 
         self.page_dom.pack(fill=tkinter.BOTH, expand=1)
 
     def get_page_model(self):
         """
         Gathers all information from the subcomponents which are necessary for the page model.
+        :returns: (Hash or boolean) the list of elements or False
         """
-        result = []
+        result = dict()
+        result['tables'] = []
+        result['lists'] = []
 
+        # gather all tables
         for table in self.table_components:
             table_result = table.get_page_model()
 
             if 'childTables' in table_result or len(table_result['toScrape']) > 0:
-                result.append(table_result)
+                result['tables'].append(table_result)
 
-        if len(result) < 1:
+        # gather all lists
+        for list in self.list_components:
+            list_result = list.get_page_model()
+            if 'nestedLists' in list_result or len(list_result['toScrape']) > 0:
+                result['lists'].append(list_result)
+        
+        # check if something was selected to scrape
+        if len(result['tables']) + len(result['lists']) < 1:
             self.pm.view_error('Nothing to scrape selected!')
             return False
 
-        labels = []
+        labels = dict()
+        labels['tables'] = []
+        labels['lists'] = []
 
-        for table in result:
+        # gather all table labels (cancel if empty or duplicate use)
+        for table in result['tables']:
             for content in table['toScrape']:
                 if content['label'].strip() == '':
-                    self.pm.view_error('Some output label is empty!')
+                    self.pm.view_error('Some table output label is empty!')
                     return False
 
-                if content['label'] in labels:
-                    self.pm.view_error('Output label "' + content['label'] + '" is used multiple times!')
+                if content['label'] in labels['tables']:
+                    self.pm.view_error('Output label "' + content['label'] + '" is used multiple times for tables!')
                     return False
 
-                labels.append(content['label'])
+                labels['tables'].append(content['label'])
+        
+        # gather all list labels (cancel if empty or duplicate use)
+        for list in result['lists']:
+            for element in list['toScrape']:
+                if element['label'].strip() == '':
+                    self.pm.view_error('Some list output label is empty!')
+                if element['label'] in labels['lists']:
+                    self.pm.view_error('Output label "' + content['label'] + '" is used multiple times for lists!')
+                    return False
+                labels['lists'].append(element['label'])
 
         return result
 
     def get_url_to_load(self):
         return self.url.get()
 
+    def is_include_lists(self):
+        return self.url.is_include_lists()
+        
     def set_page_model_name(self, name):
         self.pm.set_name(name)
         return self

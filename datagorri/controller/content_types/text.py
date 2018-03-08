@@ -9,34 +9,35 @@ class Text(ContentType):
     type = "Text"
 
     @staticmethod
-    def is_applicable_to(col):
+    def is_applicable_to(tag):
         """
         Returns True or False depending if the column value is empty
-        :param col: (Column) the column
+        :param tag: (Column or ListElement) the column or list element
         :return: (boolean)
 
         """
-        return not Text.get_val(col).isspace()
+        return not Text.get_val(tag).isspace()
 
     @staticmethod
-    def get_content(col):
+    def get_content(tag):
         """
         Returns the type and value of a column
-        :param col: (Column) the column
+        :param tag: (Column or ListElement) the column or list element
         :return: (dict) type and value
 
         """
         return {
+            'index': tag.get_index(),
             'type': Text.type,
-            'value': Text.get_val(col)
+            'value': Text.get_val(tag)
         }
 
     @staticmethod
-    def get_val(col):
+    def get_val(tag):
         """
         Returns the value of a column
-        :param col: (Column) the column
+        :param tag: (Column or ListElement) the column or list element
         :return: (string) the stripped value
 
         """
-        return col.get_text().strip().replace('\n', '').replace('\r', '')
+        return tag.get_text().strip().replace('\n', '').replace('\r', '')

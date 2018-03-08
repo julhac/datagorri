@@ -8,11 +8,12 @@ style = style['urlbar']
 
 class Urlbar(Component):
     """
-    This class represents the URL bar. It contains a textfield for the URL and a button to load the tables from that URL.
+    This class represents the URL bar. It contains a textfield for the URL, a checkbox to in-/exclude lists and a button to load the tables from that URL.
     """
     def __init__(self, master_frame, default_url=''):
         Component.__init__(self, master_frame)
         self.default_input_text = default_url
+        self.include_lists = tkinter.BooleanVar()
 
         self.change_bg(style['bg'])
         self.get_frame().configure(pady=style['pady'], padx=style['padx'])
@@ -22,14 +23,21 @@ class Urlbar(Component):
         self.input.grid(row=0, column=0, sticky="nswe")
         self.get_frame().columnconfigure(0, weight=1)
 
+        # checkbox to in-/exclude lists
+        self.lists_checkbox = tkinter.Checkbutton(self.frame, text="include lists", variable=self.include_lists)
+        self.lists_checkbox.grid(row=0, column=1)
+        
         # button to start load action
         self.button = Urlbar.create_button(self.frame, 'START')
-        self.button.grid(row=0, column=1)
+        self.button.grid(row=0, column=2)
 
         self.error_label = None
 
     def get(self):
         return self.input.get()
+        
+    def is_include_lists(self):
+        return self.include_lists.get()
 
     def on_click(self, func):
         self.button.bind('<Button-1>', lambda event: func())

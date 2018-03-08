@@ -1,5 +1,5 @@
 import tkinter
-from datagorri.view.modeler.page_dom.content import Content
+from datagorri.view.modeler.page_dom.table.content import Content
 from datagorri.view.component import Component
 from datagorri.controller.modeler import Modeler as ModelerController
 

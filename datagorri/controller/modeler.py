@@ -32,11 +32,68 @@ class Modeler(Controller):
                                    self.scrape_links_for_linklist)
 
         self.view.on_load_page_dom(self.load_page_dom)
+        self.view.on_load_page_model(self.load_page_model)
         self.view.on_page_model_create(self.create_model)
         self.view.show()
 
         return self
 
+    def load_page_model(self):
+        # load page model
+        page_model_name = self.view.get_model_to_load()
+        if page_model_name == 'select the page model to use':
+            self.view.show_load_error('model')
+            return False
+        page_model = Controller.load_page_model(config['page_models_dir'] + page_model_name + '.json')
+        if not page_model:
+            self.view.show_load_error('model')
+            return False
+        print(page_model)
+        
+        # set URL from model and list checkbox
+        self.view.set_url_to_load(page_model['url'])
+        #if len(page_model['lists']) > 0:
+        #    self.view.select_include_lists()
+        
+        # load page dom
+        self.load_page_dom()
+        
+        # overwrite default page model name
+        self.view.set_page_model_name(page_model_name)
+        
+        # select scrape checkboxes and fill output label textfields
+        for table in page_model['tables']:
+            table_component = self.view.table_components[table['tableIndex']]
+            is_repetitive = table['isRepetitive']
+            table_component.header.set_repetitive(is_repetitive)
+            for column in table['toScrape']:
+                index = col_index = column['col_index']
+                row_index = column['row_index'] if 'row_index' in column else None
+                if row_index is not None:
+                    index += row_index
+                content = table_component.content.contents[index]
+                content.set_label(column['label'])
+                content.select_to_scrape()
+            #self.select_and_fill_child_tables(page_model['childTables'])
+            
+        #for list in page_model['lists']:
+        #    list_component = self.view.list_components[list['listIndex']]
+        #    for element in list['toScrape']:
+        #        index = element['elem_index']
+        #        content = list_component.elements.elements[index]
+        #        content.set_label(element['label'])
+        #        content.select_to_scrape()
+        #    self.select_and_fill_nested_lists(page_model['lists'])
+        
+    #def select_and_fill_child_tables(self, tables):
+        
+    
+    #def select_and_fill_nested_lists(self, lists):
+        
+    #        select_and_fill_lists(list['nestedLists'])
+    #            nested_list = list_component.elements.find_nested_list_by_parent_index(pm_nested_list['parentElementIndex'])
+                
+        
     def load_page_dom(self):
         self.url = self.view.get_url_to_load()
         self.page_dom_tables_unsummarized = []
@@ -45,7 +102,7 @@ class Modeler(Controller):
         page = Page.create_by_url(self.url)
 
         if page is False:
-            self.view.show_load_page_error()
+            self.view.show_load_error()
             return False
 
         page_dom = dict()

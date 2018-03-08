@@ -74,6 +74,12 @@ class Content:
 
     def get_label(self):
         return self.label.get()
+        
+    def set_label(self, text):
+        self.label.set(text)
 
     def is_to_scrape(self):
         return self.scrape.get()
+        
+    def select_to_scrape(self):
+        self.scrape_checkbutton.select()

@@ -3,7 +3,6 @@ import datetime
 from config.app import config
 from datagorri.controller import Controller
 from datagorri.model.page import Page
-from datagorri.util.json import Json
 from datagorri.util.csv import Csv
 from datagorri.controller.content_types.text import Text as TextCol
 from datagorri.controller.content_types.img import Img as ImgCol
@@ -98,7 +97,7 @@ class Scraper(Controller):
             Scraper.update_log('Using page model: ' + file)
 
             Scraper.update_log('Try: Load page model file: ' + file)
-        page_model = Json.load_json_file(config['page_models_dir'] + file)
+        page_model = Controller.load_page_model(config['page_models_dir'] + file)
         if page_model is False:
             Scraper.update_log('Fail: Could not load page model file: ' + file)
             return False

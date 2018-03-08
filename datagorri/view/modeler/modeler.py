@@ -78,7 +78,7 @@ class Modeler(View):
         # gather all lists
         for list in self.list_components:
             list_result = list.get_page_model()
-            if len(list_result['toScrape']) > 0:
+            if 'nestedLists' in list_result or len(list_result['toScrape']) > 0:
                 result['lists'].append(list_result)
         
         # check if something was selected to scrape

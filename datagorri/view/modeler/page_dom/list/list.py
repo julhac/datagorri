@@ -47,12 +47,20 @@ class List(Component):
 
                 to_scrape.append(scrape)
                 
-        # TODO nested lists
+        nested_lists = []
+        for nested_list in self.elements.nested_lists:
+            nested_list_result = nested_list.get_page_model()
+            if 'nestedLists' in nested_list_result or len(nested_list_result['toScrape']) > 0:
+                nested_list_result['parentElementIndex'] = nested_list.get_parent_element_index()
+                nested_lists.append(nested_list_result)
                 
         result = {
             'listIndex': self.list_index,
             'toScrape': to_scrape
         }
+        
+        if len(nested_lists) > 0:
+            result['nestedLists'] = nested_lists
         
         return result
                 

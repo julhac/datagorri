@@ -28,6 +28,7 @@ class Elements(Component):
             for content in element['elements']:
                 elem_view = Element(
                     content_frame,
+                    content['index'],
                     content['type'],
                     content['value'],
                     at_grid_row,

@@ -54,8 +54,8 @@ class Urlbar(Component):
     def is_include_lists(self):
         return self.include_lists.get()
                 
-    #def select_include_lists(self):
-    #    self.lists_checkbox.select()
+    def select_include_lists(self):
+        self.lists_checkbox.select()
 
     def on_click(self, func):
         self.button.bind('<Button-1>', lambda event: func())

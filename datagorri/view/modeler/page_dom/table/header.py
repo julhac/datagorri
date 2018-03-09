@@ -87,6 +87,13 @@ class Header(Component):
 
     def set_repetitive(self, repetitive = True):
         self.repetitive.set(repetitive)
+        
+    def select_repetitive(self, repetitive):
+        if repetitive:
+            self.repetitive_checkbutton.select()
+        else:
+            self.repetitive_checkbutton.deselect()
+        self._handle_repetition_change()
 
     def on_click(self, func):
         Component.on_click(self, func)

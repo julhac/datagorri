@@ -134,8 +134,8 @@ class Modeler(View):
     def get_page_model_name(self):
         return self.pm.get_name()
 
-    #def select_include_lists(self):
-    #    self.url.select_include_lists()
+    def select_include_lists(self):
+        self.url.select_include_lists()
         
     def show_load_error(self, what='page'):
         self.url.view_load_error(what)

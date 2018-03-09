@@ -62,6 +62,30 @@ class Elements(Component):
         """
         for element in self.elements:
             element.handle_scrape_all(select)
+            
+    def find_nested_list(self, list_index, parent_element_index):
+        """
+        Finds a nested list within the list of nested lists by index of the list and index of the parent element
+        :param list_index: (Integer) index of the searched list
+        :param parent_element_index: (Integer) index of the parent list of the searched list
+        :returns: the list with index and parent element index or False
+        """
+        for list in self.nested_lists:
+            if list.index == list_index and list.parent_element_index == parent_element_index:
+                return list
+        return False
+        
+    def find_element(self, element_index, type):
+        """
+        Finds an element within the list of elements by index and type of the element
+        :param element_index: (Integer) index of the searched element
+        :param type: (string) type of the searched element
+        :returns: the element with index and type or False
+        """
+        for element in self.elements:
+            if element.index == element_index and element.type == type:
+                return element
+        return False
     
     @staticmethod
     def create_elem_frame(master_frame, label):

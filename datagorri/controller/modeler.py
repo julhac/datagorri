@@ -39,6 +39,9 @@ class Modeler(Controller):
         return self
 
     def load_page_model(self):
+        """
+        Loads the selected page model and fills in all values
+        """
         # load page model
         page_model_name = self.view.get_model_to_load()
         if page_model_name == 'select the page model to use':
@@ -48,12 +51,11 @@ class Modeler(Controller):
         if not page_model:
             self.view.show_load_error('model')
             return False
-        print(page_model)
         
         # set URL from model and list checkbox
         self.view.set_url_to_load(page_model['url'])
-        #if len(page_model['lists']) > 0:
-        #    self.view.select_include_lists()
+        if 'lists' in page_model and len(page_model['lists']) > 0:
+            self.view.select_include_lists()
         
         # load page dom
         self.load_page_dom()
@@ -64,37 +66,81 @@ class Modeler(Controller):
         # select scrape checkboxes and fill output label textfields
         for table in page_model['tables']:
             table_component = self.view.table_components[table['tableIndex']]
-            is_repetitive = table['isRepetitive']
-            table_component.header.set_repetitive(is_repetitive)
+            table_component.header.select_repetitive(table['isRepetitive'])
             for column in table['toScrape']:
-                index = col_index = column['col_index']
                 row_index = column['row_index'] if 'row_index' in column else None
-                if row_index is not None:
-                    index += row_index
-                content = table_component.content.contents[index]
+                content = table_component.content.find_content(column['type'], column['col_index'], row_index)
+                if not content:
+                    print('skip ' + str(column['type']) + ' cell column ' + str(column['col_index']) + ' row ' + str(row_index) + ' in table ' + str(table['tableIndex']))
+                    continue
                 content.set_label(column['label'])
                 content.select_to_scrape()
-            #self.select_and_fill_child_tables(page_model['childTables'])
-            
-        #for list in page_model['lists']:
-        #    list_component = self.view.list_components[list['listIndex']]
-        #    for element in list['toScrape']:
-        #        index = element['elem_index']
-        #        content = list_component.elements.elements[index]
-        #        content.set_label(element['label'])
-        #        content.select_to_scrape()
-        #    self.select_and_fill_nested_lists(page_model['lists'])
+            if 'childTables' in table:
+                self.select_and_fill_child_tables(table_component, table['childTables'])
         
-    #def select_and_fill_child_tables(self, tables):
+        if 'lists' in page_model: # to support models from old versions
+            for list in page_model['lists']:
+                list_component = self.view.list_components[list['listIndex']]
+                for element in list['toScrape']:
+                    content = list_component.elements.find_element(element['elem_index'], element['type'])
+                    if not content:
+                        print('skip ' + str(element['type']) + ' element ' + str(element['elem_index']) + ' in list #' + str(list['listIndex']))
+                        continue
+                    content.set_label(element['label'])
+                    content.select_to_scrape()
+                if 'nestedLists' in list:
+                    self.select_and_fill_nested_lists(list_component, list['nestedLists'])
         
+    def select_and_fill_child_tables(self, table_component, tables):
+        """
+        selects cell to scrape and fills output label textfield for child tables
+        :param table_component: (Table) component of the parent table containing list of child tables
+        :param tables: (dict) content of the childTables key of the page model
+        """
+        for table in tables:
+            parent_row_index = table['parentRowIndex'] if 'parentRowIndex' in table else None
+            child_table_component = table_component.content.find_child_table(table['tableIndex'], table['parentColIndex'], parent_row_index)
+            if not child_table_component:
+                print('skip child table ' + str(table['tableIndex']) + ' of cell column ' + str(table['parentColIndex']) + ' row ' + str(parent_row_index))
+                continue
+            child_table_component.header.select_repetitive(table['isRepetitive'])
+            for column in table['toScrape']:
+                row_index = column['row_index'] + 1 if 'row_index' in column else None
+                content = child_table_component.content.find_content(column['type'], column['col_index'], row_index)
+                if not content:
+                    print('skip ' + str(column['type']) + ' cell column ' + str(column['col_index']) + ' row ' + str(row_index) + ' in table ' + str(table['tableIndex']))
+                    continue
+                content.set_label(column['label'])
+                content.select_to_scrape()
+            if 'childTables' in table:
+                self.select_and_fill_child_tables(child_table_component, table['childTables'])
     
-    #def select_and_fill_nested_lists(self, lists):
-        
-    #        select_and_fill_lists(list['nestedLists'])
-    #            nested_list = list_component.elements.find_nested_list_by_parent_index(pm_nested_list['parentElementIndex'])
+    def select_and_fill_nested_lists(self, list_component, lists):
+        """
+        selects elements to scrape and fills output label textfields for nested lists 
+        :param list_component: (List) component of the parent list containing list of nested lists
+        :param lists: (dict) content of the nestedLists key of the page model
+        """
+        for list in lists:
+            nested_list_component = list_component.elements.find_nested_list(list['listIndex'], list['parentElementIndex'])
+            if not nested_list_component:
+                print('skip nested list ' + str(list['listIndex']) + ' of parent element ' + str(list['parentElementIndex']))
+                continue
+            for element in list['toScrape']:
+                content = nested_list_component.elements.find_element(element['elem_index'], element['type'])
+                if not content:
+                    print('skip ' + str(element['type']) + ' element ' + str(element['elem_index']) + ' of list #' + str(list['listIndex']))
+                    continue
+                content.set_label(element['label'])
+                content.select_to_scrape()
+            if 'nestedLists' in list:
+                self.select_and_fill_nested_lists(nested_list_component, list['nestedLists'])
                 
         
     def load_page_dom(self):
+        """
+        Loads the page DOM of the URL and shows tables and lists (if they are included)
+        """
         self.url = self.view.get_url_to_load()
         self.page_dom_tables_unsummarized = []
 

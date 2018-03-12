@@ -202,19 +202,20 @@ class Scraper(Controller):
             
             result_tables += table_page_result  # Scraping results in a dict
 
-            list_page_result = []
-            for pm_list in page_model['lists']:
-                Scraper.update_log('Try: Scrape list #' + str(pm_list['listIndex']))
+            if 'lists' in page_model: # to support old versions of models not containing the lists element
+                list_page_result = []
+                for pm_list in page_model['lists']:
+                    Scraper.update_log('Try: Scrape list #' + str(pm_list['listIndex']))
+                    
+                    lists = page.get_lists()
+                    if len(lists) - 1 < pm_list['listIndex']:
+                        Scraper.update_log('Fail: Page has no list with index: ' + str(pm_list['listIndex']))
+                        failures.append('Page with URL ' + url + ' has no table with index: ' + str(pm_list['listIndex']))
+                        continue
+                    list_result = Scraper.scrape_list(lists[pm_list['listIndex']], pm_list['toScrape'], url, pm_list['listIndex'], failures, warnings)
+                    list_page_result = Scraper.add_scraped_list_to_page_scraping(list_result, list_page_result)
                 
-                lists = page.get_lists()
-                if len(lists) - 1 < pm_list['listIndex']:
-                    Scraper.update_log('Fail: Page has no list with index: ' + str(pm_list['listIndex']))
-                    failures.append('Page with URL ' + url + ' has no table with index: ' + str(pm_list['listIndex']))
-                    continue
-                list_result = Scraper.scrape_list(lists[pm_list['listIndex']], pm_list['toScrape'], url, pm_list['listIndex'], failures, warnings)
-                list_page_result = Scraper.add_scraped_list_to_page_scraping(list_result, list_page_result)
-            
-            result_lists += list_page_result  # Scraping results in a dict
+                result_lists += list_page_result  # Scraping results in a dict
         
         if filename == "":
             timestamp = time.time()

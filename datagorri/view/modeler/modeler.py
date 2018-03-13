@@ -117,6 +117,12 @@ class Modeler(View):
 
     def get_url_to_load(self):
         return self.url.get()
+        
+    def set_url_to_load(self, url):
+        self.url.set(url)
+        
+    def get_model_to_load(self):
+        return self.url.get_selected()
 
     def is_include_lists(self):
         return self.url.is_include_lists()
@@ -128,8 +134,11 @@ class Modeler(View):
     def get_page_model_name(self):
         return self.pm.get_name()
 
-    def show_load_page_error(self):
-        self.url.view_page_load_error()
+    def select_include_lists(self):
+        self.url.select_include_lists()
+        
+    def show_load_error(self, what='page'):
+        self.url.view_load_error(what)
         return self
 
     def on_load_page_dom(self, function):
@@ -139,6 +148,15 @@ class Modeler(View):
             self.clickSimulateEnd(self.url.button)
 
         self.url.on_click(handle_click)
+        return self
+        
+    def on_load_page_model(self, function):
+        def handle_click():
+            self.clickSimulate(self.url.load_button)
+            function()
+            self.clickSimulateEnd(self.url.load_button)
+            
+        self.url.on_load_click(handle_click)
         return self
 
     def on_page_model_create(self, function):

@@ -3,7 +3,6 @@ import datetime
 from config.app import config
 from datagorri.controller import Controller
 from datagorri.model.page import Page
-from datagorri.util.json import Json
 from datagorri.util.csv import Csv
 from datagorri.controller.content_types.text import Text as TextTag
 from datagorri.controller.content_types.img import Img as ImgTag
@@ -98,7 +97,7 @@ class Scraper(Controller):
             Scraper.update_log('Using page model: ' + file)
 
             Scraper.update_log('Try: Load page model file: ' + file)
-        page_model = Json.load_json_file(config['page_models_dir'] + file)
+        page_model = Controller.load_page_model(config['page_models_dir'] + file)
         if page_model is False:
             Scraper.update_log('Fail: Could not load page model file: ' + file)
             return False
@@ -203,19 +202,20 @@ class Scraper(Controller):
             
             result_tables += table_page_result  # Scraping results in a dict
 
-            list_page_result = []
-            for pm_list in page_model['lists']:
-                Scraper.update_log('Try: Scrape list #' + str(pm_list['listIndex']))
+            if 'lists' in page_model: # to support old versions of models not containing the lists element
+                list_page_result = []
+                for pm_list in page_model['lists']:
+                    Scraper.update_log('Try: Scrape list #' + str(pm_list['listIndex']))
+                    
+                    lists = page.get_lists()
+                    if len(lists) - 1 < pm_list['listIndex']:
+                        Scraper.update_log('Fail: Page has no list with index: ' + str(pm_list['listIndex']))
+                        failures.append('Page with URL ' + url + ' has no table with index: ' + str(pm_list['listIndex']))
+                        continue
+                    list_result = Scraper.scrape_list(lists[pm_list['listIndex']], pm_list['toScrape'], url, pm_list['listIndex'], failures, warnings)
+                    list_page_result = Scraper.add_scraped_list_to_page_scraping(list_result, list_page_result)
                 
-                lists = page.get_lists()
-                if len(lists) - 1 < pm_list['listIndex']:
-                    Scraper.update_log('Fail: Page has no list with index: ' + str(pm_list['listIndex']))
-                    failures.append('Page with URL ' + url + ' has no table with index: ' + str(pm_list['listIndex']))
-                    continue
-                list_result = Scraper.scrape_list(lists[pm_list['listIndex']], pm_list['toScrape'], url, pm_list['listIndex'], failures, warnings)
-                list_page_result = Scraper.add_scraped_list_to_page_scraping(list_result, list_page_result)
-            
-            result_lists += list_page_result  # Scraping results in a dict
+                result_lists += list_page_result  # Scraping results in a dict
         
         if filename == "":
             timestamp = time.time()

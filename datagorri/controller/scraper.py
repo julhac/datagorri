@@ -298,7 +298,6 @@ class Scraper(Controller):
         :param table_rows: (list) list of dicts containing the scraped table rows (repetitive and non-repetitive)
         :returns: (list) list of dicts containing the merged result
         """
-        print(table_rows)
         repetitive_tables = []
         non_repetitive_tables = []
         # sort table entries to repetitive and non-repetitive
@@ -313,7 +312,11 @@ class Scraper(Controller):
         for non_repetitive_entry in non_repetitive_tables:
             for key, val in non_repetitive_entry.items(): # there should be no duplicate keys because the model creation prohibits it
                 non_repetitive_result[key] = val
-        del non_repetitive_result['from_url'] # is added at the end by the repetitive rows
+                
+        # it is needed when no repetitive tables scraped
+        # if no non-repetitive table is scraped this dict is empty
+        if len(repetitive_tables) > 0 and 'from_url' in non_repetitive_result: 
+            del non_repetitive_result['from_url'] # is added at the end by the repetitive rows
         
         # merge repetitive results with non-repetitive result
         result = []

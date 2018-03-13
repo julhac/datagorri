@@ -182,7 +182,7 @@ class Scraper(Controller):
             Scraper.update_log(' ')
 
             # a list of dicts, may have only one dict if only non-repetitive tables scraped
-            table_page_result = []
+            table_results = []
             for pm_table in page_model['tables']:
                 Scraper.update_log('Try: Scrape table #' + str(pm_table['tableIndex']))
 
@@ -197,10 +197,10 @@ class Scraper(Controller):
                                                     warnings,
                                                     pm_child_tables=pm_table[
                                                         'childTables'] if 'childTables' in pm_table else [])
-
-                table_page_result = Scraper.add_scraped_table_to_page_scraping(table_result, table_page_result, pm_table['isRepetitive'])
+                
+                table_results += table_result
             
-            result_tables += table_page_result  # Scraping results in a dict
+            result_tables += Scraper.merge_tables(table_results) # Scraping results in a dict
 
             if 'lists' in page_model: # to support old versions of models not containing the lists element
                 list_page_result = []
@@ -288,24 +288,44 @@ class Scraper(Controller):
             single_result['from_url'] = url
         
         return list_result
-        
+
     @staticmethod
-    def add_scraped_table_to_page_scraping(table_result, page_result, is_repetitive):
-        if len(page_result) == 0:  # no tables on this page scraped so far
-            return table_result
-
-        new_page_result = []
-
-        for single_page_result in page_result:
-            for single_table_result in table_result:
-                new_entry = single_page_result.copy()
-                new_entry.update(single_table_result)
-                new_page_result.append(new_entry)
-
-        page_result = new_page_result
-
-        return page_result
-
+    def merge_tables(table_rows):
+        """
+        Merges all scraped table rows from one page to a scraping result for this page
+        All repetitive rows are just put one after another. the non-repetitive rows are added to each repetitive row result.
+        
+        :param table_rows: (list) list of dicts containing the scraped table rows (repetitive and non-repetitive)
+        :returns: (list) list of dicts containing the merged result
+        """
+        print(table_rows)
+        repetitive_tables = []
+        non_repetitive_tables = []
+        # sort table entries to repetitive and non-repetitive
+        for row in table_rows:
+            if row['is_repetitive']:
+                repetitive_tables.append(row)
+            else:
+                non_repetitive_tables.append(row)
+        
+        # merge non-repetitive entries to one non-repetitive result
+        non_repetitive_result = dict()
+        for non_repetitive_entry in non_repetitive_tables:
+            for key, val in non_repetitive_entry.items(): # there should be no duplicate keys because the model creation prohibits it
+                non_repetitive_result[key] = val
+        del non_repetitive_result['from_url'] # is added at the end by the repetitive rows
+        
+        # merge repetitive results with non-repetitive result
+        result = []
+        for repetitive_entry in repetitive_tables:
+            new_entry = non_repetitive_result.copy()
+            new_entry.update(repetitive_entry)
+            # remove is_repetitive
+            del new_entry['is_repetitive']
+            result.append(new_entry)
+        
+        return result
+        
     # will return a list of dicts
     @staticmethod
     def scrape_table(table, is_repetitive, to_scrape, url, table_index, failures, warnings, pm_child_tables=[]):
@@ -339,8 +359,9 @@ class Scraper(Controller):
                                              img_index=img_index)
                 if not suc:
                     continue
-
+                
                 table_result[0][pm_to_scrape['label']] = suc
+                table_result[0]['is_repetitive'] = False
             else:
                 for row_index, row in enumerate(table.get_rows()):
                     suc = Scraper.get_table_scrape_val(table, url, table_index, pm_to_scrape['col_index'], row_index,
@@ -348,11 +369,12 @@ class Scraper(Controller):
                                                  img_index=img_index)
                     if not suc:
                         continue
-
+                    
                     while len(table_result) - 1 < row_index:
                         table_result.append({})
 
                     table_result[row_index][pm_to_scrape['label']] = suc
+                    table_result[row_index]['is_repetitive'] = True
 
         table_result = list(filter(None, table_result))
 
@@ -378,6 +400,7 @@ class Scraper(Controller):
                 if 1 < len(table_result) == len(scraped_child):  # parent is repetitive, child not
                     for i in range(0, len(table_result)):
                         table_result[i].update(scraped_child[i])
+                        table_result[i]['is_repetitive'] = True # otherwise will be overwritten by update above
 
                 elif len(table_result) == 0:  # nothing from parent
                     table_result = scraped_child
@@ -388,8 +411,9 @@ class Scraper(Controller):
                 elif len(table_result) == 1 and len(scraped_child) > 1:  # parent is not repetitive, child is
                     for single_scraped_child in scraped_child:
                         single_scraped_child.update(table_result)
+                        single_scraped_child['is_repetitive'] = True # otherwise will be overwritten by update above
 
-                elif len(table_result) > 1 and len(scraped_child) > 1:
+                elif len(table_result) > 1 and len(scraped_child) > 1: # parent and child are repetitive
                     bigger_table = table_result if len(table_result) >= len(scraped_child) else scraped_child
                     smaller_table = table_result if len(table_result) < len(scraped_child) else scraped_child
                     for single_entry in bigger_table:

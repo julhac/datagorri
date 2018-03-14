@@ -39,11 +39,9 @@ class List(Component):
             if element.is_to_scrape():
                 scrape = {
                     'type': element.type,
+                    'elem_index': element.index,
                     'label': element.get_label()
                 }
-                
-                if not is_repetitive:
-                    scrape['elem_index'] = element.index
                 
                 if element.type == 'ImgAlt' or element.type == 'ImgSrc':
                     scrape['img_index'] = element.img_index
@@ -57,8 +55,7 @@ class List(Component):
         for nested_list in self.elements.nested_lists:
             nested_list_result = nested_list.get_page_model()
             if 'nestedLists' in nested_list_result or len(nested_list_result['toScrape']) > 0:
-                if not is_repetitive:
-                    nested_list_result['parentElementIndex'] = nested_list.get_parent_element_index()
+                nested_list_result['parentElementIndex'] = nested_list.get_parent_element_index()
                 nested_lists.append(nested_list_result)
                 
         result = {

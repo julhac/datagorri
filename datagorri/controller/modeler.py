@@ -81,6 +81,7 @@ class Modeler(Controller):
         if 'lists' in page_model: # to support models from old versions
             for list in page_model['lists']:
                 list_component = self.view.list_components[list['listIndex']]
+                list_component.header.select_repetitive(list['isRepetitive'])
                 for element in list['toScrape']:
                     content = list_component.elements.find_element(element['elem_index'], element['type'])
                     if not content:
@@ -126,6 +127,7 @@ class Modeler(Controller):
             if not nested_list_component:
                 print('skip nested list ' + str(list['listIndex']) + ' of parent element ' + str(list['parentElementIndex']))
                 continue
+            nested_list_component.header.select_repetitive(list['isRepetitive'])
             for element in list['toScrape']:
                 content = nested_list_component.elements.find_element(element['elem_index'], element['type'])
                 if not content:

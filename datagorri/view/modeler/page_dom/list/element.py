@@ -4,12 +4,15 @@ class Element:
     """
     This class represents a line of the elements (including, id, type, value, scrape checkbox and output label textfield)
     """
-    def __init__(self, master_frame, index, type, value, at_grid_row, img_index=None, link_index=None):
+    def __init__(self, master_frame, index, type, value, at_grid_row, img_index=None, link_index=None, is_repetitive=None, controller_list_id=None, parent_controller_list_id=None, parent_is_repetitive=None):
         self.index = index
         self.type = type
         self.value = value
         self.img_index = img_index
         self.link_index = link_index
+        self.controller_list_id = controller_list_id
+        self.parent_controller_list_id = parent_controller_list_id
+        self.parent_is_repetitive = parent_is_repetitive
         
         self.scrape = tkinter.BooleanVar()
         self.label = tkinter.StringVar()

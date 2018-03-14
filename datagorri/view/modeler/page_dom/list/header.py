@@ -5,7 +5,7 @@ class Header(Component):
     """
     This class represents the clickable header content for lists
     """
-    def __init__(self, master_frame, label, on_scrape_all=None):
+    def __init__(self, master_frame, label, repetitive=True, on_repetition_change=None, on_scrape_all=None):
         Component.__init__(self, master_frame)
         self.get_frame().configure(padx=16)
         
@@ -14,6 +14,12 @@ class Header(Component):
         self.do_on_scrape_all = []
         if on_scrape_all is not None:
             self.add_scrape_all_handler(on_scrape_all)
+            
+        self.repetitive = tkinter.BooleanVar()
+        self.set_repetitive(repetitive)
+        self.do_on_repetition_change = []
+        if on_repetition_change is not None:
+            self.add_repetition_change_handler(on_repetition_change)
             
         self.label = tkinter.Label(
             self.get_frame(),
@@ -36,9 +42,32 @@ class Header(Component):
         )
         self.scrape_all_checkbutton.grid(row=0, column=1, sticky=tkinter.W)
         
+        self.repetitive_checkbutton = tkinter.Checkbutton(
+            self.get_frame(),
+            text="Repetitive elements?",
+            variable=self.repetitive,
+            bg="#555555",
+            command=self._handle_repetition_change,
+            padx=5
+        )
+        self.repetitive_checkbutton.grid(row=0, column=2, sticky='w')
+        
         self.get_frame().columnconfigure(0, weight=1)
 
         self.change_bg('#222222')
+    
+    def is_repetitive(self):
+        return self.repetitive.get()
+        
+    def set_repetitive(self, repetitive=True):
+        self.repetitive.set(repetitive)
+    
+    def select_repetitive(self, repetitive):
+        if repetitive:
+            self.repetitive_checkbutton.select()
+        else:
+            self.repetitive_checkbutton.deselect()
+        self._handle_repetition_change()
     
     def _handle_scrape_all(self):
         self.scrape_all_checkbutton.update()
@@ -50,6 +79,18 @@ class Header(Component):
         self.do_on_scrape_all.append(function)
         return self
         
+    def _handle_repetition_change(self):
+        self.repetitive_checkbutton.update()
+        if self.add_repetition_change_handler is not None:
+            for function in self.do_on_repetition_change:
+                function(self.is_repetitive())
+                
+        return True
+        
+    def add_repetition_change_handler(self, function):
+        self.do_on_repetition_change.append(function)
+        return self
+    
     def on_click(self, func):
         Component.on_click(self, func)
         self.label.bind('<Button-1>', func)

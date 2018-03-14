@@ -11,6 +11,7 @@ class List:
         self.css_classes = ''
         self.type = ''
         self.bs4 = None
+        self._is_repetitive = True
         
     def get_index(self):
         return self._index
@@ -58,6 +59,13 @@ class List:
         
     def as_bs4(self):
         return self.bs4
+        
+    def is_repetitive(self):
+        return self._is_repetitive
+        
+    def set_repetitive(self, is_repetitive=True):
+        self._is_repetitive = is_repetitive
+        return self
         
     @staticmethod
     def create_from_html(html):

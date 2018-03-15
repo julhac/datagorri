@@ -105,7 +105,7 @@ class Modeler(Controller):
                 continue
             child_table_component.header.select_repetitive(table['isRepetitive'])
             for column in table['toScrape']:
-                row_index = column['row_index'] + 1 if 'row_index' in column else None
+                row_index = column['row_index'] if 'row_index' in column else None
                 content = child_table_component.content.find_content(column['type'], column['col_index'], row_index)
                 if not content:
                     print('skip ' + str(column['type']) + ' cell column ' + str(column['col_index']) + ' row ' + str(row_index) + ' in table ' + str(table['tableIndex']))

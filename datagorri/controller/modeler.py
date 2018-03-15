@@ -352,7 +352,7 @@ class Modeler(Controller):
         for elem_index, element in elements.items():
             if 'nested_lists' in element:
                 for index, nested_list in element['nested_lists'].items():
-                    nested_lists[len(nested_lists)] = nested_list
+                    nested_lists[index] = nested_list
         
             for content in element['elements']:
                 if not type_in_elements(elem_result, content):

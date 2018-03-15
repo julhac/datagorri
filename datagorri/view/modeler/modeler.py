@@ -109,6 +109,7 @@ class Modeler(View):
             for element in list['toScrape']:
                 if element['label'].strip() == '':
                     self.pm.view_error('Some list output label is empty!')
+                    return False
                 if element['label'] in labels['lists']:
                     self.pm.view_error('Output label "' + content['label'] + '" is used multiple times for lists!')
                     return False

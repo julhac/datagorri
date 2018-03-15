@@ -1,5 +1,5 @@
 import tkinter
-from datagorri.view.modeler.page_dom.content import Content
+from datagorri.view.modeler.page_dom.table.content import Content
 from datagorri.view.component import Component
 from datagorri.controller.modeler import Modeler as ModelerController
 
@@ -106,6 +106,33 @@ class Contents(Component):
     def get_child_tables(self):
         return self.child_tables
 
+    def find_child_table(self, table_index, parent_col_index, parent_row_index=None):
+        """
+        Finds a child table by index of the table, index of the column in parent as well as a optional index of the row in the parent
+        :param table_index: (Integer) index of the child table
+        :param parent_col_index: (Integer) index of the column in the parent table
+        :param parent_row_index: (Integer) optional index of the row in the parent table, used for non-repetitive tables
+        """
+        for table in self.child_tables:
+            if table.index == table_index and table.parent_col_index == parent_col_index:
+                if (parent_row_index is None) or (table.parent_row_index == parent_row_index):
+                    return table
+        return False
+    
+    def find_content(self, type, col_index, row_index=None):
+        """
+        Finds a cell within the list of cells by index and type of the cell
+        :param type: (string) type of the searched cell
+        :param col_index: (Integer) index of the column of the searched cell
+        :param row_index: (Integer) optional index of the row of the searched cell
+        :returns: the cell with type and indices or False
+        """
+        for content in self.contents:
+            if content.type == type and content.col_index == col_index:
+                if (row_index is None) or (content.row_index == row_index):
+                    return content
+        return False
+    
     @staticmethod
     def create_row_frame(master_frame, label):
         row_frame = tkinter.Frame(master_frame)

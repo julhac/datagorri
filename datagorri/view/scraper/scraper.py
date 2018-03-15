@@ -1,11 +1,11 @@
 import tkinter
-from datagorri.view import View
-from datagorri.view.scraper.scrapebar import Scrapebar
 from datagorri.controller.scraper import Scraper as ScraperController
+from datagorri.view import View
+from datagorri.view.page_model_dropdown import PageModelDropDown
+from datagorri.view.scraper.scrapebar import Scrapebar
 from datagorri.view.scraper.link_list import LinkList
 from datagorri.view.scraper.link_list_dropdown import LinkListDropDown
 from datagorri.view.scraper.log import Log
-from datagorri.view.scraper.page_model_dropdown import PageModelDropDown
 from datagorri.view.scraper.range_adder import RangeAdder
 from datagorri.view.scrollable_component import ScrollableComponent
 from datagorri.view.style.scraper import style

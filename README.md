@@ -45,7 +45,17 @@ For the versions available, see the [releases on this repository](https://github
 
 * **Julian Hackinger** Julian.Hackinger@tum.de
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+Further, the following persons (in alphabetical order) have contributed to the current or previous versions of this software and agreed to being named as contributors:
+
+* Ivaylo Dimitrov
+* Matthias Franze
+* Julian Hackinger
+* Stefan Hentschel
+* Florian Kreitmair
+* Daniel Krieger
+* Michael Legenc
+
+See also the list of [contributors](https://github.com/julhac/datagorri/graphs/contributors) who participated in this project.
 
 ## License
 

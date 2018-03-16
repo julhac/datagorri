@@ -26,7 +26,7 @@ class Urlbar(Component):
 
         # checkbox to in-/exclude lists
         self.lists_checkbox = tkinter.Checkbutton(self.frame, text="include lists", variable=self.include_lists)
-        self.lists_checkbox.grid(row=0, column=1)
+        self.lists_checkbox.grid(row=0, column=1, padx=10)
         
         # button to start load action
         self.button = Urlbar.create_button(self.frame, 'START')
@@ -36,7 +36,7 @@ class Urlbar(Component):
         
         # dropdown to choose existing page model
         self.pm_drop_down = PageModelDropDown(self.frame)
-        self.pm_drop_down.get_frame().grid(row=0, column=4, sticky="news")
+        self.pm_drop_down.get_frame().grid(row=0, column=4, sticky="news", padx=10)
         
         # button to load selected page model
         self.load_button = Urlbar.create_button(self.frame, 'LOAD')

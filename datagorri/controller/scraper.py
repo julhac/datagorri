@@ -198,7 +198,7 @@ class Scraper(Controller):
                 
                 table_results += table_result
             
-            result_tables += Scraper.merge_results(table_results) # Scraping results in a dict
+            result_tables += Scraper.merge_results(table_results, url) # Scraping results in a dict
 
             if 'lists' in page_model: # to support old versions of models not containing the lists element
                 list_page_result = []
@@ -214,7 +214,7 @@ class Scraper(Controller):
                                                       warnings, pm_nested_lists=pm_list['nestedLists'] if 'nestedLists' in pm_list else [])
                     list_page_result += list_result
                 
-                result_lists += Scraper.merge_results(list_page_result)  # Scraping results in a dict
+                result_lists += Scraper.merge_results(list_page_result, url)  # Scraping results in a dict
         
         if filename == "":
             timestamp = time.time()
@@ -279,15 +279,17 @@ class Scraper(Controller):
                     list_result[elem_index]['is_repetitive'] = True
         
         list_result = list(filter(None, list_result))
-        
+
         # scrape nested lists
         if len(pm_nested_lists) > 0:
             for pm_nested_list in pm_nested_lists:
-                scraped_nested = []
+                scraped_nested = {}
                 for elem_index, element in enumerate(list1.get_elements()):
                     single_scraped_nested = Scraper.scrape_nested_list(element, pm_nested_list, url, failures, warnings)
                     if single_scraped_nested is not False:
-                        scraped_nested += single_scraped_nested
+                        if elem_index not in scraped_nested:
+                            scraped_nested[elem_index] = []
+                        scraped_nested[elem_index] += single_scraped_nested
                             
                 if 1 < len(list_result) == len(scraped_nested): # parent is repetitive, child not
                     for i in range(0, len(list_result)):
@@ -302,20 +304,15 @@ class Scraper(Controller):
                     
                 elif len(list_result) == 1 and len(scraped_nested) > 1: # parent is not repetitive, child is
                     for single_scraped_nested in scraped_nested:
-                        single_scraped_nested.update(list_result)
-                        single_scraped_nested['is_repetitive'] = True # otherwise will be overwritten by update above
+                    #    single_scraped_nested.update(list_result)
+                        single_scraped_nested['is_repetitive'] = False
+                    list_result += scraped_nested
                         
                 elif len(list_result) > 1 and len(scraped_nested) > 1: # parent and child are repetitive
-                    list_result += scraped_nested
-                    #bigger_list = list_result if len(list_result) >= len(scraped_nested) else scraped_nested
-                    #smaller_list = list_result if len(list_result) < len(scraped_nested) else scraped_nested
-                    #for bigger_entry in bigger_list:
-                    #    bigger_entry.update(smaller_list[0])
-                    #list_result = bigger_list
+                    # add repetitive subelements directly after their parent
+                    for key in list(reversed(sorted(scraped_nested.keys()))):
+                        list_result = list_result[:key+1] + scraped_nested[key] + list_result[key+1:]
         
-        for single_result in list_result:
-            single_result['from_url'] = url
-
         return list_result
 
     @staticmethod
@@ -333,20 +330,26 @@ class Scraper(Controller):
         return Scraper.scrape_list(nested_list, pm_nested_list['isRepetitive'], pm_nested_list['toScrape'], url, pm_nested_list['listIndex'], failures, warnings, further_pm_nested_lists)
         
     @staticmethod
-    def merge_results(results):
+    def merge_results(results, url):
         """
-        Merges all scraped table rows from one page to a scraping result for this page
-        All repetitive rows are just put one after another. The non-repetitive rows are added to each repetitive row.
+        Merges all scraped table rows/list elements from one page to a scraping result for this page
+        All repetitive rows/elements are just put one after another. The non-repetitive rows/elements are added to each repetitive row/element.
         
         :param results: (list) list of dicts containing the scraped table rows/list elements (repetitive and non-repetitive)
+        :param url: (string) url the data came from
         :returns: (list) list of dicts containing the merged result
         """
         repetitives = []
+        repetitive_labels = []
         non_repetitives = []
         # sort table/list entries to repetitive and non-repetitive
         for result in results:
             if result['is_repetitive']:
                 repetitives.append(result)
+                # figure out all repetitive lables
+                for key in result.keys():
+                    if key not in repetitive_labels:
+                        repetitive_labels.append(key)
             else:
                 non_repetitives.append(result)
         
@@ -355,17 +358,18 @@ class Scraper(Controller):
         for non_repetitive_entry in non_repetitives:
             for key, val in non_repetitive_entry.items(): # there should be no duplicate keys because the model creation prohibits it
                 non_repetitive_result[key] = val
-                
-        # it is needed when no repetitive tables scraped
-        # if no non-repetitive table is scraped this dict is empty
-        if len(repetitives) > 0 and 'from_url' in non_repetitive_result: 
-            del non_repetitive_result['from_url'] # is added at the end by the repetitive rows
         
         # merge repetitive results with non-repetitive result
         result = []
         for repetitive_entry in repetitives:
             new_entry = non_repetitive_result.copy()
             new_entry.update(repetitive_entry)
+            # add missing labels (as empty) so from_url is always the last element
+            for label in repetitive_labels:
+                if label not in new_entry:
+                    new_entry[label] = ''
+            # set url data came from
+            new_entry['from_url'] = url
             # remove is_repetitive
             del new_entry['is_repetitive']
             result.append(new_entry)
@@ -466,9 +470,6 @@ class Scraper(Controller):
                         single_entry.update(smaller_table[0])
 
                     table_result = bigger_table
-
-        for single_result in table_result:
-            single_result['from_url'] = url
 
         return table_result
 

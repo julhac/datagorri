@@ -300,9 +300,6 @@ class Scraper(Controller):
                     if single_scraped_nested is not False:
                         scraped_nested[elem_index] = single_scraped_nested
                 
-                print("PARENT: " + str(list_result))
-                print("NESTED: " + str(scraped_nested))
-                
                 if repetitive:
                     if pm_nested_list['isRepetitive']: # parent and nested are repetitive
                         Scraper.update_log("INFO: parent and nested repetitive")
@@ -319,7 +316,6 @@ class Scraper(Controller):
                     if pm_nested_list['isRepetitive']: # parent is not repetitive, nested is
                         Scraper.update_log("INFO: parent not repetitive, nested is")
                         merged = Scraper.merge_non_repetitive_parent_with_repetitive_nested_list(list_result, scraped_nested[elem_index], parent_labels)
-                        print("MERGED: " + str(merged))
                         if merged is False:
                             continue
                         for elem in merged:
@@ -328,7 +324,7 @@ class Scraper(Controller):
                         list_result = merged
                     else: # parent and nested are not repetitive
                         Scraper.update_log("INFO: parent and nested not repetitive")
-                        list_result[0].update(scraped_nested[0])
+                        list_result[0].update(scraped_nested[elem_index][0])
                     
                 elif len(list_result) == 0: # nothing from parent
                     Scraper.update_log("INFO: nothing from parent")

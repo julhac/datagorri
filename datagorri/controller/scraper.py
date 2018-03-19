@@ -290,10 +290,13 @@ class Scraper(Controller):
                         if elem_index not in scraped_nested:
                             scraped_nested[elem_index] = []
                         scraped_nested[elem_index] += single_scraped_nested
-                            
+                
+                print("PARENT: " + str(list_result))
+                print("NESTED: " + str(scraped_nested))
+                
                 if 1 < len(list_result) == len(scraped_nested): # parent is repetitive, child not
                     for i in range(0, len(list_result)):
-                        list_result[i].update(scraped_nested[i])
+                        list_result[i].update(scraped_nested[i][0])
                         list_result[i]['is_repetitive'] = True # otherwise will be overwritten by update above
                         
                 elif len(list_result) == 0: # nothing from parent

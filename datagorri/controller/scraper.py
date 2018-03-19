@@ -294,7 +294,7 @@ class Scraper(Controller):
                 print("PARENT: " + str(list_result))
                 print("NESTED: " + str(scraped_nested))
                 
-                if 1 < len(list_result) == len(scraped_nested): # parent is repetitive, child not
+                if 1 < len(list_result) == len(scraped_nested): # parent is repetitive, nested not
                     for i in range(0, len(list_result)):
                         list_result[i].update(scraped_nested[i][0])
                         list_result[i]['is_repetitive'] = True # otherwise will be overwritten by update above
@@ -302,16 +302,16 @@ class Scraper(Controller):
                 elif len(list_result) == 0: # nothing from parent
                     list_result = scraped_nested
                     
-                elif len(list_result) == 1 and len(scraped_nested) == 1: # parent and child are not repetitive
+                elif len(list_result) == 1 and len(scraped_nested) == 1: # parent and nested are not repetitive
                     list_result[0].update(scraped_nested[0])
                     
-                elif len(list_result) == 1 and len(scraped_nested) > 1: # parent is not repetitive, child is
+                elif len(list_result) == 1 and len(scraped_nested) > 1: # parent is not repetitive, nested is
                     for single_scraped_nested in scraped_nested:
                     #    single_scraped_nested.update(list_result)
                         single_scraped_nested['is_repetitive'] = False
                     list_result += scraped_nested
                         
-                elif len(list_result) > 1 and len(scraped_nested) > 1: # parent and child are repetitive
+                elif len(list_result) > 1 and len(scraped_nested) > 1: # parent and nested are repetitive
                     # add repetitive subelements directly after their parent
                     for key in list(reversed(sorted(scraped_nested.keys()))):
                         list_result = list_result[:key+1] + scraped_nested[key] + list_result[key+1:]

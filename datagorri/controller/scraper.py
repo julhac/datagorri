@@ -255,9 +255,11 @@ class Scraper(Controller):
         :return: (list) list of dicts to print in the result file
         """
         list_result = []
+        parent_labels = []
         
         for pm_to_scrape in to_scrape:
             Scraper.update_log('Try: Scrape: ' + str(pm_to_scrape))
+            parent_labels.append(pm_to_scrape['label'])
             
             img_index = pm_to_scrape['img_index'] if 'img_index' in pm_to_scrape else None
             link_index = pm_to_scrape['link_index'] if 'link_index' in pm_to_scrape else None
@@ -284,39 +286,88 @@ class Scraper(Controller):
         if len(pm_nested_lists) > 0:
             for pm_nested_list in pm_nested_lists:
                 scraped_nested = {}
-                for elem_index, element in enumerate(list1.get_elements()):
+                if repetitive: # parent is repetitive
+                    for elem_index, element in enumerate(list1.get_elements()): # try for every element
+                        single_scraped_nested = Scraper.scrape_nested_list(element, pm_nested_list, url, failures, warnings)
+                        if single_scraped_nested is not False:
+                            if elem_index not in scraped_nested:
+                                scraped_nested[elem_index] = []
+                            scraped_nested[elem_index] += single_scraped_nested
+                else: # parent is not repetitive
+                    elem_index = pm_nested_list['parentElementIndex'] # search specific nested list
+                    element = list1.get_elements()[elem_index]
                     single_scraped_nested = Scraper.scrape_nested_list(element, pm_nested_list, url, failures, warnings)
                     if single_scraped_nested is not False:
-                        if elem_index not in scraped_nested:
-                            scraped_nested[elem_index] = []
-                        scraped_nested[elem_index] += single_scraped_nested
+                        scraped_nested[elem_index] = single_scraped_nested
                 
                 print("PARENT: " + str(list_result))
                 print("NESTED: " + str(scraped_nested))
                 
-                if 1 < len(list_result) == len(scraped_nested): # parent is repetitive, nested not
-                    for i in range(0, len(list_result)):
-                        list_result[i].update(scraped_nested[i][0])
-                        list_result[i]['is_repetitive'] = True # otherwise will be overwritten by update above
-                        
+                if repetitive:
+                    if pm_nested_list['isRepetitive']: # parent and nested are repetitive
+                        Scraper.update_log("INFO: parent and nested repetitive")
+                        # add repetitive subelements directly after their parent
+                        for key in list(reversed(sorted(scraped_nested.keys()))):
+                            list_result = list_result[:key+1] + scraped_nested[key] + list_result[key+1:]
+                    else: # parent is repetitive, nested not
+                        Scraper.update_log("INFO: parent repetitive, nested not")
+                        for i in range(0, len(list_result)):
+                            list_result[i].update(scraped_nested[i][0])
+                            list_result[i]['is_repetitive'] = True # otherwise will be overwritten by update above
+                
+                elif not repetitive:
+                    if pm_nested_list['isRepetitive']: # parent is not repetitive, nested is
+                        Scraper.update_log("INFO: parent not repetitive, nested is")
+                        merged = Scraper.merge_non_repetitive_parent_with_repetitive_nested_list(list_result, scraped_nested[elem_index], parent_labels)
+                        print("MERGED: " + str(merged))
+                        if merged is False:
+                            continue
+                        for elem in merged:
+                            #del elem['from_url']
+                            elem['is_repetitive'] = True
+                        list_result = merged
+                    else: # parent and nested are not repetitive
+                        Scraper.update_log("INFO: parent and nested not repetitive")
+                        list_result[0].update(scraped_nested[0])
+                    
                 elif len(list_result) == 0: # nothing from parent
+                    Scraper.update_log("INFO: nothing from parent")
                     list_result = scraped_nested
-                    
-                elif len(list_result) == 1 and len(scraped_nested) == 1: # parent and nested are not repetitive
-                    list_result[0].update(scraped_nested[0])
-                    
-                elif len(list_result) == 1 and len(scraped_nested) > 1: # parent is not repetitive, nested is
-                    for single_scraped_nested in scraped_nested:
-                    #    single_scraped_nested.update(list_result)
-                        single_scraped_nested['is_repetitive'] = False
-                    list_result += scraped_nested
-                        
-                elif len(list_result) > 1 and len(scraped_nested) > 1: # parent and nested are repetitive
-                    # add repetitive subelements directly after their parent
-                    for key in list(reversed(sorted(scraped_nested.keys()))):
-                        list_result = list_result[:key+1] + scraped_nested[key] + list_result[key+1:]
         
         return list_result
+        
+    @staticmethod
+    def merge_non_repetitive_parent_with_repetitive_nested_list(parent_result, scraped_result, parent_labels):
+        """
+        Merges the non repetitive parent with the repetitive nested list.
+        
+        :param parent_result: (list) list of scraped data from the parent list (might be combined with earlier nested lists)
+        :param scraped_result: (list) list of scraped data from the nested list
+        :param parent_labels: (list) list of labels which are from the parent list
+        
+        :return: (list) combination of parent_result and scraped_result
+        """
+        # lists need to have the same length
+        while len(parent_result) < len(scraped_result):
+            new_entry = dict()
+            for label in parent_labels:
+                new_entry[label] = parent_result[0][label]
+            parent_result.append(new_entry)
+        
+        # if the lists do not have te same length abort because something went wrong
+        if len(parent_result) != len(scraped_result):
+            return False
+
+        # add results of nested list to combined result
+        index = 0
+        for nested_elem in scraped_result:
+            for key, val in nested_elem.items():
+                if key == 'is_repetitive':
+                    continue
+                parent_result[index][key] = val
+            index += 1
+        
+        return parent_result
 
     @staticmethod
     def scrape_nested_list(element, pm_nested_list, url, failures, warnings):

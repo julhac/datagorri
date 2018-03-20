@@ -28,7 +28,7 @@ class Modeler(Controller):
 
     def on_route(self, view_class, master_frame):
         if self.view is None:
-            self.view = view_class(master_frame, config['default_url'], self.repetition_change,
+            self.view = view_class(master_frame, config['default_url'], self.table_repetition_change, self.list_repetition_change,
                                    self.scrape_links_for_linklist)
 
         self.view.on_load_page_dom(self.load_page_dom)
@@ -81,6 +81,7 @@ class Modeler(Controller):
         if 'lists' in page_model: # to support models from old versions
             for list in page_model['lists']:
                 list_component = self.view.list_components[list['listIndex']]
+                list_component.header.select_repetitive(list['isRepetitive'])
                 for element in list['toScrape']:
                     content = list_component.elements.find_element(element['elem_index'], element['type'])
                     if not content:
@@ -126,6 +127,7 @@ class Modeler(Controller):
             if not nested_list_component:
                 print('skip nested list ' + str(list['listIndex']) + ' of parent element ' + str(list['parentElementIndex']))
                 continue
+            nested_list_component.header.select_repetitive(list['isRepetitive'])
             for element in list['toScrape']:
                 content = nested_list_component.elements.find_element(element['elem_index'], element['type'])
                 if not content:
@@ -143,6 +145,7 @@ class Modeler(Controller):
         """
         self.url = self.view.get_url_to_load()
         self.page_dom_tables_unsummarized = []
+        self.page_dom_lists_unsummarized = []
 
         # load page
         page = Page.create_by_url(self.url)
@@ -180,7 +183,7 @@ class Modeler(Controller):
         self.view.on_page_model_create(self.create_model)
         return self
 
-    def repetition_change(self, controller_table_id, is_repetitive, change_table_rows_to):
+    def table_repetition_change(self, controller_table_id, is_repetitive, change_table_rows_to):
         tables = copy.deepcopy(self.page_dom_tables_unsummarized)
         for table in tables:
             if table['controller_id'] == controller_table_id:
@@ -192,38 +195,67 @@ class Modeler(Controller):
         change_table_rows_to(table['rows'])
 
         return True
+        
+    def list_repetition_change(self, controller_list_id, is_repetitive, change_list_elements_to):
+        lists = copy.deepcopy(self.page_dom_lists_unsummarized)
+        for list in lists:
+            if list['controller_id'] == controller_list_id:
+                break
+                
+        if is_repetitive:
+            list['elements'] = self.summarize_elements_for_page_dom(list['elements'])
+            
+        change_list_elements_to(list['elements'])
+        
+        return True
 
-    def _create_list_for_page_dom(self, list1):
+    def _create_list_for_page_dom(self, list1, parent_controller_id=None):
         result = dict()
         result['label'] = str(list1.get_type()) + ' #' + str(list1.get_type_index())
+        result['isRepetitive'] = list1.is_repetitive()
         result['elements'] = dict()
         
         for element in list1.get_elements():
-            elements = []
-            for type in Modeler.content_types:
-                if type.is_applicable_to(element):
-                    content = type.get_content(element)
-                    if isinstance(content, list):
-                        for single_type_return in content:
-                            elements.append(single_type_return)
-                    else:
-                        elements.append(content)
-                        
-            nested_lists = {}
-            for child_index, nested_list_html in enumerate(element.get_html_lists()):
-                nested_list = Nestedlist.create_from_html(nested_list_html, child_index, list1.get_index(), element.get_index())
-                nested_lists[child_index] = self._create_list_for_page_dom(nested_list)
-                       
-            result['elements'][element.get_index()] = {
-                'label': 'ListElement #' +  str(element.get_index()),
-                'elements': elements,
-            }
+            elem = self._create_elements_for_page_dom(element, list1, len(self.page_dom_lists_unsummarized))
             
-            if len(nested_lists) > 0:
-                result['elements'][element.get_index()]['nested_lists'] = nested_lists
-                                
-        return result
+            result['elements'][element.get_index()] = elem
+                    
+        result['controller_id'] = len(self.page_dom_lists_unsummarized) # do not set earlier, otherwise nested_lists controller_id would be wrong!
+        if parent_controller_id is not None and parent_controller_id > 0:
+            result['parent_controller_id'] = parent_controller_id
+        self.page_dom_lists_unsummarized.append(copy.deepcopy(result))
         
+        if list1.is_repetitive():
+            result['elements'] = Modeler.summarize_elements_for_page_dom(result['elements'])
+                    
+        return result
+    
+    def _create_elements_for_page_dom(self, element, list1, parent_controller_id):
+        elements = []
+        for type in Modeler.content_types:
+            if type.is_applicable_to(element):
+                content = type.get_content(element)
+                if isinstance(content, list):
+                    for single_type_return in content:
+                        elements.append(single_type_return)
+                else:
+                    elements.append(content)
+                    
+        nested_lists = {}
+        for child_index, nested_list_html in enumerate(element.get_html_lists()):
+            nested_list = Nestedlist.create_from_html(nested_list_html, child_index, list1.get_index(), element.get_index())
+            nested_lists[child_index] = self._create_list_for_page_dom(nested_list, parent_controller_id + len(element.get_html_lists()))
+                   
+        result = {
+            'label': 'ListElement #' +  str(element.get_index()),
+            'elements': elements,
+        }
+        
+        if len(nested_lists) > 0:
+            result['nested_lists'] = nested_lists
+            
+        return result
+    
     def _create_table_for_page_dom(self, table, parent_controller_id=None):
         result = dict()
         result['label'] = 'Table #' + str(table.get_index())
@@ -298,6 +330,47 @@ class Modeler(Controller):
 
         return result
 
+    @staticmethod
+    def summarize_elements_for_page_dom(elements):
+        if len(elements) < 2:
+            return elements
+        
+        def type_in_elements(elements, elem):
+            for element in elements:
+                if element['type'] == elem['type'] and (element['type'] != 'LinkText' or element['link_index'] == elem['link_index']):
+                    return True
+            return False
+            
+        def add_value_to_content_type(elements, to_type, value):
+            for element in elements:
+                if element['type'] == to_type:
+                    element['value'] += '  |    ' + value
+            return True
+        
+        elem_result = []
+        nested_lists = {}
+        for elem_index, element in elements.items():
+            if 'nested_lists' in element:
+                for index, nested_list in element['nested_lists'].items():
+                    nested_lists[index] = nested_list
+        
+            for content in element['elements']:
+                if not type_in_elements(elem_result, content):
+                    elem_result.append(content)
+                else:
+                    add_value_to_content_type(elem_result, content['type'], content['value'])
+        
+        # shorten summarized value examples
+        for content in elem_result:
+            values = content['value'].split('|')
+            content['value'] = '|'.join(values[:Modeler.amount_summarized_examples])
+            
+        result = {0: {'label': 'Summarized elements', 'elements': elem_result}}
+        if len(nested_lists) > 0:
+            result[0]['nested_lists'] = nested_lists
+        
+        return result
+        
     @staticmethod
     def summarize_rows_for_page_dom(rows):
         cols_result = {}
@@ -417,8 +490,11 @@ class Modeler(Controller):
         return True
 
     @staticmethod
-    def create_view_nested_list_from_html(master_frame, list, child_index, parent_element_index):
-        nested_list = NestedList(master_frame, list, child_index, parent_element_index)
+    def create_view_nested_list_from_html(master_frame, list, child_index, parent_element_index, is_repetitive,
+                                          on_repetition_change=None, parent_controller_list_id=None, 
+                                          parent_is_repetitive=None):
+        nested_list = NestedList(master_frame, list, child_index, parent_element_index, on_repetition_change, parent_is_repetitive)
+        nested_list.header.set_repetitive(is_repetitive)
         nested_list.change_header_text('Nested list #' + str(child_index) + ' of element ' + str(parent_element_index))
         return nested_list
         

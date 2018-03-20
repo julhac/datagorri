@@ -12,10 +12,11 @@ class Modeler(View):
     """
     This class represents the modeler view. It builds the URL bar and contains the page DOM and result bar after parsing the url.
     """
-    def __init__(self, master_frame, default_url='', on_repetition_change=None, on_link_adder_click=None):
+    def __init__(self, master_frame, default_url='', on_table_repetition_change=None, on_list_repetition_change=None, on_link_adder_click=None):
         View.__init__(self, master_frame)
 
-        self.on_repetition_change = on_repetition_change
+        self.on_table_repetition_change = on_table_repetition_change
+        self.on_list_repetition_change = on_list_repetition_change
         self.on_link_adder_click = on_link_adder_click
         self.url = Urlbar(self.get_frame(), default_url)
         self.url.get_frame().pack(side=tkinter.TOP, fill=tkinter.X)
@@ -48,12 +49,12 @@ class Modeler(View):
         self.page_dom_scrollable_container = ScrollableComponent(self.page_dom)
 
         for table_index, table in page_dom_tables.items():
-            table_view = Table(self.page_dom_scrollable_container.canvas_frame, table, table_index, self.on_repetition_change, on_link_adder_click=self.on_link_adder_click)
+            table_view = Table(self.page_dom_scrollable_container.canvas_frame, table, table_index, self.on_table_repetition_change, on_link_adder_click=self.on_link_adder_click)
             table_view.get_frame().pack(side=tkinter.TOP, fill=tkinter.X)
             self.table_components.append(table_view)
             
         for list_index, list in page_dom_lists.items():
-            list_view = List(self.page_dom_scrollable_container.canvas_frame, list, list_index)
+            list_view = List(self.page_dom_scrollable_container.canvas_frame, list, list_index, self.on_list_repetition_change)
             list_view.get_frame().pack(side=tkinter.TOP, fill=tkinter.X)
             self.list_components.append(list_view)
 
@@ -108,6 +109,7 @@ class Modeler(View):
             for element in list['toScrape']:
                 if element['label'].strip() == '':
                     self.pm.view_error('Some list output label is empty!')
+                    return False
                 if element['label'] in labels['lists']:
                     self.pm.view_error('Output label "' + content['label'] + '" is used multiple times for lists!')
                     return False

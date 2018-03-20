@@ -7,13 +7,27 @@ class Elements(Component):
     """
     This class builds all elements of the list as GUI objects
     """
-    def __init__(self, master_frame, elements):
+    def __init__(self, master_frame, elements, repetitive=True, on_repetition_change=None, controller_list_id=None, parent_controller_list_id=None, parent_is_repetitive=None):
         Component.__init__(self, master_frame)
         self.get_frame().configure(padx=20)
+        self.repetitive = repetitive
+        self.on_repetition_change = on_repetition_change
+        self.controller_list_id = controller_list_id
+        self.parent_controller_list_id = parent_controller_list_id
+        self.parent_is_repetitive = parent_is_repetitive
         
         self.elements = []
         self.nested_lists = []
         
+        self.show_content(elements, self.repetitive)
+        
+    def show_content(self, elements, repetitive):
+        """
+        Builds the components to show for the given list elements
+        
+        :params elements: (dict) containing elements in prepared way
+        :params repetitive: (boolean) is the list repetitive
+        """
         for elem_index, element in elements.items():
             elem_frame = Elements.create_elem_frame(self.get_frame(), element['label'])
             elem_frame.pack(side=tkinter.TOP, fill=tkinter.X)
@@ -34,6 +48,10 @@ class Elements(Component):
                     at_grid_row,
                     img_index=content['img_index'] if 'img_index' in content else None,
                     link_index=content['link_index'] if 'link_index' in content else None,
+                    is_repetitive=repetitive,
+                    controller_list_id=self.controller_list_id,
+                    parent_controller_list_id=self.parent_controller_list_id,
+                    parent_is_repetitive=self.parent_is_repetitive
                 )
                 self.elements.append(elem_view)
                 at_grid_row += 1
@@ -47,7 +65,7 @@ class Elements(Component):
                     empty_placeholder_left_frame = tkinter.Frame(nested_list_container, width=40)
                     empty_placeholder_left_frame.pack(side=tkinter.LEFT)
                     
-                    nested_list = ModelerController.create_view_nested_list_from_html(nested_list_container, nested_list_content, child_index, elem_index)
+                    nested_list = ModelerController.create_view_nested_list_from_html(nested_list_container, nested_list_content, child_index, elem_index, nested_list_content['isRepetitive'], on_repetition_change=self.on_repetition_change, parent_is_repetitive=repetitive)
                     nested_list.get_frame().pack(side=tkinter.TOP, fill=tkinter.X)
                     self.nested_lists.append(nested_list)
                     
@@ -55,6 +73,15 @@ class Elements(Component):
                     empty_placeholder_bottom_frame.pack(side=tkinter.TOP)
                     
                     at_grid_row += 1
+    
+    def change_repetition_style(self, repetitive):
+        if self.repetitive == repetitive: # style already in use?
+            return True
+            
+        self.renew_frame()
+        self.get_frame().configure(padx=20)
+        self.show_content(repetitive)
+        self.repetitive = repetitive
     
     def handle_scrape_all(self, select):
         """

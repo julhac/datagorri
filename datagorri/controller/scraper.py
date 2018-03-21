@@ -156,10 +156,10 @@ class Scraper(Controller):
         #    Scraper.update_log("Warning: Choose file extension!")
         #    return
 
-        # Force the delimiter to be 1 char long
-        if len(delimiter) != 1:
-            Scraper.update_log('Failure: The delimiter must be 1 character long!')
-            return
+        # Force the delimiter to be 1 char long. Uncomment to enable delimiter checking
+        # if len(delimiter) != 1:
+        #     Scraper.update_log('Failure: The delimiter must be 1 character long!')
+        #     return
 
         page_model = Scraper.load_page_model(page_model_file + '.json')
         if not page_model:

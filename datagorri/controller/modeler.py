@@ -54,8 +54,7 @@ class Modeler(Controller):
         
         # set URL from model and list checkbox
         self.view.set_url_to_load(page_model['url'])
-        if 'lists' in page_model and len(page_model['lists']) > 0:
-            self.view.select_include_lists()
+        self.view.select_include_lists()
         
         # load page dom
         self.load_page_dom()

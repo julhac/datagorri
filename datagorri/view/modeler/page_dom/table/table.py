@@ -91,8 +91,6 @@ class Table(Component):
         # update counter
         if select:
             Table.handled_tables += 1
-        else:
-            Table.handled_tables -= 1
         
     def handle_repetition_change(self, new_rows):
         """

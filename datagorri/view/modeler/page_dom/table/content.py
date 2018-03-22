@@ -49,11 +49,11 @@ class Content:
         """
         if select:
             self.scrape_checkbutton.select()
-            level_str = str(level) + "." if level != 0 else ""
-            self.label.set(level_str + str(number))
+            if self.get_label() == "":
+                level_str = str(level) + "." if level != 0 else ""
+                self.set_label(level_str + str(number))
         else:
             self.scrape_checkbutton.deselect()
-            self.label.set("")
     
     def _auto_select_scrape_checkbox(self, event):
         """

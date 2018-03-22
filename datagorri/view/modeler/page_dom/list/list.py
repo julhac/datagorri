@@ -79,8 +79,6 @@ class List(Component):
         # update counter
         if select:
             List.handled_lists += 1
-        else:
-            List.handled_lists -= 1
         
     def handle_repetition_change(self, new_elems):
         """

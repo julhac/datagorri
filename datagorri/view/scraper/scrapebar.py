@@ -1,5 +1,6 @@
 import tkinter
 from datagorri.view.component import Component
+from datagorri.view.tooltip import Tooltip
 from datagorri.view.style.scraper import style
 style = style['scraper']
 
@@ -49,6 +50,8 @@ class Scrapebar(Component):
         self._encoding_dropdown.config(width=10)
         self._encoding_dropdown.grid(row=0, column=4, sticky="NEWS")
         self._encoding.set("UTF-8")
+        # Tooltip
+        self._encoding_tooltip = Tooltip(self._encoding_dropdown, "Most websites are encoded in UTF-8. So using Latin-1 here might cause problems!")
         
         self._scrape_btn = tkinter.Label(
             self.get_frame(),

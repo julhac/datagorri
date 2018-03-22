@@ -135,7 +135,7 @@ class Scraper(Controller):
         return page
 
     @staticmethod
-    def scrape(page_model_file, urls, filename, extension, delimiter):
+    def scrape(page_model_file, urls, filename, extension, delimiter, encoding):
         """
         This method takes a page_model a list of urls and scrapes the content of the specified websites according
         to the model. The content is then saved in a .csv file.
@@ -225,7 +225,7 @@ class Scraper(Controller):
             date = date.replace(' ', '_')
             filename = "result_" + str(date)
 
-        Csv.create_file(config['results_dir'] + filename + ".csv", result_tables, result_lists, delimiter)
+        Csv.create_file(config['results_dir'] + filename + ".csv", result_tables, result_lists, delimiter, encoding)
         # if extension == ".json":
         #    Json.create_file(config['results_dir'] + filename + ".json", result)
         # else:

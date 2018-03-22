@@ -1,5 +1,4 @@
 import csv
-from unidecode import unidecode
 #from datagorri.controller.scraper import Scraper as Log
 
 class Csv:
@@ -8,7 +7,7 @@ class Csv:
 
     """
     @staticmethod
-    def create_file(path, list_of_tables, list_of_lists, delimiter):
+    def create_file(path, list_of_tables, list_of_lists, delimiter, encoding="UTF-8"):
         """
         This method takes a dictionary of data and saves it at a given path as csv file.
 
@@ -21,7 +20,7 @@ class Csv:
         """
         # With Latin-1 encoding Excel displays the umlauts correct
         #with open(path, 'w', encoding='Latin-1') as f: # writing to file might crash due to unicode characters
-        with open(path, 'w', encoding='UTF-8') as f: # Excel has to import file in order to show umlauts correctly
+        with open(path, 'w', encoding=encoding) as f: # Excel has to import file in order to show umlauts correctly
 
             table_headers = []
 
@@ -58,18 +57,4 @@ class Csv:
             except Exception as e:
                 print('file {}, {}'.format(path, e))
                 #Log.update_log('Error writing file {}, {}'.format(path, e))
-        
-        #Csv._to_latin1(path) # Umlaute ohne Punkte (ä -> a, ...)
-
-    @staticmethod
-    def _to_latin1(path):
-        lines = []
-        with open(path, 'r', encoding='utf8') as origfile:
-            for line in origfile:
-                if line != '':
-                    lines.append(unidecode(line))
-            
-        with open(path, 'w', encoding='Latin-1') as convertfile:
-            for line in lines:
-                convertfile.write(line)
     

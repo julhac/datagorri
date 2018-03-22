@@ -303,9 +303,17 @@ class Scraper(Controller):
                 if repetitive:
                     if pm_nested_list['isRepetitive']: # parent and nested are repetitive
                         Scraper.update_log("INFO: parent and nested repetitive")
-                        # add repetitive subelements directly after their parent
+                        # merge parent with nested
+                        for key, val in scraped_nested.items():
+                            new_list = []
+                            for elem in val:
+                                new_elem = list_result[key].copy()
+                                new_elem.update(elem)
+                                new_list.append(new_elem)
+                            scraped_nested[key] = new_list
+                        # replace parent with merged repetitive subelements
                         for key in list(reversed(sorted(scraped_nested.keys()))):
-                            list_result = list_result[:key+1] + scraped_nested[key] + list_result[key+1:]
+                            list_result = list_result[:key] + scraped_nested[key] + list_result[key+1:]
                     else: # parent is repetitive, nested not
                         Scraper.update_log("INFO: parent repetitive, nested not")
                         for i in range(0, len(list_result)):

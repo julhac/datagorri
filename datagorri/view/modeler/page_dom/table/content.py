@@ -40,11 +40,20 @@ class Content:
         self.label_entry.grid(row=at_grid_row, column=3, sticky=tkinter.E)
         self.label_entry.bind("<Key>", lambda event: self._auto_select_scrape_checkbox(event)) #5 bind typing to select scrape checkbox
 
-    def handle_scrape_all(self, select):
+    def handle_scrape_all(self, select, level, number):
+        """
+        selects the scrape checkbutton and sets the output label
+        :param select: (boolean) True if the checkbutton was selected, False otherwise
+        :param level: (integer) number of previously select tables
+        :param number: (integer) the number the output label should show
+        """
         if select:
             self.scrape_checkbutton.select()
+            level_str = str(level) + "." if level != 0 else ""
+            self.label.set(level_str + str(number))
         else:
             self.scrape_checkbutton.deselect()
+            self.label.set("")
     
     def _auto_select_scrape_checkbox(self, event):
         """

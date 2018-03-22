@@ -1,5 +1,6 @@
 import tkinter
 from datagorri.view.component import Component
+from datagorri.view.tooltip import Tooltip
 from datagorri.view.style.scraper import style
 style = style['scraper']
 
@@ -42,7 +43,16 @@ class Scrapebar(Component):
         )
         self._delimiter.grid(row=0, column=2, sticky="NEWS")
         self._delimiter.insert(0, ';')
-
+        
+        tkinter.Label(self.get_frame(), text='Encoding:', bg='#cccccc').grid(row=0, column=3, sticky="NEWS", padx=10)
+        self._encoding = tkinter.StringVar(self.get_frame())
+        self._encoding_dropdown = tkinter.OptionMenu(self.get_frame(), self._encoding, "UTF-8", "Latin-1")
+        self._encoding_dropdown.config(width=10)
+        self._encoding_dropdown.grid(row=0, column=4, sticky="NEWS")
+        self._encoding.set("UTF-8")
+        # Tooltip
+        self._encoding_tooltip = Tooltip(self._encoding_dropdown, "Most websites are encoded in UTF-8. So using Latin-1 here might cause problems!")
+        
         self._scrape_btn = tkinter.Label(
             self.get_frame(),
             text='SCRAPE',
@@ -53,7 +63,7 @@ class Scrapebar(Component):
             padx=style['button']['padx'],
             pady=style['button']['pady']
         )
-        self._scrape_btn.grid(row=0, column=3, sticky="NEWS", padx=(10, 0))
+        self._scrape_btn.grid(row=0, column=5, sticky="NEWS", padx=(10, 0))
 
     def on_scrape(self, func):
         """
@@ -97,3 +107,10 @@ class Scrapebar(Component):
         :return: (string) the delimiter
         """
         return self._delimiter.get()
+        
+    def get_encoding(self):
+        """
+        Returns the encoding value
+        :return: (string) the encoding
+        """
+        return self._encoding.get()

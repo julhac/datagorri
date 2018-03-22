@@ -68,12 +68,17 @@ class List(Component):
             result['nestedLists'] = nested_lists
         
         return result
-                
+    
+    handled_lists = 0 # static variable to count select all clicks of lists
     def handle_scrape_all(self, select):
         """
-        Selects/Deselects all scrape checkboxes
+        Selects/Deselects all scrape checkboxes and enumerates the output labels
+        :param select: (boolean) True if the seclect checkboxes should be selected, False otherwise
         """
-        self.elements.handle_scrape_all(select)
+        self.elements.handle_scrape_all(select, List.handled_lists)
+        # update counter
+        if select:
+            List.handled_lists += 1
         
     def handle_repetition_change(self, new_elems):
         """

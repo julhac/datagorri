@@ -90,9 +90,16 @@ class Contents(Component):
                     empty_placeholder_frame = tkinter.Frame(col_frame, height=10)
                     empty_placeholder_frame.grid(row=at_grid_row, column=0)
 
-    def handle_scrape_all(self, select):
+    def handle_scrape_all(self, select, level):
+        """
+        selects/deselects all scrape checkbuttons and enumerates the output labels
+        :param select: (boolean) True if the checkbutton was selected, False otherwise
+        :param level: (number) number of previously selected tables
+        """
+        number = 0
         for content in self.contents:
-            content.handle_scrape_all(select)
+            content.handle_scrape_all(select, level, number)
+            number += 1
                     
     def change_repetition_style(self, repetitive):
         if self.repetitive == repetitive:  # style already in use?

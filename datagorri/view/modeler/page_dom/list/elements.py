@@ -83,12 +83,16 @@ class Elements(Component):
         self.show_content(repetitive)
         self.repetitive = repetitive
     
-    def handle_scrape_all(self, select):
+    def handle_scrape_all(self, select, level):
         """
-        Selects/Deselects all scrape checkboxes
+        Selects/Deselects all scrape checkboxes and enumerates the output labels
+        :param select: (boolean) True if the checkbutton was selected, False otherwise
+        :param level: (integer) number showing the level (count of nested lists) 
         """
+        number = 0
         for element in self.elements:
-            element.handle_scrape_all(select)
+            element.handle_scrape_all(select, level, number)
+            number += 1
             
     def find_nested_list(self, list_index, parent_element_index):
         """

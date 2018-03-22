@@ -81,11 +81,16 @@ class Table(Component):
 
         return result
 
+    handled_tables = 0 # static variable to count select all clicks of tables
     def handle_scrape_all(self, select):
         """
-        selects/deselects all scrape checkboxes
+        selects/deselects all scrape checkboxes and enumerates the output labels
+        :param select: (boolean) True if the scrape checkboxes should be selected, False otherwise
         """
-        self.content.handle_scrape_all(select)
+        self.content.handle_scrape_all(select, Table.handled_tables)
+        # update counter
+        if select:
+            Table.handled_tables += 1
         
     def handle_repetition_change(self, new_rows):
         """

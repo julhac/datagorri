@@ -40,30 +40,31 @@ class App:
         This functions therefore creates a folder on the desktop, if it is not already there.
 
         """
-        if platform == "win32" or platform == "darwin":
-            homepath = os.path.expanduser("~")
-            os.chdir(homepath)
+        homepath = os.path.expanduser("~")
+        os.chdir(homepath)
 
+        desktop = ""
+        if platform == "win32" or platform == "darwin":
             if not os.path.exists("Desktop"):
                 os.makedirs("Desktop")
-
+            desktop = "/Desktop"
             os.chdir(homepath + "/Desktop")
 
-            if not os.path.exists("DataGorri_Output"):
-                os.makedirs("DataGorri_Output")
+        if not os.path.exists("DataGorri_Output"):
+            os.makedirs("DataGorri_Output")
 
-            working_dir = homepath + "/Desktop/DataGorri_Output/"
-            os.chdir(working_dir)
+        working_dir = homepath + desktop + "/DataGorri_Output/"
+        os.chdir(working_dir)
 
-            if not os.path.exists("models"):
-                os.makedirs("models")
+        if not os.path.exists("models"):
+            os.makedirs("models")
 
-            if not os.path.exists("results"):
-                os.makedirs("results")
+        if not os.path.exists("results"):
+            os.makedirs("results")
 
-            if not os.path.exists("link_lists"):
-                os.makedirs("link_lists")
+        if not os.path.exists("link_lists"):
+            os.makedirs("link_lists")
 
-            os.chdir(working_dir)
+        os.chdir(working_dir)
 
         return True

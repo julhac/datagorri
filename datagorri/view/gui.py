@@ -3,10 +3,16 @@ import tkinter
 from tkinter import *
 from datagorri.view.navigation import Navigation
 from datagorri.view.style import common_style as style
+from sys import platform
 
 path = os.path.dirname(os.path.abspath(__file__))
-pathicon = path+"\\favicon.ico"
-
+pathicon = os.path.join(path, "favicon.")
+if platform == "win32": # Windows (used most often)
+    pathicon = pathicon + 'ico'
+elif platform == "darwin": # OS X (Apple)
+    pathicon = pathicon + 'icns'
+elif platform == "linux" or platform == "linux2": # any linux distribution
+    pathicon = '@' + pathicon + 'xbm'
 
 class Gui:
 
@@ -16,7 +22,7 @@ class Gui:
         self.frame.wm_iconbitmap(bitmap=pathicon) # include icon
         self.frame.configure(background=style['bg'])
 
-        self.frame.wm_state('zoomed') # start as maximized window
+        self.frame.wm_state('normal') # start as maximized window
 
         if full_screen:
             self.do_full_screen()
@@ -55,3 +61,4 @@ class Gui:
             self.frame.winfo_screenwidth(),
             self.frame.winfo_screenheight())
         )
+

@@ -225,18 +225,22 @@ class Scraper(Controller):
             date = date.replace(' ', '_')
             filename = "result_" + str(date)
 
-        Csv.create_file(config['results_dir'] + filename + ".csv", result_tables, result_lists, delimiter, encoding)
+        if Csv.create_file(config['results_dir'] + filename + ".csv", result_tables, result_lists, delimiter, encoding):
         # if extension == ".json":
         #    Json.create_file(config['results_dir'] + filename + ".json", result)
         # else:
         #    Csv.create_file(config['results_dir'] + filename + ".csv", result)
 
-        Scraper.update_log(' ')
-        Scraper.update_log('#############################')
-        Scraper.update_log('Done!')
-        Scraper.update_log(' ')
-        Scraper.log_report(failures, warnings)
-
+            Scraper.update_log(' ')
+            Scraper.update_log('#############################')
+            Scraper.update_log('Done!')
+            Scraper.update_log(' ')
+            Scraper.log_report(failures, warnings)
+        else:
+            Scraper.update_log(' ')
+            Scraper.update_log('#############################')
+            Scraper.update_log('Failure writing file!')
+            Scraper.update_log('Select a different encoding!')
         return True
     
     @staticmethod

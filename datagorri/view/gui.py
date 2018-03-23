@@ -20,7 +20,10 @@ class Gui:
         self.frame.wm_iconbitmap(bitmap=pathicon) # include icon
         self.frame.configure(background=style['bg'])
 
-        self.frame.wm_state('normal') # start as maximized window
+        if platform == "win32" or platform == "darwin":
+            self.frame.wm_state('zoomed') # start as maximized window
+        elif platform == "linux" or platform == "linux2":
+            self.frame.wm_state('normal')
 
         if full_screen:
             self.do_full_screen()

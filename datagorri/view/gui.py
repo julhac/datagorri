@@ -7,10 +7,8 @@ from sys import platform
 
 path = os.path.dirname(os.path.abspath(__file__))
 pathicon = os.path.join(path, "favicon.")
-if platform == "win32": # Windows (used most often)
+if platform == "win32" or platform == "darwin": # Windows (used most often) or OS X (Apple)
     pathicon = pathicon + 'ico'
-elif platform == "darwin": # OS X (Apple)
-    pathicon = pathicon + 'icns'
 elif platform == "linux" or platform == "linux2": # any linux distribution
     pathicon = '@' + pathicon + 'xbm'
 

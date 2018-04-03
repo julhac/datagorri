@@ -1,5 +1,6 @@
 import time
 import datetime
+import traceback
 from config.app import config
 from datagorri.controller import Controller
 from datagorri.model.page import Page
@@ -193,10 +194,14 @@ class Scraper(Controller):
                     failures.append('Page with url ' + url + ' has no table with index: ' + str(pm_table['tableIndex']))
                     continue
 
-                table_result = Scraper.scrape_table(tables[pm_table['tableIndex']], pm_table['isRepetitive'], pm_table['toScrape'], url, pm_table['tableIndex'], failures,
+                try:
+                    table_result = Scraper.scrape_table(tables[pm_table['tableIndex']], pm_table['isRepetitive'], pm_table['toScrape'], url, pm_table['tableIndex'], failures,
                                                     warnings, pm_child_tables=pm_table['childTables'] if 'childTables' in pm_table else [])
                 
-                table_results += table_result
+                    table_results += table_result
+                except:
+                    Scraper.update_log(traceback.format_exc())
+                    failures.append("ERROR: " + traceback.format_exc())
             
             result_tables += Scraper.merge_results(table_results, url) # Scraping results in a dict
 
@@ -210,9 +215,15 @@ class Scraper(Controller):
                         Scraper.update_log('Fail: Page has no list with index: ' + str(pm_list['listIndex']))
                         failures.append('Page with URL ' + url + ' has no table with index: ' + str(pm_list['listIndex']))
                         continue
-                    list_result = Scraper.scrape_list(lists[pm_list['listIndex']], pm_list['isRepetitive'], pm_list['toScrape'], url, pm_list['listIndex'], failures, 
+                        
+                    try:
+                        list_result = Scraper.scrape_list(lists[pm_list['listIndex']], pm_list['isRepetitive'], pm_list['toScrape'], url, pm_list['listIndex'], failures, 
                                                       warnings, pm_nested_lists=pm_list['nestedLists'] if 'nestedLists' in pm_list else [])
-                    list_page_result += list_result
+                                                      
+                        list_page_result += list_result
+                    except:
+                        Scraper.update_log(traceback.format_exc())
+                        failures.append("ERROR: " + traceback.format_exc())
                 
                 result_lists += Scraper.merge_results(list_page_result, url)  # Scraping results in a dict
         
@@ -285,7 +296,7 @@ class Scraper(Controller):
                     list_result[elem_index]['is_repetitive'] = True
         
         list_result = list(filter(None, list_result))
-
+        
         # scrape nested lists
         if len(pm_nested_lists) > 0:
             for pm_nested_list in pm_nested_lists:
@@ -592,7 +603,7 @@ class Scraper(Controller):
                 table_index) + ' and url ' + url + '. Table has not enough rows: ' + str(
                 len(rows)) + 'actually, but model requires ' + str(row_index + 1))
             return False
-
+        
         row = rows[row_index]
         cols = row.get_columns()
 

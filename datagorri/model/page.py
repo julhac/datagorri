@@ -18,6 +18,7 @@ class Page:
     def get_html(self):
         """
         Returns the html
+
         :return: (string)
         """
         return self.html
@@ -25,6 +26,7 @@ class Page:
     def get_title(self):
         """
         Returns the title
+
         :return: (string)
 
         """
@@ -33,6 +35,7 @@ class Page:
     def get_tables(self):
         """
         Finds all parent tables located on in html of a website and returns them
+
         :return: (list) list of found tables
         
         """
@@ -101,6 +104,7 @@ class Page:
     def create_by_url(url, headers=config['request_headers']):
         """
         Returns the received html data from a given url
+
         :param url: (string) the url
         :param headers: the headers for the content request
         :return: (Page) the html content of the website
@@ -128,6 +132,7 @@ class Page:
     def create_cache_file(page, cache_file, url):
         """
         This method generates a cache file containing a dictionary with the content in json format
+
         :param page: (Page) the page
         :param cache_file: (string) the name of the cache file
         :param url: (string) the name of the corresponding url

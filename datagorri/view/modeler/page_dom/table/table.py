@@ -1,7 +1,7 @@
 import tkinter
 from datagorri.view.modeler.page_dom.table.header import Header
 from datagorri.view.modeler.page_dom.table.contents import Contents
-from datagorri.view.component                 import Component
+from datagorri.view.component import Component
 
 
 class Table(Component):
@@ -36,7 +36,8 @@ class Table(Component):
     def get_page_model(self):
         """
         Gathers all information selected to create the page model
-        returns (Hash): all selected information
+
+        :returns (Hash): all selected information
         """
         to_scrape = []
         is_repetitive = self.header.is_repetitive()
@@ -85,6 +86,7 @@ class Table(Component):
     def handle_scrape_all(self, select):
         """
         selects/deselects all scrape checkboxes and enumerates the output labels
+
         :param select: (boolean) True if the scrape checkboxes should be selected, False otherwise
         """
         self.content.handle_scrape_all(select, Table.handled_tables)

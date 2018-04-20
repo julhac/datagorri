@@ -12,6 +12,7 @@ class Link(ContentType):
     def is_applicable_to(tag):
         """
         Returns True if the column contains a link otherwise False
+
         :param tag: (Column or ListElement) the column or list element
         :return: (boolean)
 
@@ -22,6 +23,7 @@ class Link(ContentType):
     def get_content(tag):
         """
         Returns the content of a column in a list links
+
         :param tag: (Column or ListElement) the column or list element
         :return: (list)
 
@@ -50,6 +52,7 @@ class Link(ContentType):
     def get_text_val(tag, link_index):
         """
         Returns the to a link corresponding text value or False if the value is not available
+
         :param tag: (Column or ListElement) the column or list element
         :param link_index: (int) position of the link
         :return: (string or False)
@@ -66,6 +69,7 @@ class Link(ContentType):
     def get_href_val(tag, link_index):
         """
         Returns the to a link corresponding href value or False if the value is not available
+
         :param tag: (Column or ListElement) the column or list element
         :param link_index: (int) position of the link
         :return: (string or False)

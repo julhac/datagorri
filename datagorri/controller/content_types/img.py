@@ -22,6 +22,7 @@ class Img(ContentType):
     def get_content(tag):
         """
         Returns the content of Images of a column in a list
+
         :param tag: (Column or ListElement) the column or list element
         :return: (list)
         """
@@ -47,6 +48,7 @@ class Img(ContentType):
     def get_alt_val(tag, img_index):
         """
         Returns the alternative string of an image or False
+
         :param tag: (Column or ListElement) the column or list element
         :param img_index: (int) the number index in the column
         :return: (string or False)
@@ -62,6 +64,7 @@ class Img(ContentType):
     def get_src_val(tag, img_index):
         """
         Returns the source url of an image or False
+
         :param tag: (Column or ListElement) the column or list element
         :param img_index: (int) the number index in the column
         :return: (string or False)

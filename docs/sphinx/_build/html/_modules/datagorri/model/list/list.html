@@ -1,0 +1,197 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>datagorri.model.list.list &#8212; Datagorri 1.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for datagorri.model.list.list</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="k">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span> <span class="nn">datagorri.model.list.listelement</span> <span class="k">import</span> <span class="n">ListElement</span>
+
+
+<div class="viewcode-block" id="List"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List">[docs]</a><span class="k">class</span> <span class="nc">List</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_index</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">html</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">child_lists</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">css_classes</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bs4</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_repetitive</span> <span class="o">=</span> <span class="kc">True</span>
+        
+<div class="viewcode-block" id="List.get_index"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.get_index">[docs]</a>    <span class="k">def</span> <span class="nf">get_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span></div>
+        
+<div class="viewcode-block" id="List.set_index"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.set_index">[docs]</a>    <span class="k">def</span> <span class="nf">set_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="n">index</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+        
+<div class="viewcode-block" id="List.get_type_index"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.get_type_index">[docs]</a>    <span class="k">def</span> <span class="nf">get_type_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_index</span></div>
+        
+<div class="viewcode-block" id="List.set_type_index"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.set_type_index">[docs]</a>    <span class="k">def</span> <span class="nf">set_type_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_index</span> <span class="o">=</span> <span class="n">index</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+        
+<div class="viewcode-block" id="List.get_html"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.get_html">[docs]</a>    <span class="k">def</span> <span class="nf">get_html</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">html</span></div>
+        
+<div class="viewcode-block" id="List.set_html"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.set_html">[docs]</a>    <span class="k">def</span> <span class="nf">set_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">html</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">html</span> <span class="o">=</span> <span class="n">html</span></div>
+        
+<div class="viewcode-block" id="List.get_elements"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.get_elements">[docs]</a>    <span class="k">def</span> <span class="nf">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span></div>
+        
+<div class="viewcode-block" id="List.set_elements"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.set_elements">[docs]</a>    <span class="k">def</span> <span class="nf">set_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elems</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">elems</span></div>
+        
+<div class="viewcode-block" id="List.get_child_lists"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.get_child_lists">[docs]</a>    <span class="k">def</span> <span class="nf">get_child_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">child_lists</span></div>
+        
+<div class="viewcode-block" id="List.set_child_list"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.set_child_list">[docs]</a>    <span class="k">def</span> <span class="nf">set_child_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lists</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">child_lists</span> <span class="o">=</span> <span class="n">lists</span></div>
+        
+<div class="viewcode-block" id="List.get_css_classes"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.get_css_classes">[docs]</a>    <span class="k">def</span> <span class="nf">get_css_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">css_classes</span></div>
+        
+<div class="viewcode-block" id="List.set_css_classes"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.set_css_classes">[docs]</a>    <span class="k">def</span> <span class="nf">set_css_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">css</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">css_classes</span> <span class="o">=</span> <span class="n">css</span></div>
+        
+<div class="viewcode-block" id="List.get_type"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.get_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span></div>
+        
+<div class="viewcode-block" id="List.set_type"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.set_type">[docs]</a>    <span class="k">def</span> <span class="nf">set_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span></div>
+        
+<div class="viewcode-block" id="List.as_bs4"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.as_bs4">[docs]</a>    <span class="k">def</span> <span class="nf">as_bs4</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bs4</span></div>
+        
+<div class="viewcode-block" id="List.is_repetitive"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.is_repetitive">[docs]</a>    <span class="k">def</span> <span class="nf">is_repetitive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_repetitive</span></div>
+        
+<div class="viewcode-block" id="List.set_repetitive"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.set_repetitive">[docs]</a>    <span class="k">def</span> <span class="nf">set_repetitive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_repetitive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_repetitive</span> <span class="o">=</span> <span class="n">is_repetitive</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+        
+<div class="viewcode-block" id="List.create_from_html"><a class="viewcode-back" href="../../../../datagorri.model.list.html#datagorri.model.list.list.List.create_from_html">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_from_html</span><span class="p">(</span><span class="n">html</span><span class="p">):</span>
+        <span class="nb">list</span> <span class="o">=</span> <span class="n">List</span><span class="p">()</span>
+        <span class="nb">list</span><span class="o">.</span><span class="n">set_html</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+        
+        <span class="nb">list</span><span class="o">.</span><span class="n">bs4</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">list</span><span class="o">.</span><span class="n">bs4</span><span class="o">.</span><span class="n">has_attr</span><span class="p">(</span><span class="s1">&#39;class&#39;</span><span class="p">):</span>
+            <span class="nb">list</span><span class="o">.</span><span class="n">set_css_classes</span><span class="p">(</span><span class="nb">list</span><span class="o">.</span><span class="n">bs4</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">])</span>
+        
+        <span class="c1"># look for nested lists</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">xl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">list</span><span class="o">.</span><span class="n">bs4</span><span class="o">.</span><span class="n">find_all</span><span class="p">([</span><span class="s2">&quot;ol&quot;</span><span class="p">,</span><span class="s2">&quot;ul&quot;</span><span class="p">,</span><span class="s2">&quot;dl&quot;</span><span class="p">])):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xl</span><span class="o">.</span><span class="n">find_parents</span><span class="p">([</span><span class="s2">&quot;ol&quot;</span><span class="p">,</span><span class="s2">&quot;ul&quot;</span><span class="p">,</span><span class="s2">&quot;dl&quot;</span><span class="p">]))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">nestedList</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">create_from_html</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">xl</span><span class="p">))</span>
+            <span class="nb">list</span><span class="o">.</span><span class="n">get_child_lists</span><span class="p">()</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nestedList</span><span class="p">)</span>
+        
+        <span class="c1"># get all elements (li, dt, dd)</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">li</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">list</span><span class="o">.</span><span class="n">bs4</span><span class="o">.</span><span class="n">find_all</span><span class="p">([</span><span class="s2">&quot;li&quot;</span><span class="p">,</span><span class="s2">&quot;dt&quot;</span><span class="p">,</span><span class="s2">&quot;dd&quot;</span><span class="p">])):</span>
+            <span class="c1"># exclude list elements from nested lists</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">li</span><span class="o">.</span><span class="n">find_parents</span><span class="p">([</span><span class="s2">&quot;li&quot;</span><span class="p">,</span><span class="s2">&quot;dt&quot;</span><span class="p">,</span><span class="s2">&quot;dd&quot;</span><span class="p">]))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">elem</span> <span class="o">=</span> <span class="n">ListElement</span><span class="o">.</span><span class="n">create_from_html</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">li</span><span class="p">))</span>
+            <span class="n">elem</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="o">.</span><span class="n">get_elements</span><span class="p">()))</span>
+            <span class="nb">list</span><span class="o">.</span><span class="n">get_elements</span><span class="p">()</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="nb">list</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">Datagorri</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">datagorri</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Julian Hackinger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup
 
+
 class ListElement:
     """
-    Stellt die Tags li sowie dt und dd dar.
+    Displays the Tags li, dt and dd.
     """
     def __init__(self):
         self._index = ''

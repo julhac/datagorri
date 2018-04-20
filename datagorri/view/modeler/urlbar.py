@@ -7,7 +7,8 @@ style = style['urlbar']
 
 class Urlbar(Component):
     """
-    This class represents the URL bar. It contains a textfield for the URL, a checkbox to in-/exclude lists and a button to load the tables from that URL.
+    This class represents the URL bar. It contains a textfield for the URL, a checkbox to in-/exclude lists and a button
+    to load the tables from that URL.
     """
     def __init__(self, master_frame, default_url=''):
         Component.__init__(self, master_frame)

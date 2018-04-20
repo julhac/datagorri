@@ -1,0 +1,213 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>datagorri.view.scraper.scraper &#8212; Datagorri 1.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for datagorri.view.scraper.scraper</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tkinter</span>
+<span class="kn">from</span> <span class="nn">datagorri.controller.scraper</span> <span class="k">import</span> <span class="n">Scraper</span> <span class="k">as</span> <span class="n">ScraperController</span>
+<span class="kn">from</span> <span class="nn">datagorri.view</span> <span class="k">import</span> <span class="n">View</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.page_model_dropdown</span> <span class="k">import</span> <span class="n">PageModelDropDown</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.scraper.scrapebar</span> <span class="k">import</span> <span class="n">Scrapebar</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.scraper.link_list</span> <span class="k">import</span> <span class="n">LinkList</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.scraper.link_list_dropdown</span> <span class="k">import</span> <span class="n">LinkListDropDown</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.scraper.log</span> <span class="k">import</span> <span class="n">Log</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.scraper.range_adder</span> <span class="k">import</span> <span class="n">RangeAdder</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.scrollable_component</span> <span class="k">import</span> <span class="n">ScrollableComponent</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.style.scraper</span> <span class="k">import</span> <span class="n">style</span>
+
+
+<div class="viewcode-block" id="Scraper"><a class="viewcode-back" href="../../../../datagorri.view.scraper.html#datagorri.view.scraper.scraper.Scraper">[docs]</a><span class="k">class</span> <span class="nc">Scraper</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master_frame</span><span class="p">):</span>
+        <span class="n">View</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master_frame</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">change_bg</span><span class="p">(</span><span class="s1">&#39;#cccccc&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Importbar</span>
+        <span class="n">importbar</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span> <span class="n">pady</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;importbar&#39;</span><span class="p">][</span><span class="s1">&#39;pady&#39;</span><span class="p">],</span> <span class="n">padx</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;importbar&#39;</span><span class="p">][</span><span class="s1">&#39;padx&#39;</span><span class="p">],</span>
+                                  <span class="n">bg</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;importbar&#39;</span><span class="p">][</span><span class="s1">&#39;bg&#39;</span><span class="p">])</span>
+        <span class="n">importbar</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">TOP</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">BOTH</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">configure</span><span class="p">()</span>
+        <span class="n">tkinter</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">importbar</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s1">&#39;PAGE MODEL: &#39;</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;importbar&#39;</span><span class="p">][</span><span class="s1">&#39;bg&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">page_model</span> <span class="o">=</span> <span class="n">PageModelDropDown</span><span class="p">(</span><span class="n">importbar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">page_model</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">empty_space</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="n">importbar</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;importbar&#39;</span><span class="p">][</span><span class="s1">&#39;bg&#39;</span><span class="p">])</span>
+        <span class="n">empty_space</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">tkinter</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">importbar</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s1">&#39;LINK LIST: &#39;</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;importbar&#39;</span><span class="p">][</span><span class="s1">&#39;bg&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list_dropdown</span> <span class="o">=</span> <span class="n">LinkListDropDown</span><span class="p">(</span><span class="n">importbar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list_dropdown</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list_dropdown</span><span class="o">.</span><span class="n">on_select</span><span class="p">(</span><span class="k">lambda</span> <span class="n">selection</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_linklist_select</span><span class="p">(</span><span class="n">selection</span><span class="p">))</span>
+
+        <span class="n">scrollable_frame</span> <span class="o">=</span> <span class="n">ScrollableComponent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">())</span>
+        <span class="c1"># Main</span>
+        <span class="n">main_frame</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="n">scrollable_frame</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span> <span class="n">pady</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#dedede&#39;</span><span class="p">)</span>
+        <span class="n">main_frame</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">TOP</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">BOTH</span><span class="p">)</span>
+        <span class="n">main_frame</span><span class="o">.</span><span class="n">columnconfigure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">tkinter</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">main_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;URLS TO SCRAPE:&quot;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="s1">&#39;-weight bold&#39;</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#dedede&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                                                                 <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;NW&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list</span> <span class="o">=</span> <span class="n">LinkList</span><span class="p">(</span><span class="n">main_frame</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;NEWS&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list</span><span class="o">.</span><span class="n">set_new_file_name</span><span class="p">(</span><span class="n">ScraperController</span><span class="o">.</span><span class="n">get_default_link_list_file_name</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list</span><span class="o">.</span><span class="n">on_save</span><span class="p">(</span><span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_linklist_save</span><span class="p">())</span>
+
+        <span class="c1"># Sidebar</span>
+        <span class="n">sidebar</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="n">main_frame</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#dedede&#39;</span><span class="p">)</span>
+        <span class="n">sidebar</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;NW&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">range_adder</span> <span class="o">=</span> <span class="n">RangeAdder</span><span class="p">(</span><span class="n">sidebar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">range_adder</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;NEWS&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">range_adder</span><span class="o">.</span><span class="n">on_addition</span><span class="p">(</span><span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_range_addition</span><span class="p">())</span>
+
+        <span class="c1"># scrapebar</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scrapebar</span> <span class="o">=</span> <span class="n">Scrapebar</span><span class="p">(</span><span class="n">scrollable_frame</span><span class="o">.</span><span class="n">get_frame</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scrapebar</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">TOP</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scrapebar</span><span class="o">.</span><span class="n">set_filename</span><span class="p">(</span><span class="n">ScraperController</span><span class="o">.</span><span class="n">get_default_result_filename</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scrapebar</span><span class="o">.</span><span class="n">on_scrape</span><span class="p">(</span><span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_scraping</span><span class="p">())</span>
+
+        <span class="c1"># Log</span>
+        <span class="n">logbar</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="n">scrollable_frame</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span> <span class="n">pady</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#cccccc&#39;</span><span class="p">)</span>
+        <span class="n">logbar</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">TOP</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">BOTH</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">logbar</span><span class="o">.</span><span class="n">columnconfigure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># tkinter.Label(logbar, text=&#39;OUTPUT&#39;, bg=&#39;#cccccc&#39;, pady=12).grid(row=0, column=0, sticky=&quot;W&quot;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">Log</span><span class="p">(</span><span class="n">logbar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;NEWS&quot;</span><span class="p">)</span>
+        <span class="n">ScraperController</span><span class="o">.</span><span class="n">on_log_update</span><span class="p">(</span><span class="k">lambda</span> <span class="n">log_entry</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">log_entry</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Scraper.add_link_to_linklist"><a class="viewcode-back" href="../../../../datagorri.view.scraper.html#datagorri.view.scraper.scraper.Scraper.add_link_to_linklist">[docs]</a>    <span class="k">def</span> <span class="nf">add_link_to_linklist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_handle_linklist_select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="n">ScraperController</span><span class="o">.</span><span class="n">get_linklist</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">urls</span> <span class="o">==</span> <span class="s2">&quot;permission_error&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Warning: Permission error&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">elif</span> <span class="n">urls</span> <span class="o">==</span> <span class="s2">&quot;filenotfound_error&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Warning: FileNotFound error&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list</span><span class="o">.</span><span class="n">set_new_file_name</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Imported linklist &#39;</span> <span class="o">+</span> <span class="n">selection</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_handle_linklist_save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_list</span><span class="o">.</span><span class="n">get_new_file_name</span><span class="p">()</span>
+        <span class="n">ScraperController</span><span class="o">.</span><span class="n">save_linklist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">link_list</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list_dropdown</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list_dropdown</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Saved links to linklist &#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_handle_range_addition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">link_list</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
+            <span class="n">ScraperController</span><span class="o">.</span><span class="n">get_links_by_range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">range_adder</span><span class="o">.</span><span class="n">get_url</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">range_adder</span><span class="o">.</span><span class="n">get_range</span><span class="p">()[</span><span class="s1">&#39;from&#39;</span><span class="p">],</span>
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">range_adder</span><span class="o">.</span><span class="n">get_range</span><span class="p">()[</span><span class="s1">&#39;to&#39;</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Added links by range&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_handle_scraping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Start scraping&#39;</span><span class="p">)</span>
+        <span class="n">ScraperController</span><span class="o">.</span><span class="n">scrape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page_model</span><span class="o">.</span><span class="n">get_selected</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">link_list</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scrapebar</span><span class="o">.</span><span class="n">get_filename</span><span class="p">(),</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">_scrapebar</span><span class="o">.</span><span class="n">get_filetype</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scrapebar</span><span class="o">.</span><span class="n">get_delimiter</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scrapebar</span><span class="o">.</span><span class="n">get_encoding</span><span class="p">())</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">Datagorri</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">datagorri</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Julian Hackinger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

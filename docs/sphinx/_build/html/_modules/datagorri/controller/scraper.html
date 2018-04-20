@@ -1,0 +1,863 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>datagorri.controller.scraper &#8212; Datagorri 1.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for datagorri.controller.scraper</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">config.app</span> <span class="k">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">datagorri.controller</span> <span class="k">import</span> <span class="n">Controller</span>
+<span class="kn">from</span> <span class="nn">datagorri.model.page</span> <span class="k">import</span> <span class="n">Page</span>
+<span class="kn">from</span> <span class="nn">datagorri.util.csv</span> <span class="k">import</span> <span class="n">Csv</span>
+<span class="kn">from</span> <span class="nn">datagorri.controller.content_types.text</span> <span class="k">import</span> <span class="n">Text</span> <span class="k">as</span> <span class="n">TextTag</span>
+<span class="kn">from</span> <span class="nn">datagorri.controller.content_types.img</span> <span class="k">import</span> <span class="n">Img</span> <span class="k">as</span> <span class="n">ImgTag</span>
+<span class="kn">from</span> <span class="nn">datagorri.controller.content_types.link</span> <span class="k">import</span> <span class="n">Link</span> <span class="k">as</span> <span class="n">LinkTag</span>
+<span class="kn">from</span> <span class="nn">datagorri.model.table</span> <span class="k">import</span> <span class="n">Table</span>
+<span class="kn">from</span> <span class="nn">datagorri.model.list.list</span> <span class="k">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">listdir</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">join</span>
+<span class="kn">from</span> <span class="nn">datagorri.controller.linklist</span> <span class="k">import</span> <span class="n">Linklist</span>
+
+
+<div class="viewcode-block" id="Scraper"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper">[docs]</a><span class="k">class</span> <span class="nc">Scraper</span><span class="p">(</span><span class="n">Controller</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The class scraper provides the methods to scrape the content of tables on specified websites using the previously</span>
+<span class="sd">    generated page models</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">do_on_log_update</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">links_from_modeler</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Controller</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">Linklist</span><span class="o">.</span><span class="n">on_update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_link_to_linklist</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Scraper.add_link_to_linklist"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.add_link_to_linklist">[docs]</a>    <span class="k">def</span> <span class="nf">add_link_to_linklist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link</span><span class="p">):</span>
+        <span class="n">Scraper</span><span class="o">.</span><span class="n">links_from_modeler</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">add_link_to_linklist</span><span class="p">(</span><span class="n">link</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Scraper.on_route"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.on_route">[docs]</a>    <span class="k">def</span> <span class="nf">on_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">view_class</span><span class="p">,</span> <span class="n">master_frame</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">view_class</span><span class="p">(</span><span class="n">master_frame</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Scraper.get_page_models"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.get_page_models">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_page_models</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;page_models_dir&#39;</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of all page_models at the given path</span>
+
+<span class="sd">        :param dir: (string) the directory containing the page_models</span>
+<span class="sd">        :return: (list) a list containing the page models</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">isfile</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span> <span class="ow">and</span> <span class="s2">&quot;.json&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Scraper.get_link_lists"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.get_link_lists">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_link_lists</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;link_lists_dir&#39;</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of all link_lists at the given path</span>
+
+<span class="sd">        :param dir: (string) the directory containing the list of links</span>
+<span class="sd">        :return: (list) a list containing the link lists</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">isfile</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span> <span class="ow">and</span> <span class="s2">&quot;.txt&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Scraper.get_default_link_list_text"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.get_default_link_list_text">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_default_link_list_text</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :return: (string=</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">default_links</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">link_from_modeler</span> <span class="ow">in</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">links_from_modeler</span><span class="p">:</span>
+            <span class="n">default_links</span> <span class="o">+=</span> <span class="n">link_from_modeler</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="k">return</span> <span class="n">default_links</span></div>
+
+<div class="viewcode-block" id="Scraper.get_default_result_filename"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.get_default_result_filename">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_default_result_filename</span><span class="p">():</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
+            <span class="n">timestamp</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H-%M-%S&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;result_&#39;</span> <span class="o">+</span> <span class="n">date</span></div>
+
+<div class="viewcode-block" id="Scraper.get_default_link_list_file_name"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.get_default_link_list_file_name">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_default_link_list_file_name</span><span class="p">():</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
+            <span class="n">timestamp</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H-%M-%S&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">date</span></div>
+
+<div class="viewcode-block" id="Scraper.load_page_model"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.load_page_model">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load_page_model</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">file</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Choose a page model first!&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Using page model: &#39;</span> <span class="o">+</span> <span class="n">file</span><span class="p">)</span>
+
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Try: Load page model file: &#39;</span> <span class="o">+</span> <span class="n">file</span><span class="p">)</span>
+        <span class="n">page_model</span> <span class="o">=</span> <span class="n">Controller</span><span class="o">.</span><span class="n">load_page_model</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;page_models_dir&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">page_model</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Fail: Could not load page model file: &#39;</span> <span class="o">+</span> <span class="n">file</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Success&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">page_model</span></div>
+
+<div class="viewcode-block" id="Scraper.load_page"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.load_page">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load_page</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method tries to load the given page and return it</span>
+
+<span class="sd">        :param url: (string) the url of the page</span>
+<span class="sd">        :param failures: (list) list of failures</span>
+<span class="sd">        :param warnings: (list) list of warnings</span>
+<span class="sd">        :return: (Page)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">page</span> <span class="o">=</span> <span class="n">Page</span><span class="o">.</span><span class="n">create_by_url</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">max_tries</span> <span class="o">=</span> <span class="mi">5</span>
+
+        <span class="c1"># retries</span>
+        <span class="k">while</span> <span class="n">page</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">max_tries</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Warning: Failed. Trying again to load page with url: &#39;</span> <span class="o">+</span> <span class="n">url</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Page load failed. Trying again to load page with url: &#39;</span> <span class="o">+</span> <span class="n">url</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">page</span> <span class="o">=</span> <span class="n">Page</span><span class="o">.</span><span class="n">create_by_url</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="n">max_tries</span> <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">page</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Fail: Could not load page with url: &#39;</span> <span class="o">+</span> <span class="n">url</span><span class="p">)</span>
+            <span class="n">failures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Could not load page with url: &#39;</span> <span class="o">+</span> <span class="n">url</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">page</span></div>
+
+<div class="viewcode-block" id="Scraper.scrape"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.scrape">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">scrape</span><span class="p">(</span><span class="n">page_model_file</span><span class="p">,</span> <span class="n">urls</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">encoding</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method takes a page_model a list of urls and scrapes the content of the specified websites according</span>
+<span class="sd">        to the model. The content is then saved in a .csv file.</span>
+
+<span class="sd">        :param page_model_file: (string) path to the page_model file</span>
+<span class="sd">        :param urls: (list) list of urls to scrape</span>
+<span class="sd">        :param filename: (string) the filename of the generated file</span>
+<span class="sd">        :param extension: (string) the file extension</span>
+<span class="sd">        :return: (boolean) Returns True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">failures</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Something that definitely went wrong</span>
+        <span class="n">warnings</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Something that could be wrong</span>
+        <span class="n">result_tables</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">result_lists</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># if extension == &quot;choose file extension&quot;:</span>
+        <span class="c1">#    Scraper.update_log(&quot;Warning: Choose file extension!&quot;)</span>
+        <span class="c1">#    return</span>
+
+        <span class="c1"># Force the delimiter to be 1 char long. Uncomment to enable delimiter checking</span>
+        <span class="c1"># if len(delimiter) != 1:</span>
+        <span class="c1">#     Scraper.update_log(&#39;Failure: The delimiter must be 1 character long!&#39;)</span>
+        <span class="c1">#     return</span>
+
+        <span class="n">page_model</span> <span class="o">=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">load_page_model</span><span class="p">(</span><span class="n">page_model_file</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">page_model</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;#############################&#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Scraping: &#39;</span> <span class="o">+</span> <span class="n">url</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;-----------------------------&#39;</span><span class="p">)</span>
+
+            <span class="c1"># load page</span>
+            <span class="n">needed_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Try: Load page&#39;</span><span class="p">)</span>
+            <span class="n">page</span> <span class="o">=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">load_page</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">page</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">needed_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">needed_time</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span>
+                <span class="s1">&#39;Success: Page has title: &#39;</span> <span class="o">+</span> <span class="n">page</span><span class="o">.</span><span class="n">get_title</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; (needed time: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">needed_time</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; sec.)&#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+
+            <span class="c1"># a list of dicts, may have only one dict if only non-repetitive tables scraped</span>
+            <span class="n">table_results</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">pm_table</span> <span class="ow">in</span> <span class="n">page_model</span><span class="p">[</span><span class="s1">&#39;tables&#39;</span><span class="p">]:</span>
+                <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Try: Scrape table #&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pm_table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">]))</span>
+
+                <span class="n">tables</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">get_tables</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tables</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">pm_table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">]:</span>
+                    <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Fail: Page has no table with index:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pm_table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">]))</span>
+                    <span class="n">failures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Page with url &#39;</span> <span class="o">+</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39; has no table with index: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pm_table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">]))</span>
+                    <span class="k">continue</span>
+
+                <span class="n">table_result</span> <span class="o">=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">scrape_table</span><span class="p">(</span><span class="n">tables</span><span class="p">[</span><span class="n">pm_table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">]],</span> <span class="n">pm_table</span><span class="p">[</span><span class="s1">&#39;isRepetitive&#39;</span><span class="p">],</span> <span class="n">pm_table</span><span class="p">[</span><span class="s1">&#39;toScrape&#39;</span><span class="p">],</span> <span class="n">url</span><span class="p">,</span> <span class="n">pm_table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">],</span> <span class="n">failures</span><span class="p">,</span>
+                                                    <span class="n">warnings</span><span class="p">,</span> <span class="n">pm_child_tables</span><span class="o">=</span><span class="n">pm_table</span><span class="p">[</span><span class="s1">&#39;childTables&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;childTables&#39;</span> <span class="ow">in</span> <span class="n">pm_table</span> <span class="k">else</span> <span class="p">[])</span>
+                
+                <span class="n">table_results</span> <span class="o">+=</span> <span class="n">table_result</span>
+            
+            <span class="n">result_tables</span> <span class="o">+=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">merge_results</span><span class="p">(</span><span class="n">table_results</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span> <span class="c1"># Scraping results in a dict</span>
+
+            <span class="k">if</span> <span class="s1">&#39;lists&#39;</span> <span class="ow">in</span> <span class="n">page_model</span><span class="p">:</span> <span class="c1"># to support old versions of models not containing the lists element</span>
+                <span class="n">list_page_result</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">pm_list</span> <span class="ow">in</span> <span class="n">page_model</span><span class="p">[</span><span class="s1">&#39;lists&#39;</span><span class="p">]:</span>
+                    <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Try: Scrape list #&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pm_list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">]))</span>
+                    
+                    <span class="n">lists</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">get_lists</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lists</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">pm_list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">]:</span>
+                        <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Fail: Page has no list with index: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pm_list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">]))</span>
+                        <span class="n">failures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Page with URL &#39;</span> <span class="o">+</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39; has no table with index: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pm_list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">]))</span>
+                        <span class="k">continue</span>
+                    <span class="n">list_result</span> <span class="o">=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">scrape_list</span><span class="p">(</span><span class="n">lists</span><span class="p">[</span><span class="n">pm_list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">]],</span> <span class="n">pm_list</span><span class="p">[</span><span class="s1">&#39;isRepetitive&#39;</span><span class="p">],</span> <span class="n">pm_list</span><span class="p">[</span><span class="s1">&#39;toScrape&#39;</span><span class="p">],</span> <span class="n">url</span><span class="p">,</span> <span class="n">pm_list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">],</span> <span class="n">failures</span><span class="p">,</span> 
+                                                      <span class="n">warnings</span><span class="p">,</span> <span class="n">pm_nested_lists</span><span class="o">=</span><span class="n">pm_list</span><span class="p">[</span><span class="s1">&#39;nestedLists&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;nestedLists&#39;</span> <span class="ow">in</span> <span class="n">pm_list</span> <span class="k">else</span> <span class="p">[])</span>
+                    <span class="n">list_page_result</span> <span class="o">+=</span> <span class="n">list_result</span>
+                
+                <span class="n">result_lists</span> <span class="o">+=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">merge_results</span><span class="p">(</span><span class="n">list_page_result</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>  <span class="c1"># Scraping results in a dict</span>
+        
+        <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
+                <span class="n">timestamp</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;result_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">Csv</span><span class="o">.</span><span class="n">create_file</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;results_dir&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">,</span> <span class="n">result_tables</span><span class="p">,</span> <span class="n">result_lists</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">,</span> <span class="n">encoding</span><span class="p">):</span>
+        <span class="c1"># if extension == &quot;.json&quot;:</span>
+        <span class="c1">#    Json.create_file(config[&#39;results_dir&#39;] + filename + &quot;.json&quot;, result)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#    Csv.create_file(config[&#39;results_dir&#39;] + filename + &quot;.csv&quot;, result)</span>
+
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;#############################&#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Done!&#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">log_report</span><span class="p">(</span><span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;#############################&#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Failure writing file!&#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Select a different encoding!&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+    
+<div class="viewcode-block" id="Scraper.scrape_list"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.scrape_list">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">scrape_list</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">repetitive</span><span class="p">,</span> <span class="n">to_scrape</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">list_index</span><span class="p">,</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">,</span> <span class="n">pm_nested_lists</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method scrapes a list and returns a list of dicts</span>
+<span class="sd">        </span>
+<span class="sd">        :param list1: (List) the list to scrape</span>
+<span class="sd">        :param repetitive: (boolean) is list repetitive</span>
+<span class="sd">        :param to_scrape: (dict) elements to scrape according to the model</span>
+<span class="sd">        :param url: (string) the url to scrape</span>
+<span class="sd">        :param list_index: (integer) the index of the list to scrape</span>
+<span class="sd">        :param failures: (list) list of current failures</span>
+<span class="sd">        :param warnings: (list) list of current warnings</span>
+<span class="sd">        :param pm_nested_lists: (list) list of nested lists</span>
+<span class="sd">        :return: (list) list of dicts to print in the result file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">list_result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">parent_labels</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">pm_to_scrape</span> <span class="ow">in</span> <span class="n">to_scrape</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Try: Scrape: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pm_to_scrape</span><span class="p">))</span>
+            <span class="n">parent_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span>
+            
+            <span class="n">img_index</span> <span class="o">=</span> <span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;img_index&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;img_index&#39;</span> <span class="ow">in</span> <span class="n">pm_to_scrape</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">link_index</span> <span class="o">=</span> <span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;link_index&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;link_index&#39;</span> <span class="ow">in</span> <span class="n">pm_to_scrape</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">repetitive</span><span class="p">:</span>
+                <span class="n">list_result</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
+                <span class="n">cont</span> <span class="o">=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">get_list_scrape_val</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">list_index</span><span class="p">,</span> <span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;elem_index&#39;</span><span class="p">],</span> <span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">,</span> <span class="n">link_index</span><span class="o">=</span><span class="n">link_index</span><span class="p">,</span> <span class="n">img_index</span><span class="o">=</span><span class="n">img_index</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">cont</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">list_result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cont</span>
+                <span class="n">list_result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;is_repetitive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">elem_index</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">list1</span><span class="o">.</span><span class="n">get_elements</span><span class="p">()):</span>
+                    <span class="n">cont</span> <span class="o">=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">get_list_scrape_val</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">list_index</span><span class="p">,</span> <span class="n">elem_index</span><span class="p">,</span> <span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">,</span> <span class="n">link_index</span><span class="o">=</span><span class="n">link_index</span><span class="p">,</span> <span class="n">img_index</span><span class="o">=</span><span class="n">img_index</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">cont</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_result</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">elem_index</span><span class="p">:</span>
+                        <span class="n">list_result</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
+                    <span class="n">list_result</span><span class="p">[</span><span class="n">elem_index</span><span class="p">][</span><span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cont</span>
+                    <span class="n">list_result</span><span class="p">[</span><span class="n">elem_index</span><span class="p">][</span><span class="s1">&#39;is_repetitive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        
+        <span class="n">list_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">list_result</span><span class="p">))</span>
+
+        <span class="c1"># scrape nested lists</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pm_nested_lists</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">pm_nested_list</span> <span class="ow">in</span> <span class="n">pm_nested_lists</span><span class="p">:</span>
+                <span class="n">scraped_nested</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">if</span> <span class="n">repetitive</span><span class="p">:</span> <span class="c1"># parent is repetitive</span>
+                    <span class="k">for</span> <span class="n">elem_index</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">list1</span><span class="o">.</span><span class="n">get_elements</span><span class="p">()):</span> <span class="c1"># try for every element</span>
+                        <span class="n">single_scraped_nested</span> <span class="o">=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">scrape_nested_list</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">pm_nested_list</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">single_scraped_nested</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">elem_index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">scraped_nested</span><span class="p">:</span>
+                                <span class="n">scraped_nested</span><span class="p">[</span><span class="n">elem_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                            <span class="n">scraped_nested</span><span class="p">[</span><span class="n">elem_index</span><span class="p">]</span> <span class="o">+=</span> <span class="n">single_scraped_nested</span>
+                <span class="k">else</span><span class="p">:</span> <span class="c1"># parent is not repetitive</span>
+                    <span class="n">elem_index</span> <span class="o">=</span> <span class="n">pm_nested_list</span><span class="p">[</span><span class="s1">&#39;parentElementIndex&#39;</span><span class="p">]</span> <span class="c1"># search specific nested list</span>
+                    <span class="n">element</span> <span class="o">=</span> <span class="n">list1</span><span class="o">.</span><span class="n">get_elements</span><span class="p">()[</span><span class="n">elem_index</span><span class="p">]</span>
+                    <span class="n">single_scraped_nested</span> <span class="o">=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">scrape_nested_list</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">pm_nested_list</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">single_scraped_nested</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+                        <span class="n">scraped_nested</span><span class="p">[</span><span class="n">elem_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">single_scraped_nested</span>
+                
+                <span class="k">if</span> <span class="n">repetitive</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">pm_nested_list</span><span class="p">[</span><span class="s1">&#39;isRepetitive&#39;</span><span class="p">]:</span> <span class="c1"># parent and nested are repetitive</span>
+                        <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s2">&quot;INFO: parent and nested repetitive&quot;</span><span class="p">)</span>
+                        <span class="c1"># merge parent with nested</span>
+                        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">scraped_nested</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                            <span class="n">new_list</span> <span class="o">=</span> <span class="p">[]</span>
+                            <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+                                <span class="n">new_elem</span> <span class="o">=</span> <span class="n">list_result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                                <span class="n">new_elem</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+                                <span class="n">new_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_elem</span><span class="p">)</span>
+                            <span class="n">scraped_nested</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_list</span>
+                        <span class="c1"># replace parent with merged repetitive subelements</span>
+                        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">scraped_nested</span><span class="o">.</span><span class="n">keys</span><span class="p">()))):</span>
+                            <span class="n">list_result</span> <span class="o">=</span> <span class="n">list_result</span><span class="p">[:</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="n">scraped_nested</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="n">list_result</span><span class="p">[</span><span class="n">key</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="k">else</span><span class="p">:</span> <span class="c1"># parent is repetitive, nested not</span>
+                        <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s2">&quot;INFO: parent repetitive, nested not&quot;</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_result</span><span class="p">)):</span>
+                            <span class="n">list_result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">scraped_nested</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                            <span class="n">list_result</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;is_repetitive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># otherwise will be overwritten by update above</span>
+                
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">repetitive</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">pm_nested_list</span><span class="p">[</span><span class="s1">&#39;isRepetitive&#39;</span><span class="p">]:</span> <span class="c1"># parent is not repetitive, nested is</span>
+                        <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s2">&quot;INFO: parent not repetitive, nested is&quot;</span><span class="p">)</span>
+                        <span class="n">merged</span> <span class="o">=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">merge_non_repetitive_parent_with_repetitive_nested_list</span><span class="p">(</span><span class="n">list_result</span><span class="p">,</span> <span class="n">scraped_nested</span><span class="p">[</span><span class="n">elem_index</span><span class="p">],</span> <span class="n">parent_labels</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">merged</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">merged</span><span class="p">:</span>
+                            <span class="c1">#del elem[&#39;from_url&#39;]</span>
+                            <span class="n">elem</span><span class="p">[</span><span class="s1">&#39;is_repetitive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">list_result</span> <span class="o">=</span> <span class="n">merged</span>
+                    <span class="k">else</span><span class="p">:</span> <span class="c1"># parent and nested are not repetitive</span>
+                        <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s2">&quot;INFO: parent and nested not repetitive&quot;</span><span class="p">)</span>
+                        <span class="n">list_result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">scraped_nested</span><span class="p">[</span><span class="n">elem_index</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                    
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># nothing from parent</span>
+                    <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s2">&quot;INFO: nothing from parent&quot;</span><span class="p">)</span>
+                    <span class="n">list_result</span> <span class="o">=</span> <span class="n">scraped_nested</span>
+        
+        <span class="k">return</span> <span class="n">list_result</span></div>
+        
+<div class="viewcode-block" id="Scraper.merge_non_repetitive_parent_with_repetitive_nested_list"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.merge_non_repetitive_parent_with_repetitive_nested_list">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">merge_non_repetitive_parent_with_repetitive_nested_list</span><span class="p">(</span><span class="n">parent_result</span><span class="p">,</span> <span class="n">scraped_result</span><span class="p">,</span> <span class="n">parent_labels</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merges the non repetitive parent with the repetitive nested list.</span>
+<span class="sd">        </span>
+<span class="sd">        :param parent_result: (list) list of scraped data from the parent list (might be combined with earlier nested lists)</span>
+<span class="sd">        :param scraped_result: (list) list of scraped data from the nested list</span>
+<span class="sd">        :param parent_labels: (list) list of labels which are from the parent list</span>
+<span class="sd">        </span>
+<span class="sd">        :return: (list) combination of parent_result and scraped_result</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># lists need to have the same length</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">parent_result</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">scraped_result</span><span class="p">):</span>
+            <span class="n">new_entry</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">parent_labels</span><span class="p">:</span>
+                <span class="n">new_entry</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">parent_result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">label</span><span class="p">]</span>
+            <span class="n">parent_result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_entry</span><span class="p">)</span>
+        
+        <span class="c1"># if the lists do not have te same length abort because something went wrong</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parent_result</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scraped_result</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># add results of nested list to combined result</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">nested_elem</span> <span class="ow">in</span> <span class="n">scraped_result</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">nested_elem</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;is_repetitive&#39;</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">parent_result</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+        <span class="k">return</span> <span class="n">parent_result</span></div>
+
+<div class="viewcode-block" id="Scraper.scrape_nested_list"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.scrape_nested_list">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">scrape_nested_list</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">pm_nested_list</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">):</span>
+        <span class="n">html_lists</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">get_html_lists</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">html_lists</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">pm_nested_list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">]:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s2">&quot;WARNING: element #&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">get_index</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot; has no nested list at index &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pm_nested_list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">]))</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Nested list scraping failed for element #&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">get_index</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot; and url &quot;</span> <span class="o">+</span> <span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;. Element has not enough nested lists: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pm_nested_list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">]))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="n">html_list</span> <span class="o">=</span> <span class="n">html_lists</span><span class="p">[</span><span class="n">pm_nested_list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">]]</span>
+        <span class="n">nested_list</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">create_from_html</span><span class="p">(</span><span class="n">html_list</span><span class="p">)</span>
+        
+        <span class="n">further_pm_nested_lists</span> <span class="o">=</span> <span class="n">pm_nested_list</span><span class="p">[</span><span class="s1">&#39;nestedLists&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;nestedLists&#39;</span> <span class="ow">in</span> <span class="n">pm_nested_list</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">scrape_list</span><span class="p">(</span><span class="n">nested_list</span><span class="p">,</span> <span class="n">pm_nested_list</span><span class="p">[</span><span class="s1">&#39;isRepetitive&#39;</span><span class="p">],</span> <span class="n">pm_nested_list</span><span class="p">[</span><span class="s1">&#39;toScrape&#39;</span><span class="p">],</span> <span class="n">url</span><span class="p">,</span> <span class="n">pm_nested_list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">],</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">,</span> <span class="n">further_pm_nested_lists</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="Scraper.merge_results"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.merge_results">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">merge_results</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merges all scraped table rows/list elements from one page to a scraping result for this page</span>
+<span class="sd">        All repetitive rows/elements are just put one after another. The non-repetitive rows/elements are added to each repetitive row/element.</span>
+<span class="sd">        </span>
+<span class="sd">        :param results: (list) list of dicts containing the scraped table rows/list elements (repetitive and non-repetitive)</span>
+<span class="sd">        :param url: (string) url the data came from</span>
+<span class="sd">        :returns: (list) list of dicts containing the merged result</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">repetitives</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">repetitive_labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">non_repetitives</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># sort table/list entries to repetitive and non-repetitive</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;is_repetitive&#39;</span><span class="p">]:</span>
+                <span class="n">repetitives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                <span class="c1"># figure out all repetitive lables</span>
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">repetitive_labels</span><span class="p">:</span>
+                        <span class="n">repetitive_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">non_repetitives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        
+        <span class="c1"># merge non-repetitive entries to one non-repetitive result</span>
+        <span class="n">non_repetitive_result</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">non_repetitive_entry</span> <span class="ow">in</span> <span class="n">non_repetitives</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">non_repetitive_entry</span><span class="o">.</span><span class="n">items</span><span class="p">():</span> <span class="c1"># there should be no duplicate keys because the model creation prohibits it</span>
+                <span class="n">non_repetitive_result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+        
+        <span class="c1"># merge repetitive results with non-repetitive result</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">repetitive_entry</span> <span class="ow">in</span> <span class="n">repetitives</span><span class="p">:</span>
+            <span class="n">new_entry</span> <span class="o">=</span> <span class="n">non_repetitive_result</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">new_entry</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">repetitive_entry</span><span class="p">)</span>
+            <span class="c1"># add missing labels (as empty) so from_url is always the last element</span>
+            <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">repetitive_labels</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_entry</span><span class="p">:</span>
+                    <span class="n">new_entry</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="c1"># set url data came from</span>
+            <span class="n">new_entry</span><span class="p">[</span><span class="s1">&#39;from_url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">url</span>
+            <span class="c1"># remove is_repetitive</span>
+            <span class="k">del</span> <span class="n">new_entry</span><span class="p">[</span><span class="s1">&#39;is_repetitive&#39;</span><span class="p">]</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_entry</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">result</span></div>
+        
+    <span class="c1"># will return a list of dicts</span>
+<div class="viewcode-block" id="Scraper.scrape_table"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.scrape_table">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">scrape_table</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">is_repetitive</span><span class="p">,</span> <span class="n">to_scrape</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">table_index</span><span class="p">,</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">,</span> <span class="n">pm_child_tables</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method scrapes a table and returns a list of dicts</span>
+
+<span class="sd">        :param table:</span>
+<span class="sd">        :param is_repetitive: (boolean)</span>
+<span class="sd">        :param to_scrape:</span>
+<span class="sd">        :param url: (string) the url to scrape</span>
+<span class="sd">        :param table_index:</span>
+<span class="sd">        :param failures: (list) list of failures</span>
+<span class="sd">        :param warnings: (list) list of warnings</span>
+<span class="sd">        :param pm_child_tables: (list)</span>
+<span class="sd">        :return: will return a list of dicts</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">table_result</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">pm_to_scrape</span> <span class="ow">in</span> <span class="n">to_scrape</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Try: Scrape: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pm_to_scrape</span><span class="p">))</span>
+
+            <span class="n">img_index</span> <span class="o">=</span> <span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;img_index&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;img_index&#39;</span> <span class="ow">in</span> <span class="n">pm_to_scrape</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">link_index</span> <span class="o">=</span> <span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;link_index&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;link_index&#39;</span> <span class="ow">in</span> <span class="n">pm_to_scrape</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_repetitive</span><span class="p">:</span>
+                <span class="n">table_result</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
+                <span class="n">suc</span> <span class="o">=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">get_table_scrape_val</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">table_index</span><span class="p">,</span> <span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;col_index&#39;</span><span class="p">],</span>
+                                             <span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;row_index&#39;</span><span class="p">],</span>
+                                             <span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">,</span> <span class="n">link_index</span><span class="o">=</span><span class="n">link_index</span><span class="p">,</span>
+                                             <span class="n">img_index</span><span class="o">=</span><span class="n">img_index</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">suc</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                
+                <span class="n">table_result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">suc</span>
+                <span class="n">table_result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;is_repetitive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">row_index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()):</span>
+                    <span class="n">suc</span> <span class="o">=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">get_table_scrape_val</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">table_index</span><span class="p">,</span> <span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;col_index&#39;</span><span class="p">],</span> <span class="n">row_index</span><span class="p">,</span>
+                                                 <span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">,</span> <span class="n">link_index</span><span class="o">=</span><span class="n">link_index</span><span class="p">,</span>
+                                                 <span class="n">img_index</span><span class="o">=</span><span class="n">img_index</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">suc</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    
+                    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_result</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">row_index</span><span class="p">:</span>
+                        <span class="n">table_result</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
+
+                    <span class="n">table_result</span><span class="p">[</span><span class="n">row_index</span><span class="p">][</span><span class="n">pm_to_scrape</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">suc</span>
+                    <span class="n">table_result</span><span class="p">[</span><span class="n">row_index</span><span class="p">][</span><span class="s1">&#39;is_repetitive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">table_result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">table_result</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pm_child_tables</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">pm_child_table</span> <span class="ow">in</span> <span class="n">pm_child_tables</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_result</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">rows</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span>
+
+                    <span class="k">if</span> <span class="s1">&#39;parentRowIndex&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pm_child_table</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">pm_child_table</span><span class="p">[</span><span class="s1">&#39;parentRowIndex&#39;</span><span class="p">]:</span>
+                        <span class="k">continue</span>
+
+                    <span class="n">row</span> <span class="o">=</span> <span class="n">rows</span><span class="p">[</span><span class="n">pm_child_table</span><span class="p">[</span><span class="s1">&#39;parentRowIndex&#39;</span><span class="p">]]</span>
+                    <span class="n">scraped_child</span> <span class="o">=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">scrape_child_table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">pm_child_table</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">scraped_child</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">scraped_child</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">row_index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()):</span>
+                        <span class="n">single_scraped_child</span> <span class="o">=</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">scrape_child_table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">pm_child_table</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">single_scraped_child</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+                            <span class="n">scraped_child</span> <span class="o">+=</span> <span class="n">single_scraped_child</span>
+
+                <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_result</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">scraped_child</span><span class="p">):</span>  <span class="c1"># parent is repetitive, child not</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_result</span><span class="p">)):</span>
+                        <span class="n">table_result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">scraped_child</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                        <span class="n">table_result</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;is_repetitive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># otherwise will be overwritten by update above</span>
+
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># nothing from parent</span>
+                    <span class="n">table_result</span> <span class="o">=</span> <span class="n">scraped_child</span>
+
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">scraped_child</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># parent and child are not repetitive</span>
+                    <span class="n">table_result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">scraped_child</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">scraped_child</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># parent is not repetitive, child is</span>
+                    <span class="k">for</span> <span class="n">single_scraped_child</span> <span class="ow">in</span> <span class="n">scraped_child</span><span class="p">:</span>
+                        <span class="n">single_scraped_child</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">table_result</span><span class="p">)</span>
+                        <span class="n">single_scraped_child</span><span class="p">[</span><span class="s1">&#39;is_repetitive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># otherwise will be overwritten by update above</span>
+
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">scraped_child</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># parent and child are repetitive</span>
+                    <span class="n">bigger_table</span> <span class="o">=</span> <span class="n">table_result</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_result</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scraped_child</span><span class="p">)</span> <span class="k">else</span> <span class="n">scraped_child</span>
+                    <span class="n">smaller_table</span> <span class="o">=</span> <span class="n">table_result</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_result</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">scraped_child</span><span class="p">)</span> <span class="k">else</span> <span class="n">scraped_child</span>
+                    <span class="k">for</span> <span class="n">single_entry</span> <span class="ow">in</span> <span class="n">bigger_table</span><span class="p">:</span>
+                        <span class="n">single_entry</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">smaller_table</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                    <span class="n">table_result</span> <span class="o">=</span> <span class="n">bigger_table</span>
+
+        <span class="k">return</span> <span class="n">table_result</span></div>
+
+<div class="viewcode-block" id="Scraper.scrape_child_table"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.scrape_child_table">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">scrape_child_table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">pm_child_table</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">):</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get_columns</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">pm_child_table</span><span class="p">[</span><span class="s1">&#39;parentColIndex&#39;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">col</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="n">pm_child_table</span><span class="p">[</span><span class="s1">&#39;parentColIndex&#39;</span><span class="p">]]</span>
+        <span class="n">html_tables</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">get_html_tables</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">html_tables</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">pm_child_table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">html_table</span> <span class="o">=</span> <span class="n">html_tables</span><span class="p">[</span><span class="n">pm_child_table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">]]</span>
+        <span class="n">child_table</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">create_from_html</span><span class="p">(</span><span class="n">html_table</span><span class="p">)</span>
+
+        <span class="n">further_pm_child_tables</span> <span class="o">=</span> <span class="n">pm_child_table</span><span class="p">[</span><span class="s1">&#39;childTables&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;childTables&#39;</span> <span class="ow">in</span> <span class="n">pm_child_table</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">scrape_table</span><span class="p">(</span><span class="n">child_table</span><span class="p">,</span> <span class="n">pm_child_table</span><span class="p">[</span><span class="s1">&#39;isRepetitive&#39;</span><span class="p">],</span> <span class="n">pm_child_table</span><span class="p">[</span><span class="s1">&#39;toScrape&#39;</span><span class="p">],</span>
+                                    <span class="n">url</span><span class="p">,</span> <span class="n">pm_child_table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">],</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">,</span>
+                                    <span class="n">further_pm_child_tables</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Scraper.get_list_scrape_val"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.get_list_scrape_val">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_list_scrape_val</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">list_index</span><span class="p">,</span> <span class="n">element_index</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">,</span> <span class="n">link_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">img_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="o">.</span><span class="n">get_elements</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">element_index</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Warning: List has not enough elements: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39; actually, but model requires &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">element_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">failures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Element scraping failed for list with index &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">list_index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; and url &#39;</span> <span class="o">+</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;. List has not enough elements: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;actually, but model requires &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">element_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="n">element</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="n">element_index</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;Text&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TextTag</span><span class="o">.</span><span class="n">get_val</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;ImgAlt&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ImgTag</span><span class="o">.</span><span class="n">get_alt_val</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">img_index</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;ImgSrc&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ImgTag</span><span class="o">.</span><span class="n">get_src_val</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">img_index</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;LinkText&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LinkTag</span><span class="o">.</span><span class="n">get_text_val</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">link_index</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;Link&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LinkTag</span><span class="o">.</span><span class="n">get_href_val</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">link_index</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+    
+<div class="viewcode-block" id="Scraper.get_table_scrape_val"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.get_table_scrape_val">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_table_scrape_val</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">table_index</span><span class="p">,</span> <span class="n">col_index</span><span class="p">,</span> <span class="n">row_index</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">,</span> <span class="n">link_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">img_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">row_index</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span>
+                <span class="s1">&#39;Warning: Table has not enough rows: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39; actually, but model requires &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                    <span class="n">row_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">failures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Row scraping failed for table with index &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="n">table_index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; and url &#39;</span> <span class="o">+</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;. Table has not enough rows: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;actually, but model requires &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">row_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="n">rows</span><span class="p">[</span><span class="n">row_index</span><span class="p">]</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get_columns</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">col_index</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Warning: Table has not enough columns in row: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">row_index</span><span class="p">))</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Column scraping failed for table with index &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="n">table_index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; and url &#39;</span> <span class="o">+</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;. Table has not enough columns in row: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">row_index</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">col</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="n">col_index</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;Text&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TextTag</span><span class="o">.</span><span class="n">get_val</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;ImgAlt&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ImgTag</span><span class="o">.</span><span class="n">get_alt_val</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">img_index</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;ImgSrc&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ImgTag</span><span class="o">.</span><span class="n">get_src_val</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">img_index</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;LinkText&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LinkTag</span><span class="o">.</span><span class="n">get_text_val</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">link_index</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;Link&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LinkTag</span><span class="o">.</span><span class="n">get_href_val</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">link_index</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Scraper.log_report"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.log_report">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">log_report</span><span class="p">(</span><span class="n">failures</span><span class="p">,</span> <span class="n">warnings</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method writes the content of failures of warnings to the log file.</span>
+
+<span class="sd">        :param failures: (list) list of failures</span>
+<span class="sd">        :param warnings: (list) list of warnings</span>
+<span class="sd">        :return: Returns always True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;#############################&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">failures</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">warnings</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Report: No failures, no warnings!&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;Report:&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">failures</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;#############################&#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">failures</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39; Failures:&#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;-----------------------------&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">fail</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">failures</span><span class="p">):</span>
+                <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">fail</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;#############################&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;No failures&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">warnings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;#############################&#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">warnings</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39; Warnings:&#39;</span><span class="p">)</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;-----------------------------&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">warning</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">warnings</span><span class="p">):</span>
+                <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">warning</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Scraper</span><span class="o">.</span><span class="n">update_log</span><span class="p">(</span><span class="s1">&#39;No warnings&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Scraper.on_log_update"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.on_log_update">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">on_log_update</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Appends a given function to the do_on_log_update list</span>
+
+<span class="sd">        :param func: (function)</span>
+<span class="sd">        :return: -</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Scraper</span><span class="o">.</span><span class="n">do_on_log_update</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Scraper.update_log"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.update_log">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">update_log</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes a string and updates the log with it</span>
+
+<span class="sd">        :param text: (string) text</span>
+<span class="sd">        :return: (boolean) True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">observer_function</span> <span class="ow">in</span> <span class="n">Scraper</span><span class="o">.</span><span class="n">do_on_log_update</span><span class="p">:</span>
+            <span class="n">observer_function</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Scraper.get_links_by_range"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.get_links_by_range">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_links_by_range</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">range_from</span><span class="p">,</span> <span class="n">range_to</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method generates and return a list of URLs based on a given base url and a range of id values appended</span>
+<span class="sd">        to the end of the url</span>
+
+<span class="sd">        :param base_url: (string) the url</span>
+<span class="sd">        :param range_from: (int) lowest url id</span>
+<span class="sd">        :param range_to: (int) highest url id</span>
+<span class="sd">        :return: (list) list of the generated urls</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># swap if from &gt; to:</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">range_to</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">range_from</span><span class="p">):</span>
+            <span class="n">range_to</span><span class="p">,</span> <span class="n">range_from</span> <span class="o">=</span> <span class="n">range_from</span><span class="p">,</span> <span class="n">range_to</span>
+
+        <span class="n">urls</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">range_from</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">range_to</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">base_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;range_placeholder&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">urls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">urls</span></div>
+
+<div class="viewcode-block" id="Scraper.save_linklist"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.save_linklist">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">save_linklist</span><span class="p">(</span><span class="n">urls</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method saves a list of links in a .txt file at the link_list directory</span>
+
+<span class="sd">        :param urls: (list) list of urls</span>
+<span class="sd">        :param name: (string) the filename</span>
+<span class="sd">        :return: (string) return the filename of the created file</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;link_lists_dir&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
+                <span class="n">timestamp</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H-%M&#39;</span><span class="p">)</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span>
+
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">filename</span></div>
+
+<div class="viewcode-block" id="Scraper.get_linklist"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.scraper.Scraper.get_linklist">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_linklist</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method reads from a given filename in the link_list directory and writes the content into a list.</span>
+
+<span class="sd">        :param name: (string) the name of the file</span>
+<span class="sd">        :return: (list) a list containing the urls</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;link_lists_dir&#39;</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;permission_error&quot;</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;filenotfound_error&quot;</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">urls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">urls</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Datagorri</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">datagorri</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Julian Hackinger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

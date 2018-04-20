@@ -19,6 +19,7 @@ class Controller:
     def load_page_model(file):
         """
         Loads the page model from the given file. Error handling has to be done by the caller
+
         :params file: path to the page model file
         :returns: (dict or False) dict representing the content of the json file
         """

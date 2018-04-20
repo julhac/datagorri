@@ -8,7 +8,8 @@ style = style['urlbar']
 
 class Resultbar(Component):
     """
-    This is the result bar. It contains a textfield where the user can enter a file name for the page model, and a button to generate the page model.
+    This is the result bar. It contains a textfield where the user can enter a file name for the page model, and a button
+    to generate the page model.
     """
     def __init__(self, master_frame, default_page_model_name=None):
         Component.__init__(self, master_frame)

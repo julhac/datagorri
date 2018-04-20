@@ -1,0 +1,255 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>datagorri.model package &#8212; Datagorri 1.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="datagorri.model.list package" href="datagorri.model.list.html" />
+    <link rel="prev" title="datagorri.util package" href="datagorri.util.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="datagorri-model-package">
+<h1>datagorri.model package<a class="headerlink" href="#datagorri-model-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="datagorri.model.list.html">datagorri.model.list package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.list.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.list.html#module-datagorri.model.list.list">datagorri.model.list.list module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.list.html#module-datagorri.model.list.listelement">datagorri.model.list.listelement module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.list.html#module-datagorri.model.list.nestedlist">datagorri.model.list.nestedlist module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.list.html#module-datagorri.model.list">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="datagorri.model.table.html">datagorri.model.table package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.table.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.table.html#module-datagorri.model.table.childtable">datagorri.model.table.childtable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.table.html#module-datagorri.model.table.column">datagorri.model.table.column module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.table.html#module-datagorri.model.table.row">datagorri.model.table.row module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.table.html#module-datagorri.model.table.table">datagorri.model.table.table module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.table.html#module-datagorri.model.table">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-datagorri.model.page">
+<span id="datagorri-model-page-module"></span><h2>datagorri.model.page module<a class="headerlink" href="#module-datagorri.model.page" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datagorri.model.page.Page">
+<em class="property">class </em><code class="descclassname">datagorri.model.page.</code><code class="descname">Page</code><span class="sig-paren">(</span><em>html</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/model/page.html#Page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.model.page.Page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="staticmethod">
+<dt id="datagorri.model.page.Page.create_by_url">
+<em class="property">static </em><code class="descname">create_by_url</code><span class="sig-paren">(</span><em>url</em>, <em>headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:39.0)'}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/model/page.html#Page.create_by_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.model.page.Page.create_by_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the received html data from a given url</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>url</strong> – (string) the url</li>
+<li><strong>headers</strong> – the headers for the content request</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(Page) the html content of the website</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.model.page.Page.create_cache_file">
+<em class="property">static </em><code class="descname">create_cache_file</code><span class="sig-paren">(</span><em>page</em>, <em>cache_file</em>, <em>url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/model/page.html#Page.create_cache_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.model.page.Page.create_cache_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method generates a cache file containing a dictionary with the content in json format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>page</strong> – (Page) the page</li>
+<li><strong>cache_file</strong> – (string) the name of the cache file</li>
+<li><strong>url</strong> – (string) the name of the corresponding url</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datagorri.model.page.Page.get_html">
+<code class="descname">get_html</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/model/page.html#Page.get_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.model.page.Page.get_html" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the html</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(string)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datagorri.model.page.Page.get_html_as_bs4">
+<code class="descname">get_html_as_bs4</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/model/page.html#Page.get_html_as_bs4"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.model.page.Page.get_html_as_bs4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="datagorri.model.page.Page.get_lists">
+<code class="descname">get_lists</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/model/page.html#Page.get_lists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.model.page.Page.get_lists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds all lists (ordered and unordered) located on the html of a website and returns them
+:return: (list) list of found lists</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="datagorri.model.page.Page.get_tables">
+<code class="descname">get_tables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/model/page.html#Page.get_tables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.model.page.Page.get_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds all parent tables located on in html of a website and returns them</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(list) list of found tables</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datagorri.model.page.Page.get_title">
+<code class="descname">get_title</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/model/page.html#Page.get_title"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.model.page.Page.get_title" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the title</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(string)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-datagorri.model">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-datagorri.model" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Datagorri</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">datagorri</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="DataGorri.html">DataGorri module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.controller.html">datagorri.controller package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.view.html">datagorri.view package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.util.html">datagorri.util package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">datagorri.model package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">datagorri</a><ul>
+      <li>Previous: <a href="datagorri.util.html" title="previous chapter">datagorri.util package</a></li>
+      <li>Next: <a href="datagorri.model.list.html" title="next chapter">datagorri.model.list package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Julian Hackinger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/datagorri.model.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

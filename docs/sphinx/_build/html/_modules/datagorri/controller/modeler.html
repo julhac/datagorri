@@ -1,0 +1,619 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>datagorri.controller.modeler &#8212; Datagorri 1.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for datagorri.controller.modeler</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">config.app</span> <span class="k">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">datagorri.controller</span> <span class="k">import</span> <span class="n">Controller</span>
+<span class="kn">from</span> <span class="nn">datagorri.controller.content_types.img</span> <span class="k">import</span> <span class="n">Img</span>
+<span class="kn">from</span> <span class="nn">datagorri.controller.content_types.link</span> <span class="k">import</span> <span class="n">Link</span>
+<span class="kn">from</span> <span class="nn">datagorri.controller.content_types.text</span> <span class="k">import</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">datagorri.controller.linklist</span> <span class="k">import</span> <span class="n">Linklist</span>
+<span class="kn">from</span> <span class="nn">datagorri.model.page</span> <span class="k">import</span> <span class="n">Page</span>
+<span class="kn">from</span> <span class="nn">datagorri.model.list.nestedlist</span> <span class="k">import</span> <span class="n">Nestedlist</span>
+<span class="kn">from</span> <span class="nn">datagorri.model.table.childtable</span> <span class="k">import</span> <span class="n">Childtable</span>
+<span class="kn">from</span> <span class="nn">datagorri.util.json</span> <span class="k">import</span> <span class="n">Json</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urlparse</span>
+
+<div class="viewcode-block" id="Modeler"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler">[docs]</a><span class="k">class</span> <span class="nc">Modeler</span><span class="p">(</span><span class="n">Controller</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The class provides methods defining the Modeler&#39;s behavior.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">content_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Img</span><span class="p">,</span> <span class="n">Link</span><span class="p">]</span>
+    <span class="n">dropdown_to_update</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">amount_summarized_examples</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Controller</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">page_dom_tables_unsummarized</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Modeler.on_route"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler.on_route">[docs]</a>    <span class="k">def</span> <span class="nf">on_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">view_class</span><span class="p">,</span> <span class="n">master_frame</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">view_class</span><span class="p">(</span><span class="n">master_frame</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default_url&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_repetition_change</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_repetition_change</span><span class="p">,</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">scrape_links_for_linklist</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">on_load_page_dom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">load_page_dom</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">on_load_page_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">load_page_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">on_page_model_create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">create_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Modeler.load_page_model"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler.load_page_model">[docs]</a>    <span class="k">def</span> <span class="nf">load_page_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads the selected page model and fills in all values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># load page model</span>
+        <span class="n">page_model_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">get_model_to_load</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">page_model_name</span> <span class="o">==</span> <span class="s1">&#39;select the page model to use&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">show_load_error</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">page_model</span> <span class="o">=</span> <span class="n">Controller</span><span class="o">.</span><span class="n">load_page_model</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;page_models_dir&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">page_model_name</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">page_model</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">show_load_error</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="c1"># set URL from model and list checkbox</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">set_url_to_load</span><span class="p">(</span><span class="n">page_model</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">select_include_lists</span><span class="p">()</span>
+        
+        <span class="c1"># load page dom</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_page_dom</span><span class="p">()</span>
+        
+        <span class="c1"># overwrite default page model name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">set_page_model_name</span><span class="p">(</span><span class="n">page_model_name</span><span class="p">)</span>
+        
+        <span class="c1"># select scrape checkboxes and fill output label textfields</span>
+        <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">page_model</span><span class="p">[</span><span class="s1">&#39;tables&#39;</span><span class="p">]:</span>
+            <span class="n">table_component</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">table_components</span><span class="p">[</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">]]</span>
+            <span class="n">table_component</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">select_repetitive</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;isRepetitive&#39;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;toScrape&#39;</span><span class="p">]:</span>
+                <span class="n">row_index</span> <span class="o">=</span> <span class="n">column</span><span class="p">[</span><span class="s1">&#39;row_index&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;row_index&#39;</span> <span class="ow">in</span> <span class="n">column</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">table_component</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">find_content</span><span class="p">(</span><span class="n">column</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">column</span><span class="p">[</span><span class="s1">&#39;col_index&#39;</span><span class="p">],</span> <span class="n">row_index</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">content</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;skip &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; cell column &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">[</span><span class="s1">&#39;col_index&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; row &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">row_index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; in table &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">]))</span>
+                    <span class="k">continue</span>
+                <span class="n">content</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">column</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span>
+                <span class="n">content</span><span class="o">.</span><span class="n">select_to_scrape</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s1">&#39;childTables&#39;</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">select_and_fill_child_tables</span><span class="p">(</span><span class="n">table_component</span><span class="p">,</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;childTables&#39;</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="s1">&#39;lists&#39;</span> <span class="ow">in</span> <span class="n">page_model</span><span class="p">:</span> <span class="c1"># to support models from old versions</span>
+            <span class="k">for</span> <span class="nb">list</span> <span class="ow">in</span> <span class="n">page_model</span><span class="p">[</span><span class="s1">&#39;lists&#39;</span><span class="p">]:</span>
+                <span class="n">list_component</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">list_components</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">]]</span>
+                <span class="n">list_component</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">select_repetitive</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="s1">&#39;isRepetitive&#39;</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;toScrape&#39;</span><span class="p">]:</span>
+                    <span class="n">content</span> <span class="o">=</span> <span class="n">list_component</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;elem_index&#39;</span><span class="p">],</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">content</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;skip &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; element &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;elem_index&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; in list #&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">]))</span>
+                        <span class="k">continue</span>
+                    <span class="n">content</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span>
+                    <span class="n">content</span><span class="o">.</span><span class="n">select_to_scrape</span><span class="p">()</span>
+                <span class="k">if</span> <span class="s1">&#39;nestedLists&#39;</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">select_and_fill_nested_lists</span><span class="p">(</span><span class="n">list_component</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;nestedLists&#39;</span><span class="p">])</span></div>
+        
+<div class="viewcode-block" id="Modeler.select_and_fill_child_tables"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler.select_and_fill_child_tables">[docs]</a>    <span class="k">def</span> <span class="nf">select_and_fill_child_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_component</span><span class="p">,</span> <span class="n">tables</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        selects cell to scrape and fills output label textfield for child tables</span>
+
+<span class="sd">        :param table_component: (Table) component of the parent table containing list of child tables</span>
+<span class="sd">        :param tables: (dict) content of the childTables key of the page model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
+            <span class="n">parent_row_index</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;parentRowIndex&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;parentRowIndex&#39;</span> <span class="ow">in</span> <span class="n">table</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">child_table_component</span> <span class="o">=</span> <span class="n">table_component</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">find_child_table</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">],</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;parentColIndex&#39;</span><span class="p">],</span> <span class="n">parent_row_index</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">child_table_component</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;skip child table &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; of cell column &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;parentColIndex&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; row &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">parent_row_index</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="n">child_table_component</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">select_repetitive</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;isRepetitive&#39;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;toScrape&#39;</span><span class="p">]:</span>
+                <span class="n">row_index</span> <span class="o">=</span> <span class="n">column</span><span class="p">[</span><span class="s1">&#39;row_index&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;row_index&#39;</span> <span class="ow">in</span> <span class="n">column</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">child_table_component</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">find_content</span><span class="p">(</span><span class="n">column</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">column</span><span class="p">[</span><span class="s1">&#39;col_index&#39;</span><span class="p">],</span> <span class="n">row_index</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">content</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;skip &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; cell column &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">[</span><span class="s1">&#39;col_index&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; row &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">row_index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; in table &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;tableIndex&#39;</span><span class="p">]))</span>
+                    <span class="k">continue</span>
+                <span class="n">content</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">column</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span>
+                <span class="n">content</span><span class="o">.</span><span class="n">select_to_scrape</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s1">&#39;childTables&#39;</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">select_and_fill_child_tables</span><span class="p">(</span><span class="n">child_table_component</span><span class="p">,</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;childTables&#39;</span><span class="p">])</span></div>
+    
+<div class="viewcode-block" id="Modeler.select_and_fill_nested_lists"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler.select_and_fill_nested_lists">[docs]</a>    <span class="k">def</span> <span class="nf">select_and_fill_nested_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_component</span><span class="p">,</span> <span class="n">lists</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        selects elements to scrape and fills output label textfields for nested lists</span>
+
+<span class="sd">        :param list_component: (List) component of the parent list containing list of nested lists</span>
+<span class="sd">        :param lists: (dict) content of the nestedLists key of the page model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="nb">list</span> <span class="ow">in</span> <span class="n">lists</span><span class="p">:</span>
+            <span class="n">nested_list_component</span> <span class="o">=</span> <span class="n">list_component</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">find_nested_list</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;parentElementIndex&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">nested_list_component</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;skip nested list &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; of parent element &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="s1">&#39;parentElementIndex&#39;</span><span class="p">]))</span>
+                <span class="k">continue</span>
+            <span class="n">nested_list_component</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">select_repetitive</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="s1">&#39;isRepetitive&#39;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;toScrape&#39;</span><span class="p">]:</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">nested_list_component</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;elem_index&#39;</span><span class="p">],</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">content</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;skip &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; element &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;elem_index&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; of list #&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="s1">&#39;listIndex&#39;</span><span class="p">]))</span>
+                    <span class="k">continue</span>
+                <span class="n">content</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span>
+                <span class="n">content</span><span class="o">.</span><span class="n">select_to_scrape</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s1">&#39;nestedLists&#39;</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">select_and_fill_nested_lists</span><span class="p">(</span><span class="n">nested_list_component</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;nestedLists&#39;</span><span class="p">])</span></div>
+                
+        
+<div class="viewcode-block" id="Modeler.load_page_dom"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler.load_page_dom">[docs]</a>    <span class="k">def</span> <span class="nf">load_page_dom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads the page DOM of the URL and shows tables and lists (if they are included)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">get_url_to_load</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">page_dom_tables_unsummarized</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">page_dom_lists_unsummarized</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># load page</span>
+        <span class="n">page</span> <span class="o">=</span> <span class="n">Page</span><span class="o">.</span><span class="n">create_by_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">page</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">show_load_error</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">page_dom_tables</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">tables</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">get_tables</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
+            <span class="n">page_dom_tables</span><span class="p">[</span><span class="n">table</span><span class="o">.</span><span class="n">get_index</span><span class="p">()]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_table_for_page_dom</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+        
+        <span class="n">page_dom_lists</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">is_include_lists</span><span class="p">():</span> <span class="c1"># only load lists when checkbox marked</span>
+            <span class="n">lists</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">get_lists</span><span class="p">()</span>
+            <span class="k">for</span> <span class="nb">list</span> <span class="ow">in</span> <span class="n">lists</span><span class="p">:</span>
+                <span class="n">page_dom_lists</span><span class="p">[</span><span class="nb">list</span><span class="o">.</span><span class="n">get_index</span><span class="p">()]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_list_for_page_dom</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;current_url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;base_url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;http://&#39;</span> <span class="o">+</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;current_url&quot;</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;scheme&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;current_url&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># construct default page model name</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;http://&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;http://&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;https://www.&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">domain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="mi">11</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">start</span> <span class="o">+</span> <span class="mi">11</span><span class="p">)]</span>
+        <span class="n">domain</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="n">domain</span> <span class="o">=</span> <span class="n">domain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H_%M_%S&#39;</span><span class="p">)</span>
+        <span class="n">default_page_model_name</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">set_page_model_name</span><span class="p">(</span><span class="n">default_page_model_name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">show_page_dom</span><span class="p">(</span><span class="n">page_dom_tables</span><span class="p">,</span> <span class="n">page_dom_lists</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">on_page_model_create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">create_model</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Modeler.table_repetition_change"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler.table_repetition_change">[docs]</a>    <span class="k">def</span> <span class="nf">table_repetition_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller_table_id</span><span class="p">,</span> <span class="n">is_repetitive</span><span class="p">,</span> <span class="n">change_table_rows_to</span><span class="p">):</span>
+        <span class="n">tables</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page_dom_tables_unsummarized</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;controller_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">controller_table_id</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">is_repetitive</span><span class="p">:</span>
+            <span class="n">table</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">summarize_rows_for_page_dom</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">])</span>
+
+        <span class="n">change_table_rows_to</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+        
+<div class="viewcode-block" id="Modeler.list_repetition_change"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler.list_repetition_change">[docs]</a>    <span class="k">def</span> <span class="nf">list_repetition_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller_list_id</span><span class="p">,</span> <span class="n">is_repetitive</span><span class="p">,</span> <span class="n">change_list_elements_to</span><span class="p">):</span>
+        <span class="n">lists</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page_dom_lists_unsummarized</span><span class="p">)</span>
+        <span class="k">for</span> <span class="nb">list</span> <span class="ow">in</span> <span class="n">lists</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;controller_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">controller_list_id</span><span class="p">:</span>
+                <span class="k">break</span>
+                
+        <span class="k">if</span> <span class="n">is_repetitive</span><span class="p">:</span>
+            <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">summarize_elements_for_page_dom</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">])</span>
+            
+        <span class="n">change_list_elements_to</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">])</span>
+        
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span> <span class="nf">_create_list_for_page_dom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list1</span><span class="p">,</span> <span class="n">parent_controller_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">list1</span><span class="o">.</span><span class="n">get_type</span><span class="p">())</span> <span class="o">+</span> <span class="s1">&#39; #&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">list1</span><span class="o">.</span><span class="n">get_type_index</span><span class="p">())</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;isRepetitive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">list1</span><span class="o">.</span><span class="n">is_repetitive</span><span class="p">()</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">list1</span><span class="o">.</span><span class="n">get_elements</span><span class="p">():</span>
+            <span class="n">elem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_elements_for_page_dom</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">list1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page_dom_lists_unsummarized</span><span class="p">))</span>
+            
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">][</span><span class="n">element</span><span class="o">.</span><span class="n">get_index</span><span class="p">()]</span> <span class="o">=</span> <span class="n">elem</span>
+                    
+        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;controller_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page_dom_lists_unsummarized</span><span class="p">)</span> <span class="c1"># do not set earlier, otherwise nested_lists controller_id would be wrong!</span>
+        <span class="k">if</span> <span class="n">parent_controller_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">parent_controller_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;parent_controller_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parent_controller_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">page_dom_lists_unsummarized</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+        
+        <span class="k">if</span> <span class="n">list1</span><span class="o">.</span><span class="n">is_repetitive</span><span class="p">():</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Modeler</span><span class="o">.</span><span class="n">summarize_elements_for_page_dom</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">])</span>
+                    
+        <span class="k">return</span> <span class="n">result</span>
+    
+    <span class="k">def</span> <span class="nf">_create_elements_for_page_dom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">list1</span><span class="p">,</span> <span class="n">parent_controller_id</span><span class="p">):</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="nb">type</span> <span class="ow">in</span> <span class="n">Modeler</span><span class="o">.</span><span class="n">content_types</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="o">.</span><span class="n">is_applicable_to</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">get_content</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">single_type_return</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+                        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">single_type_return</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+                    
+        <span class="n">nested_lists</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">child_index</span><span class="p">,</span> <span class="n">nested_list_html</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">get_html_lists</span><span class="p">()):</span>
+            <span class="n">nested_list</span> <span class="o">=</span> <span class="n">Nestedlist</span><span class="o">.</span><span class="n">create_from_html</span><span class="p">(</span><span class="n">nested_list_html</span><span class="p">,</span> <span class="n">child_index</span><span class="p">,</span> <span class="n">list1</span><span class="o">.</span><span class="n">get_index</span><span class="p">(),</span> <span class="n">element</span><span class="o">.</span><span class="n">get_index</span><span class="p">())</span>
+            <span class="n">nested_lists</span><span class="p">[</span><span class="n">child_index</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_list_for_page_dom</span><span class="p">(</span><span class="n">nested_list</span><span class="p">,</span> <span class="n">parent_controller_id</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">get_html_lists</span><span class="p">()))</span>
+                   
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;ListElement #&#39;</span> <span class="o">+</span>  <span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">get_index</span><span class="p">()),</span>
+            <span class="s1">&#39;elements&#39;</span><span class="p">:</span> <span class="n">elements</span><span class="p">,</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nested_lists</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;nested_lists&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nested_lists</span>
+            
+        <span class="k">return</span> <span class="n">result</span>
+    
+    <span class="k">def</span> <span class="nf">_create_table_for_page_dom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">parent_controller_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Table #&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">get_index</span><span class="p">())</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;is_repetitive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">is_repetitive</span><span class="p">()</span>
+        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="c1"># add table headers to label if existing</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">get_headers</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;:     &#39;</span>
+            <span class="n">last_header</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">th</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">get_headers</span><span class="p">()):</span>
+                <span class="n">single_header</span> <span class="o">=</span> <span class="n">th</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; </span><span class="se">\t\n\r</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">last_header</span> <span class="o">==</span> <span class="n">single_header</span><span class="p">:</span>
+                    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">single_header</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span>
+                    <span class="n">last_header</span> <span class="o">=</span> <span class="n">single_header</span>
+
+            <span class="c1"># remove last &quot;, &quot;</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">][:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">get_rows</span><span class="p">():</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_columns_for_page_dom</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span>
+                                                     <span class="n">parent_controller_id</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page_dom_tables_unsummarized</span><span class="p">))</span>
+
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">][</span><span class="n">row</span><span class="o">.</span><span class="n">get_index</span><span class="p">()]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;Row #&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">get_index</span><span class="p">())</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="n">cols</span>
+            <span class="p">}</span>
+
+        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;controller_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">page_dom_tables_unsummarized</span><span class="p">)</span>  <span class="c1"># do not set earlier! Otherwise child_tables controller_id wrong!</span>
+        <span class="k">if</span> <span class="n">parent_controller_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">parent_controller_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;parent_controller_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parent_controller_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">page_dom_tables_unsummarized</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">table</span><span class="o">.</span><span class="n">is_repetitive</span><span class="p">():</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Modeler</span><span class="o">.</span><span class="n">summarize_rows_for_page_dom</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">])</span>
+            
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_create_columns_for_page_dom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">parent_controller_id</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">get_columns</span><span class="p">():</span>
+            <span class="n">contents</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="nb">type</span> <span class="ow">in</span> <span class="n">Modeler</span><span class="o">.</span><span class="n">content_types</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="o">.</span><span class="n">is_applicable_to</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+                    <span class="n">content</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">get_content</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">single_type_return</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+                            <span class="n">contents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">single_type_return</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">contents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+
+            <span class="n">child_tables</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">child_index</span><span class="p">,</span> <span class="n">child_table_html</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">get_html_tables</span><span class="p">()):</span>
+                <span class="n">child_table</span> <span class="o">=</span> <span class="n">Childtable</span><span class="o">.</span><span class="n">create_from_html</span><span class="p">(</span><span class="n">child_table_html</span><span class="p">,</span> <span class="n">child_index</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">get_index</span><span class="p">(),</span>
+                                                          <span class="n">col</span><span class="o">.</span><span class="n">get_index</span><span class="p">(),</span> <span class="n">row</span><span class="o">.</span><span class="n">get_index</span><span class="p">())</span>
+
+                <span class="k">if</span> <span class="n">table</span><span class="o">.</span><span class="n">is_repetitive</span><span class="p">():</span>
+                    <span class="n">child_table</span><span class="o">.</span><span class="n">set_repetitive</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+                <span class="n">child_tables</span><span class="p">[</span><span class="n">child_index</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_table_for_page_dom</span><span class="p">(</span><span class="n">child_table</span><span class="p">,</span> <span class="n">parent_controller_id</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span>
+                    <span class="n">col</span><span class="o">.</span><span class="n">get_html_tables</span><span class="p">()))</span>
+
+            <span class="n">result</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">get_index</span><span class="p">()]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;Column #&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">get_index</span><span class="p">()),</span>
+                <span class="s1">&#39;contents&#39;</span><span class="p">:</span> <span class="n">contents</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">child_tables</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">get_index</span><span class="p">()][</span><span class="s1">&#39;child_tables&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">child_tables</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+<div class="viewcode-block" id="Modeler.summarize_elements_for_page_dom"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler.summarize_elements_for_page_dom">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">summarize_elements_for_page_dom</span><span class="p">(</span><span class="n">elements</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">elements</span>
+        
+        <span class="k">def</span> <span class="nf">type_in_elements</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">elem</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">elem</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;LinkText&#39;</span> <span class="ow">or</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;link_index&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">elem</span><span class="p">[</span><span class="s1">&#39;link_index&#39;</span><span class="p">]):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+            
+        <span class="k">def</span> <span class="nf">add_value_to_content_type</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">to_type</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">to_type</span><span class="p">:</span>
+                    <span class="n">element</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;  |    &#39;</span> <span class="o">+</span> <span class="n">value</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        
+        <span class="n">elem_result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">nested_lists</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">elem_index</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s1">&#39;nested_lists&#39;</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">nested_list</span> <span class="ow">in</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;nested_lists&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">nested_lists</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">nested_list</span>
+        
+            <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">type_in_elements</span><span class="p">(</span><span class="n">elem_result</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+                    <span class="n">elem_result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">add_value_to_content_type</span><span class="p">(</span><span class="n">elem_result</span><span class="p">,</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+        
+        <span class="c1"># shorten summarized value examples</span>
+        <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">elem_result</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)</span>
+            <span class="n">content</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">values</span><span class="p">[:</span><span class="n">Modeler</span><span class="o">.</span><span class="n">amount_summarized_examples</span><span class="p">])</span>
+            
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;Summarized elements&#39;</span><span class="p">,</span> <span class="s1">&#39;elements&#39;</span><span class="p">:</span> <span class="n">elem_result</span><span class="p">}}</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nested_lists</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;nested_lists&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nested_lists</span>
+        
+        <span class="k">return</span> <span class="n">result</span></div>
+        
+<div class="viewcode-block" id="Modeler.summarize_rows_for_page_dom"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler.summarize_rows_for_page_dom">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">summarize_rows_for_page_dom</span><span class="p">(</span><span class="n">rows</span><span class="p">):</span>
+        <span class="n">cols_result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rows</span>
+
+        <span class="k">def</span> <span class="nf">type_in_contents</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">cont</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">cont</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">and</span> \
+                        <span class="p">(</span><span class="ow">not</span> <span class="n">cont</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;LinkText&#39;</span> <span class="ow">or</span> <span class="p">(</span><span class="n">cont</span><span class="p">[</span><span class="s1">&#39;link_index&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;link_index&#39;</span><span class="p">])):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">def</span> <span class="nf">add_value_to_content_type</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">to_type</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">cont</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">cont</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">to_type</span><span class="p">:</span>
+                    <span class="n">cont</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;  |    &#39;</span> <span class="o">+</span> <span class="n">val</span>
+
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">for</span> <span class="n">row_index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">col_index</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">col_index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cols_result</span><span class="p">:</span>
+                    <span class="n">cols_result</span><span class="p">[</span><span class="n">col_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">col</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span> <span class="s1">&#39;contents&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+
+                <span class="k">if</span> <span class="s1">&#39;child_tables&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">:</span>
+                    <span class="n">cols_result</span><span class="p">[</span><span class="n">col_index</span><span class="p">][</span><span class="s1">&#39;child_tables&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">col</span><span class="p">[</span><span class="s1">&#39;child_tables&#39;</span><span class="p">]</span>
+
+                <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">col</span><span class="p">[</span><span class="s1">&#39;contents&#39;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">type_in_contents</span><span class="p">(</span><span class="n">cols_result</span><span class="p">[</span><span class="n">col_index</span><span class="p">][</span><span class="s1">&#39;contents&#39;</span><span class="p">],</span> <span class="n">content</span><span class="p">):</span>
+                        <span class="n">cols_result</span><span class="p">[</span><span class="n">col_index</span><span class="p">][</span><span class="s1">&#39;contents&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">add_value_to_content_type</span><span class="p">(</span><span class="n">cols_result</span><span class="p">[</span><span class="n">col_index</span><span class="p">][</span><span class="s1">&#39;contents&#39;</span><span class="p">],</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+
+        <span class="c1"># shorten summarized value examples</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">col_result</span> <span class="ow">in</span> <span class="n">cols_result</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">col_result</span><span class="p">[</span><span class="s1">&#39;contents&#39;</span><span class="p">]:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)</span>
+                <span class="n">content</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">values</span><span class="p">[:</span><span class="n">Modeler</span><span class="o">.</span><span class="n">amount_summarized_examples</span><span class="p">])</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;Summarized rows&#39;</span><span class="p">,</span> <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="n">cols_result</span><span class="p">}}</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="Modeler.create_model"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler.create_model">[docs]</a>    <span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This methods creates a Json file containing a page model in the page model directory</span>
+
+<span class="sd">        :return: (object) the self object</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">get_page_model</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">pm</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">get_page_model_name</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span>
+
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
+            <span class="n">timestamp</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;tables&#39;</span><span class="p">:</span> <span class="n">pm</span><span class="p">[</span><span class="s1">&#39;tables&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;lists&#39;</span><span class="p">:</span> <span class="n">pm</span><span class="p">[</span><span class="s1">&#39;lists&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+            <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">timestamp</span><span class="p">,</span>
+            <span class="s2">&quot;datetime&quot;</span><span class="p">:</span> <span class="n">date</span>
+        <span class="p">}</span>
+
+        <span class="n">Json</span><span class="o">.</span><span class="n">create_file</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;page_models_dir&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">filename</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">show_pm_success</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Modeler</span><span class="o">.</span><span class="n">dropdown_to_update</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">Modeler</span><span class="o">.</span><span class="n">dropdown_to_update</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Modeler.scrape_links_for_linklist"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler.scrape_links_for_linklist">[docs]</a>    <span class="k">def</span> <span class="nf">scrape_links_for_linklist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller_table_id</span><span class="p">,</span> <span class="n">is_repetitive</span><span class="p">,</span> <span class="n">col_index</span><span class="p">,</span> <span class="n">link_index</span><span class="p">,</span> <span class="n">row_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                  <span class="n">parent_controller_table_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_is_repetitive</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">page_dom</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page_dom_tables_unsummarized</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">add_links_from_row</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">][</span><span class="n">col_index</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">col</span><span class="p">[</span><span class="s1">&#39;contents&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Link&#39;</span> <span class="ow">and</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;link_index&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">link_index</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;http&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]:</span>
+                        <span class="n">Linklist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">Linklist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;base_url&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">parent_is_repetitive</span><span class="p">:</span>
+            <span class="n">tables_with_same_parent</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">page_dom</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;parent_controller_id&#39;</span> <span class="ow">in</span> <span class="n">table</span> <span class="ow">and</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;parent_controller_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">parent_controller_table_id</span><span class="p">:</span>
+                    <span class="n">tables_with_same_parent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables_with_same_parent</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">row_index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">col_index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">]:</span>
+                        <span class="k">continue</span>
+
+                    <span class="n">add_links_from_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">page_dom</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;controller_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">controller_table_id</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">is_repetitive</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">row_index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">col_index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">]:</span>
+                        <span class="k">continue</span>
+
+                    <span class="n">add_links_from_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">row_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">add_links_from_row</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">][</span><span class="n">row_index</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Modeler.create_view_nested_list_from_html"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler.create_view_nested_list_from_html">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_view_nested_list_from_html</span><span class="p">(</span><span class="n">master_frame</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">child_index</span><span class="p">,</span> <span class="n">parent_element_index</span><span class="p">,</span> <span class="n">is_repetitive</span><span class="p">,</span>
+                                          <span class="n">on_repetition_change</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_controller_list_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                                          <span class="n">parent_is_repetitive</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">nested_list</span> <span class="o">=</span> <span class="n">NestedList</span><span class="p">(</span><span class="n">master_frame</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">child_index</span><span class="p">,</span> <span class="n">parent_element_index</span><span class="p">,</span> <span class="n">on_repetition_change</span><span class="p">,</span> <span class="n">parent_is_repetitive</span><span class="p">)</span>
+        <span class="n">nested_list</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_repetitive</span><span class="p">(</span><span class="n">is_repetitive</span><span class="p">)</span>
+        <span class="n">nested_list</span><span class="o">.</span><span class="n">change_header_text</span><span class="p">(</span><span class="s1">&#39;Nested list #&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">child_index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; of element &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">parent_element_index</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">nested_list</span></div>
+        
+<div class="viewcode-block" id="Modeler.create_view_child_table_from_html"><a class="viewcode-back" href="../../../datagorri.controller.html#datagorri.controller.modeler.Modeler.create_view_child_table_from_html">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_view_child_table_from_html</span><span class="p">(</span><span class="n">master_frame</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">child_index</span><span class="p">,</span> <span class="n">col_index</span><span class="p">,</span> <span class="n">row_index</span><span class="p">,</span> <span class="n">is_repetitive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                          <span class="n">on_repetition_change</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">on_link_adder_click</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                          <span class="n">hide_repetition_changer</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">parent_controller_table_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                          <span class="n">parent_is_repetitive</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">child_table</span> <span class="o">=</span> <span class="n">ChildTable</span><span class="p">(</span><span class="n">master_frame</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">child_index</span><span class="p">,</span> <span class="n">col_index</span><span class="p">,</span> <span class="n">parent_row_index</span><span class="o">=</span><span class="n">row_index</span><span class="p">,</span>
+                                 <span class="n">on_repetition_change</span><span class="o">=</span><span class="n">on_repetition_change</span><span class="p">,</span> <span class="n">on_link_adder_click</span><span class="o">=</span><span class="n">on_link_adder_click</span><span class="p">,</span>
+                                 <span class="n">hide_repetition_changer</span><span class="o">=</span><span class="n">hide_repetition_changer</span><span class="p">,</span>
+                                 <span class="n">parent_is_repetitive</span><span class="o">=</span><span class="n">parent_is_repetitive</span><span class="p">)</span>
+        <span class="n">child_table</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_repetitive</span><span class="p">(</span><span class="n">is_repetitive</span><span class="p">)</span>
+        <span class="n">child_table</span><span class="o">.</span><span class="n">change_header_text</span><span class="p">(</span>
+            <span class="s1">&#39;Child table #&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">child_index</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39; of column &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">col_index</span><span class="p">))</span> <span class="k">if</span> <span class="n">col_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">child_table</span></div></div>
+
+<span class="c1"># keep at bottom of file so there is no circular dependency on startup!!</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.modeler.page_dom.list.nested_list</span> <span class="k">import</span> <span class="n">NestedList</span> <span class="c1">## used in create_view_nested_list_from_html (line 318)</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.modeler.page_dom.table.child_table</span> <span class="k">import</span> <span class="n">ChildTable</span> <span class="c1">## used in create_view_child_table_from_html (line 327)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Datagorri</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">datagorri</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Julian Hackinger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

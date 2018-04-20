@@ -12,6 +12,7 @@ class Text(ContentType):
     def is_applicable_to(tag):
         """
         Returns True or False depending if the column value is empty
+
         :param tag: (Column or ListElement) the column or list element
         :return: (boolean)
 
@@ -22,6 +23,7 @@ class Text(ContentType):
     def get_content(tag):
         """
         Returns the type and value of a column
+
         :param tag: (Column or ListElement) the column or list element
         :return: (dict) type and value
 
@@ -36,6 +38,7 @@ class Text(ContentType):
     def get_val(tag):
         """
         Returns the value of a column
+
         :param tag: (Column or ListElement) the column or list element
         :return: (string) the stripped value
 

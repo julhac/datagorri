@@ -94,6 +94,7 @@ class Modeler(Controller):
     def select_and_fill_child_tables(self, table_component, tables):
         """
         selects cell to scrape and fills output label textfield for child tables
+
         :param table_component: (Table) component of the parent table containing list of child tables
         :param tables: (dict) content of the childTables key of the page model
         """
@@ -117,7 +118,8 @@ class Modeler(Controller):
     
     def select_and_fill_nested_lists(self, list_component, lists):
         """
-        selects elements to scrape and fills output label textfields for nested lists 
+        selects elements to scrape and fills output label textfields for nested lists
+
         :param list_component: (List) component of the parent list containing list of nested lists
         :param lists: (dict) content of the nestedLists key of the page model
         """
@@ -417,6 +419,7 @@ class Modeler(Controller):
     def create_model(self):
         """
         This methods creates a Json file containing a page model in the page model directory
+
         :return: (object) the self object
 
         """

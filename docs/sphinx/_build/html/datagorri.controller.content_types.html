@@ -1,0 +1,391 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>datagorri.controller.content_types package &#8212; Datagorri 1.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="datagorri.view package" href="datagorri.view.html" />
+    <link rel="prev" title="datagorri.controller package" href="datagorri.controller.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="datagorri-controller-content-types-package">
+<h1>datagorri.controller.content_types package<a class="headerlink" href="#datagorri-controller-content-types-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-datagorri.controller.content_types.content_type">
+<span id="datagorri-controller-content-types-content-type-module"></span><h2>datagorri.controller.content_types.content_type module<a class="headerlink" href="#module-datagorri.controller.content_types.content_type" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datagorri.controller.content_types.content_type.ContentType">
+<em class="property">class </em><code class="descclassname">datagorri.controller.content_types.content_type.</code><code class="descname">ContentType</code><a class="reference internal" href="_modules/datagorri/controller/content_types/content_type.html#ContentType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.content_type.ContentType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>The base class for content. To allow a fine grained distinction
+the different content types inherit from this class.</p>
+<dl class="staticmethod">
+<dt id="datagorri.controller.content_types.content_type.ContentType.get_content">
+<em class="property">static </em><code class="descname">get_content</code><span class="sig-paren">(</span><em>col</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/content_types/content_type.html#ContentType.get_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.content_type.ContentType.get_content" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.content_types.content_type.ContentType.is_applicable_to">
+<em class="property">static </em><code class="descname">is_applicable_to</code><span class="sig-paren">(</span><em>col</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/content_types/content_type.html#ContentType.is_applicable_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.content_type.ContentType.is_applicable_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="datagorri.controller.content_types.content_type.ContentType.type">
+<code class="descname">type</code><em class="property"> = 'ContentType'</em><a class="headerlink" href="#datagorri.controller.content_types.content_type.ContentType.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-datagorri.controller.content_types.img">
+<span id="datagorri-controller-content-types-img-module"></span><h2>datagorri.controller.content_types.img module<a class="headerlink" href="#module-datagorri.controller.content_types.img" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datagorri.controller.content_types.img.Img">
+<em class="property">class </em><code class="descclassname">datagorri.controller.content_types.img.</code><code class="descname">Img</code><a class="reference internal" href="_modules/datagorri/controller/content_types/img.html#Img"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.img.Img" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datagorri.controller.content_types.content_type.ContentType" title="datagorri.controller.content_types.content_type.ContentType"><code class="xref py py-class docutils literal"><span class="pre">datagorri.controller.content_types.content_type.ContentType</span></code></a></p>
+<p>This class defines handling if the downloaded content was an image. Inherited from ContentType.</p>
+<dl class="staticmethod">
+<dt id="datagorri.controller.content_types.img.Img.get_alt_val">
+<em class="property">static </em><code class="descname">get_alt_val</code><span class="sig-paren">(</span><em>tag</em>, <em>img_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/content_types/img.html#Img.get_alt_val"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.img.Img.get_alt_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the alternative string of an image or False</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tag</strong> – (Column or ListElement) the column or list element</li>
+<li><strong>img_index</strong> – (int) the number index in the column</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(string or False)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.content_types.img.Img.get_content">
+<em class="property">static </em><code class="descname">get_content</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/content_types/img.html#Img.get_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.img.Img.get_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the content of Images of a column in a list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> – (Column or ListElement) the column or list element</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(list)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.content_types.img.Img.get_src_val">
+<em class="property">static </em><code class="descname">get_src_val</code><span class="sig-paren">(</span><em>tag</em>, <em>img_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/content_types/img.html#Img.get_src_val"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.img.Img.get_src_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the source url of an image or False</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tag</strong> – (Column or ListElement) the column or list element</li>
+<li><strong>img_index</strong> – (int) the number index in the column</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(string or False)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.content_types.img.Img.is_applicable_to">
+<em class="property">static </em><code class="descname">is_applicable_to</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/content_types/img.html#Img.is_applicable_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.img.Img.is_applicable_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True or False depending of the column contains images.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> – (Column or ListElement) the column or list element</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(boolean)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datagorri.controller.content_types.img.Img.type">
+<code class="descname">type</code><em class="property"> = 'Img'</em><a class="headerlink" href="#datagorri.controller.content_types.img.Img.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-datagorri.controller.content_types.link">
+<span id="datagorri-controller-content-types-link"></span><h2>datagorri.controller.content_types.link<a class="headerlink" href="#module-datagorri.controller.content_types.link" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datagorri.controller.content_types.link.Link">
+<em class="property">class </em><code class="descclassname">datagorri.controller.content_types.link.</code><code class="descname">Link</code><a class="reference internal" href="_modules/datagorri/controller/content_types/link.html#Link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.link.Link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datagorri.controller.content_types.content_type.ContentType" title="datagorri.controller.content_types.content_type.ContentType"><code class="xref py py-class docutils literal"><span class="pre">datagorri.controller.content_types.content_type.ContentType</span></code></a></p>
+<p>This class defines handling if the downloaded content was a link. Inherited from ContentType.</p>
+<dl class="staticmethod">
+<dt id="datagorri.controller.content_types.link.Link.get_content">
+<em class="property">static </em><code class="descname">get_content</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/content_types/link.html#Link.get_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.link.Link.get_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the content of a column in a list links</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> – (Column or ListElement) the column or list element</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(list)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.content_types.link.Link.get_href_val">
+<em class="property">static </em><code class="descname">get_href_val</code><span class="sig-paren">(</span><em>tag</em>, <em>link_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/content_types/link.html#Link.get_href_val"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.link.Link.get_href_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the to a link corresponding href value or False if the value is not available</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tag</strong> – (Column or ListElement) the column or list element</li>
+<li><strong>link_index</strong> – (int) position of the link</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(string or False)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.content_types.link.Link.get_text_val">
+<em class="property">static </em><code class="descname">get_text_val</code><span class="sig-paren">(</span><em>tag</em>, <em>link_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/content_types/link.html#Link.get_text_val"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.link.Link.get_text_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the to a link corresponding text value or False if the value is not available</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tag</strong> – (Column or ListElement) the column or list element</li>
+<li><strong>link_index</strong> – (int) position of the link</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(string or False)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.content_types.link.Link.is_applicable_to">
+<em class="property">static </em><code class="descname">is_applicable_to</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/content_types/link.html#Link.is_applicable_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.link.Link.is_applicable_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the column contains a link otherwise False</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> – (Column or ListElement) the column or list element</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(boolean)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datagorri.controller.content_types.link.Link.type">
+<code class="descname">type</code><em class="property"> = 'Link'</em><a class="headerlink" href="#datagorri.controller.content_types.link.Link.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-datagorri.controller.content_types.text">
+<span id="datagorri-controller-content-types-text"></span><h2>datagorri.controller.content_types.text<a class="headerlink" href="#module-datagorri.controller.content_types.text" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datagorri.controller.content_types.text.Text">
+<em class="property">class </em><code class="descclassname">datagorri.controller.content_types.text.</code><code class="descname">Text</code><a class="reference internal" href="_modules/datagorri/controller/content_types/text.html#Text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.text.Text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datagorri.controller.content_types.content_type.ContentType" title="datagorri.controller.content_types.content_type.ContentType"><code class="xref py py-class docutils literal"><span class="pre">datagorri.controller.content_types.content_type.ContentType</span></code></a></p>
+<p>This class defines handling if the downloaded content was basic text. Inherited from ContentType.</p>
+<dl class="staticmethod">
+<dt id="datagorri.controller.content_types.text.Text.get_content">
+<em class="property">static </em><code class="descname">get_content</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/content_types/text.html#Text.get_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.text.Text.get_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the type and value of a column</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> – (Column or ListElement) the column or list element</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(dict) type and value</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.content_types.text.Text.get_val">
+<em class="property">static </em><code class="descname">get_val</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/content_types/text.html#Text.get_val"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.text.Text.get_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value of a column</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> – (Column or ListElement) the column or list element</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(string) the stripped value</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.content_types.text.Text.is_applicable_to">
+<em class="property">static </em><code class="descname">is_applicable_to</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/content_types/text.html#Text.is_applicable_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.content_types.text.Text.is_applicable_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True or False depending if the column value is empty</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> – (Column or ListElement) the column or list element</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(boolean)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datagorri.controller.content_types.text.Text.type">
+<code class="descname">type</code><em class="property"> = 'Text'</em><a class="headerlink" href="#datagorri.controller.content_types.text.Text.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-datagorri.controller.content_types">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-datagorri.controller.content_types" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Datagorri</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">datagorri</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="DataGorri.html">DataGorri module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="datagorri.controller.html">datagorri.controller package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.view.html">datagorri.view package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.util.html">datagorri.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.html">datagorri.model package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">datagorri</a><ul>
+  <li><a href="datagorri.controller.html">datagorri.controller package</a><ul>
+      <li>Previous: <a href="datagorri.controller.html" title="previous chapter">datagorri.controller package</a></li>
+      <li>Next: <a href="datagorri.view.html" title="next chapter">datagorri.view package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Julian Hackinger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/datagorri.controller.content_types.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

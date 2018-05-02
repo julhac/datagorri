@@ -40,6 +40,13 @@ class Img(ContentType):
                 'value': Img.get_src_val(tag, img_index),
                 'img_index': img_index
             })
+            if not img['title'] == '':
+                returns.append({
+                    'index': tag.get_index(),
+                    'type': Img.type + 'Title',
+                    'value': Img.get_title_val(tag, img_index),
+                    'img_index': img_index
+                })
 
         return returns
 
@@ -72,3 +79,18 @@ class Img(ContentType):
 
         img = images[img_index]
         return img['src'].strip().replace('\n', '').replace('\r', '')
+        
+    @staticmethod
+    def get_title_val(tag, img_index):
+        """
+        Returns the title / tooltip of an image or False
+        :param tag: (Column or ListElement) the column or list element
+        :param img_index: (int) the number index of the image in the column
+        :return: (string or False)
+        """
+        images = tag.get_images()
+        if len(images) - 1 < img_index:
+            return False
+            
+        img = images[img_index]
+        return img['title'].strip().replace('\n', '').replace('\r', '')

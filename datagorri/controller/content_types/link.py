@@ -43,6 +43,14 @@ class Link(ContentType):
                     'value': Link.get_text_val(tag, link_index),
                     'link_index': link_index
                 })
+            
+            if not link['title'] == '':
+                returns.append({
+                    'index': tag.get_index(),
+                    'type': Link.type + 'Title',
+                    'value': Link.get_title_val(tag, link_index),
+                    'link_index': link_index
+                })
 
         return returns
 
@@ -77,3 +85,18 @@ class Link(ContentType):
 
         link = links[link_index]
         return link['href'].strip().replace('\n', '').replace('\r', '')
+        
+    @staticmethod
+    def get_title_val(tag, link_index):
+        """
+        Returns the to a link corresponding title value or False if the value is not available
+        :param tag: (Column or ListElement) the column or list element
+        :param link_index: (int) position of the link
+        :return: (string or False)
+        """
+        links = tag.get_links()
+        if len(links) - 1 < link_index:
+            return False
+        
+        link = links[link_index]
+        return link['title'].strip().replace('\n', '').replace('\r', '')

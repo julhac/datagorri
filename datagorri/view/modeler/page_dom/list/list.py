@@ -43,10 +43,10 @@ class List(Component):
                     'label': element.get_label()
                 }
                 
-                if element.type == 'ImgAlt' or element.type == 'ImgSrc':
+                if element.type == 'ImgAlt' or element.type == 'ImgSrc' or element.type == 'ImgTitle':
                     scrape['img_index'] = element.img_index
 
-                if element.type == 'Link' or element.type == 'LinkText':
+                if element.type == 'Link' or element.type == 'LinkText' or element.type == 'LinkTitle':
                     scrape['link_index'] = element.link_index
 
                 to_scrape.append(scrape)

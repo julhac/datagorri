@@ -52,10 +52,10 @@ class Table(Component):
                 if not is_repetitive:
                     scrape['row_index'] = content.row_index
 
-                if content.type == 'ImgAlt' or content.type == 'ImgSrc':
+                if content.type == 'ImgAlt' or content.type == 'ImgSrc' or content.type == 'ImgTitle':
                     scrape['img_index'] = content.img_index
 
-                if content.type == 'Link' or content.type == 'LinkText':
+                if content.type == 'Link' or content.type == 'LinkText' or content.type == 'LinkTitle':
                     scrape['link_index'] = content.link_index
 
                 to_scrape.append(scrape)

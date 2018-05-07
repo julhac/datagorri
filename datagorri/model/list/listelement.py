@@ -49,7 +49,8 @@ class ListElement:
             if a.has_attr('href'):
                 links.append({
                     "href": a['href'],
-                    "text": a.getText()
+                    "text": a.getText(),
+                    "title": a['title'] if a.has_attr('title') else ''
                 })
 
         return links
@@ -64,7 +65,8 @@ class ListElement:
             if img.has_attr('src') or img.has_attr('alt'):
                 images.append({
                     "src": img['src'] if img.has_attr('src') else '',
-                    "alt": img['alt'] if img.has_attr('alt') else ''
+                    "alt": img['alt'] if img.has_attr('alt') else '',
+                    "title": img['title'] if img.has_attr('title') else ''
                 })
 
         return images

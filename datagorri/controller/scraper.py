@@ -583,10 +583,14 @@ class Scraper(Controller):
             return ImgTag.get_alt_val(element, img_index)
         elif type == 'ImgSrc':
             return ImgTag.get_src_val(element, img_index)
+        elif type == 'ImgTitle':
+            return ImgTag.get_title_val(element, img_index)
         elif type == 'LinkText':
             return LinkTag.get_text_val(element, link_index)
         elif type == 'Link':
             return LinkTag.get_href_val(element, link_index)
+        elif type == 'LinkTitle':
+            return LinkTag.get_title_val(element, link_index)
 
         return False
     
@@ -621,10 +625,14 @@ class Scraper(Controller):
             return ImgTag.get_alt_val(col, img_index)
         elif type == 'ImgSrc':
             return ImgTag.get_src_val(col, img_index)
+        elif type == 'ImgTitle':
+            return ImgTag.get_title_val(col, img_index)
         elif type == 'LinkText':
             return LinkTag.get_text_val(col, link_index)
         elif type == 'Link':
             return LinkTag.get_href_val(col, link_index)
+        elif type == 'LinkTitle':
+            return LinkTag.get_title_val(col, link_index)
 
         return False
 

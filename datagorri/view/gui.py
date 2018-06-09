@@ -17,6 +17,7 @@ class Gui:
     def __init__(self, title, full_screen=True):
         self.frame = tkinter.Tk()
         self.frame.title(title)
+        # self.frame.iconbitmap(bitmap=pathicon) # include icon
         self.frame.wm_iconbitmap(bitmap=pathicon) # include icon
         self.frame.configure(background=style['bg'])
 

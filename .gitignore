@@ -12,6 +12,7 @@ __pycache__/
 env/
 build/
 develop-eggs/
+deb_dist/
 dist/
 downloads/
 eggs/

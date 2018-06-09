@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.2
+Type=Application
+Name=DataGorri
+Comment=Application to extract data from tables and lists located on websites
+Exec=datagorri
+Icon=favicon.xbm
+Categories=Network;Office;Science;Utility;
+Terminal=false
+StartupNotify=true
+StartupWMClass=datagorri

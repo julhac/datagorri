@@ -1,0 +1,4 @@
+include datagorri/view/*.xbm
+include datagorri/view/*.ico
+include datagorri/view/*.png
+include datagorri/view/*.icns

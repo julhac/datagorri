@@ -33,8 +33,12 @@ if sys.platform == "linux" or sys.platform == "linux2":
         description="Application to extract data from tables and lists located on websites",
         url="https://github.com/julhac/datagorri",
         packages=find_packages(),
+        package_data={
+            '': ['*.png', '*.xbm', '*.ico', '*.icns']
+        },
+        include_package_data=True,
         entry_points={
-            'gui_scripts': ['datagorri=datagorri.DataGorri']
+            'gui_scripts': ['datagorri=datagorri.DataGorri:main']
         },
         data_files=[
             ('share/applications/', ['datagorri.desktop'])

@@ -41,6 +41,7 @@ if sys.platform == "linux" or sys.platform == "linux2":
             'gui_scripts': ['datagorri=datagorri.DataGorri:main']
         },
         data_files=[
-            ('share/applications/', ['datagorri.desktop'])
+            ('share/applications/', ['datagorri.desktop']),
+            ('share/datagorri/', ['favicon.png'])
         ]
     )

@@ -1,2 +1,10 @@
+# Benötigt Python 3
+# Requires Python 3
+
+# Windows
 python setup.py build
 python setup.py bdist_msi
+
+# Debian Linux
+(sudo) apt-get install python3-stdeb
+python setup.py --command-packages=stdeb.command bdist_deb

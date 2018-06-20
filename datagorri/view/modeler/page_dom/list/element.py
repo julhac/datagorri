@@ -33,6 +33,7 @@ class Element:
     def handle_scrape_all(self, select, level, number):
         """
         Selects/deselects the scrape checkbutton and fills the output label
+
         :param select: (boolean) True if the checkbutton will be selected, False otherwise
         :param level: (integer) number showing the level
         :param number: (integer) the number the output label should show

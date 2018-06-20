@@ -1,0 +1,237 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>datagorri.view.modeler.page_dom.list.list &#8212; Datagorri 1.1 documentation</title>
+    <link rel="stylesheet" href="../../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../../',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for datagorri.view.modeler.page_dom.list.list</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tkinter</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.modeler.page_dom.list.header</span> <span class="k">import</span> <span class="n">Header</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.modeler.page_dom.list.elements</span> <span class="k">import</span> <span class="n">Elements</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.component</span> <span class="k">import</span> <span class="n">Component</span>
+
+<div class="viewcode-block" id="List"><a class="viewcode-back" href="../../../../../../datagorri.view.modeler.page_dom.table.html#datagorri.view.modeler.page_dom.list.list.List">[docs]</a><span class="k">class</span> <span class="nc">List</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class represents a list. It builds a clickable row for a list. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master_frame</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">list_index</span><span class="p">,</span> <span class="n">on_repetition_change</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">Component</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master_frame</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">change_bg</span><span class="p">(</span><span class="s1">&#39;#222222&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">list</span> <span class="o">=</span> <span class="nb">list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">list_index</span> <span class="o">=</span> <span class="n">list_index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expanded</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_repetition_change</span> <span class="o">=</span> <span class="n">on_repetition_change</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">Header</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;isRepetitive&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">TOP</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">change_cursor</span><span class="p">(</span><span class="n">Component</span><span class="o">.</span><span class="n">CURSOR_CLICKABLE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">change_bg_on_hover</span><span class="p">(</span><span class="s1">&#39;#444444&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_header_click</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">add_scrape_all_handler</span><span class="p">(</span><span class="k">lambda</span> <span class="n">select</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_scrape_all</span><span class="p">(</span><span class="n">select</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">on_repetition_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">add_repetition_change_handler</span><span class="p">(</span><span class="k">lambda</span> <span class="n">is_repetitive</span><span class="p">:</span> <span class="n">on_repetition_change</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="s1">&#39;controller_id&#39;</span><span class="p">],</span> <span class="n">is_repetitive</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_repetition_change</span><span class="p">))</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">Elements</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;isRepetitive&#39;</span><span class="p">],</span> <span class="n">on_repetition_change</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="List.get_page_model"><a class="viewcode-back" href="../../../../../../datagorri.view.modeler.page_dom.table.html#datagorri.view.modeler.page_dom.list.list.List.get_page_model">[docs]</a>    <span class="k">def</span> <span class="nf">get_page_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gathers all information selected to create the page model</span>
+
+<span class="sd">        :returns: (Hash) all selected information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">to_scrape</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">is_repetitive</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">is_repetitive</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">is_to_scrape</span><span class="p">():</span>
+                <span class="n">scrape</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">element</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+                    <span class="s1">&#39;elem_index&#39;</span><span class="p">:</span> <span class="n">element</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">element</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span>
+                <span class="p">}</span>
+                
+                <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;ImgAlt&#39;</span> <span class="ow">or</span> <span class="n">element</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;ImgSrc&#39;</span><span class="p">:</span>
+                    <span class="n">scrape</span><span class="p">[</span><span class="s1">&#39;img_index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">img_index</span>
+
+                <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;Link&#39;</span> <span class="ow">or</span> <span class="n">element</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;LinkText&#39;</span><span class="p">:</span>
+                    <span class="n">scrape</span><span class="p">[</span><span class="s1">&#39;link_index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">link_index</span>
+
+                <span class="n">to_scrape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scrape</span><span class="p">)</span>
+                
+        <span class="n">nested_lists</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">nested_list</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">nested_lists</span><span class="p">:</span>
+            <span class="n">nested_list_result</span> <span class="o">=</span> <span class="n">nested_list</span><span class="o">.</span><span class="n">get_page_model</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s1">&#39;nestedLists&#39;</span> <span class="ow">in</span> <span class="n">nested_list_result</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">nested_list_result</span><span class="p">[</span><span class="s1">&#39;toScrape&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">nested_list_result</span><span class="p">[</span><span class="s1">&#39;parentElementIndex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nested_list</span><span class="o">.</span><span class="n">get_parent_element_index</span><span class="p">()</span>
+                <span class="n">nested_lists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nested_list_result</span><span class="p">)</span>
+                
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;listIndex&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_index</span><span class="p">,</span>
+            <span class="s1">&#39;isRepetitive&#39;</span><span class="p">:</span> <span class="n">is_repetitive</span><span class="p">,</span>
+            <span class="s1">&#39;toScrape&#39;</span><span class="p">:</span> <span class="n">to_scrape</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nested_lists</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;nestedLists&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nested_lists</span>
+        
+        <span class="k">return</span> <span class="n">result</span></div>
+    
+    <span class="n">handled_lists</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># static variable to count select all clicks of lists</span>
+<div class="viewcode-block" id="List.handle_scrape_all"><a class="viewcode-back" href="../../../../../../datagorri.view.modeler.page_dom.table.html#datagorri.view.modeler.page_dom.list.list.List.handle_scrape_all">[docs]</a>    <span class="k">def</span> <span class="nf">handle_scrape_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">select</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Selects/Deselects all scrape checkboxes and enumerates the output labels</span>
+
+<span class="sd">        :param select: (boolean) True if the seclect checkboxes should be selected, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">handle_scrape_all</span><span class="p">(</span><span class="n">select</span><span class="p">,</span> <span class="n">List</span><span class="o">.</span><span class="n">handled_lists</span><span class="p">)</span>
+        <span class="c1"># update counter</span>
+        <span class="k">if</span> <span class="n">select</span><span class="p">:</span>
+            <span class="n">List</span><span class="o">.</span><span class="n">handled_lists</span> <span class="o">+=</span> <span class="mi">1</span></div>
+        
+<div class="viewcode-block" id="List.handle_repetition_change"><a class="viewcode-back" href="../../../../../../datagorri.view.modeler.page_dom.table.html#datagorri.view.modeler.page_dom.list.list.List.handle_repetition_change">[docs]</a>    <span class="k">def</span> <span class="nf">handle_repetition_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_elems</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">was_expanded</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">expanded</span><span class="p">:</span>
+            <span class="n">was_expanded</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">narrow</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">Elements</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span> <span class="n">new_elems</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">is_repetitive</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_repetition_change</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">was_expanded</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">expand</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="List.handle_header_click"><a class="viewcode-back" href="../../../../../../datagorri.view.modeler.page_dom.table.html#datagorri.view.modeler.page_dom.list.list.List.handle_header_click">[docs]</a>    <span class="k">def</span> <span class="nf">handle_header_click</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        expands or collapses the Elements part of the table</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">expanded</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">narrow</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">expand</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="List.expand"><a class="viewcode-back" href="../../../../../../datagorri.view.modeler.page_dom.table.html#datagorri.view.modeler.page_dom.list.list.List.expand">[docs]</a>    <span class="k">def</span> <span class="nf">expand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        shows the Elements part</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">expanded</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">TOP</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">expanded</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="List.narrow"><a class="viewcode-back" href="../../../../../../datagorri.view.modeler.page_dom.table.html#datagorri.view.modeler.page_dom.list.list.List.narrow">[docs]</a>    <span class="k">def</span> <span class="nf">narrow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Hides the Elements part</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">expanded</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">hide_packed</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">expanded</span> <span class="o">=</span> <span class="kc">False</span></div>
+            
+<div class="viewcode-block" id="List.change_bg_on_hover"><a class="viewcode-back" href="../../../../../../datagorri.view.modeler.page_dom.table.html#datagorri.view.modeler.page_dom.list.list.List.change_bg_on_hover">[docs]</a>    <span class="k">def</span> <span class="nf">change_bg_on_hover</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bg_color</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Event function changing the background color of the element when the mouse enters the component</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Component</span><span class="o">.</span><span class="n">change_bg_on_hover</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bg_color</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="List.on_hover"><a class="viewcode-back" href="../../../../../../datagorri.view.modeler.page_dom.table.html#datagorri.view.modeler.page_dom.list.list.List.on_hover">[docs]</a>    <span class="k">def</span> <span class="nf">on_hover</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">bg_color</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">Component</span><span class="o">.</span><span class="n">on_hover</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span> <span class="n">bg_color</span><span class="o">=</span><span class="n">bg_color</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">on_hover</span><span class="p">(</span><span class="n">bg_color</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="List.change_header_text"><a class="viewcode-back" href="../../../../../../datagorri.view.modeler.page_dom.table.html#datagorri.view.modeler.page_dom.list.list.List.change_header_text">[docs]</a>    <span class="k">def</span> <span class="nf">change_header_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">label</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">text</span></div></div>
+        
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../../../index.html">Datagorri</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../modules.html">datagorri</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Julian Hackinger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

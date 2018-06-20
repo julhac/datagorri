@@ -68,6 +68,7 @@ class Scrapebar(Component):
     def on_scrape(self, func):
         """
         Handles the scrape button onclick action
+
         :param func: (function)
         :return: -
         """
@@ -87,6 +88,7 @@ class Scrapebar(Component):
     def get_filename(self):
         """
         Returns the filename
+
         :return: (string) the filename
         """
         return self._filename.get()
@@ -94,6 +96,7 @@ class Scrapebar(Component):
     def set_filename(self, name):
         """
         Sets the filename
+
         :param name: (string) the filename
         :return: (object)
         """
@@ -104,6 +107,7 @@ class Scrapebar(Component):
     def get_delimiter(self):
         """
         Returns the delimiter value
+
         :return: (string) the delimiter
         """
         return self._delimiter.get()
@@ -111,6 +115,7 @@ class Scrapebar(Component):
     def get_encoding(self):
         """
         Returns the encoding value
+
         :return: (string) the encoding
         """
         return self._encoding.get()

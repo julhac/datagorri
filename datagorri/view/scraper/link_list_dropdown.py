@@ -34,6 +34,7 @@ class LinkListDropDown(Component):
     def select(self, name):
         """
         Handles the selection process
+
         :param name: (string the name)
         :return: (object)
         """
@@ -48,6 +49,7 @@ class LinkListDropDown(Component):
     def _handle_select(self):
         """
         Handles the selection
+
         :return: (object)
         """
         for func in self._do_on_select:
@@ -57,7 +59,8 @@ class LinkListDropDown(Component):
 
     def get_selected(self):
         """
-        Returns the selecte item
+        Returns the selected item
+
         :return:
         """
         return self._selected.get()
@@ -65,6 +68,7 @@ class LinkListDropDown(Component):
     def get_all(self):
         """
         Returns all links of an object in a list
+
         :return: (list) list of links
         """
         link_lists = []
@@ -77,6 +81,7 @@ class LinkListDropDown(Component):
     def refresh(self):
         """
         Handles the refresh process of the linklist field
+
         :return: (object)
         """
         linklist_files = ScraperController.get_link_lists()

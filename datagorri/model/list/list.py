@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from datagorri.model.list.listelement import ListElement
 
+
 class List:
     def __init__(self):
         self._index = ''

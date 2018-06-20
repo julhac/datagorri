@@ -3,7 +3,8 @@ import tkinter
 
 class Content:
     """
-    This class represents a line showing the summary of one column (includes type, sample values of first three rows, a scrape checkbox and a output label textfield)
+    This class represents a line showing the summary of one column (includes type, sample values of first three rows, a
+    scrape checkbox and a output label textfield)
     """
     def __init__(self, master_frame, type, examples, at_grid_row, default_label='', col_index=None, row_index=None, img_index=None,
                  link_index=None, add_link_adder=False, is_repetitive=None, table=None, controller_table_id=None, parent_controller_table_id=None, parent_is_repetitive=None):
@@ -43,6 +44,7 @@ class Content:
     def handle_scrape_all(self, select, level, number):
         """
         selects the scrape checkbutton and sets the output label
+
         :param select: (boolean) True if the checkbutton was selected, False otherwise
         :param level: (integer) number of previously select tables
         :param number: (integer) the number the output label should show

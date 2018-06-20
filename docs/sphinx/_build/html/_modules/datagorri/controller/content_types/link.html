@@ -1,0 +1,183 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>datagorri.controller.content_types.link &#8212; Datagorri 1.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for datagorri.controller.content_types.link</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">datagorri.controller.content_types.content_type</span> <span class="k">import</span> <span class="n">ContentType</span>
+
+
+<div class="viewcode-block" id="Link"><a class="viewcode-back" href="../../../../datagorri.controller.content_types.html#datagorri.controller.content_types.link.Link">[docs]</a><span class="k">class</span> <span class="nc">Link</span><span class="p">(</span><span class="n">ContentType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class defines handling if the downloaded content was a link. Inherited from ContentType.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="s2">&quot;Link&quot;</span>
+
+<div class="viewcode-block" id="Link.is_applicable_to"><a class="viewcode-back" href="../../../../datagorri.controller.content_types.html#datagorri.controller.content_types.link.Link.is_applicable_to">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_applicable_to</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns True if the column contains a link otherwise False</span>
+
+<span class="sd">        :param tag: (Column or ListElement) the column or list element</span>
+<span class="sd">        :return: (boolean)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">get_links</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="Link.get_content"><a class="viewcode-back" href="../../../../datagorri.controller.content_types.html#datagorri.controller.content_types.link.Link.get_content">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_content</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the content of a column in a list links</span>
+
+<span class="sd">        :param tag: (Column or ListElement) the column or list element</span>
+<span class="sd">        :return: (list)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">returns</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">link_index</span><span class="p">,</span> <span class="n">link</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">get_links</span><span class="p">()):</span>
+            <span class="n">returns</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">tag</span><span class="o">.</span><span class="n">get_index</span><span class="p">(),</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">Link</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+                <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">Link</span><span class="o">.</span><span class="n">get_href_val</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">link_index</span><span class="p">),</span>
+                <span class="s1">&#39;link_index&#39;</span><span class="p">:</span> <span class="n">link_index</span>
+            <span class="p">})</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">link</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">returns</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">tag</span><span class="o">.</span><span class="n">get_index</span><span class="p">(),</span>
+                    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">Link</span><span class="o">.</span><span class="n">type</span> <span class="o">+</span> <span class="s1">&#39;Text&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">Link</span><span class="o">.</span><span class="n">get_text_val</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">link_index</span><span class="p">),</span>
+                    <span class="s1">&#39;link_index&#39;</span><span class="p">:</span> <span class="n">link_index</span>
+                <span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">returns</span></div>
+
+<div class="viewcode-block" id="Link.get_text_val"><a class="viewcode-back" href="../../../../datagorri.controller.content_types.html#datagorri.controller.content_types.link.Link.get_text_val">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_text_val</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">link_index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the to a link corresponding text value or False if the value is not available</span>
+
+<span class="sd">        :param tag: (Column or ListElement) the column or list element</span>
+<span class="sd">        :param link_index: (int) position of the link</span>
+<span class="sd">        :return: (string or False)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">links</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">get_links</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">links</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">link_index</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">link</span> <span class="o">=</span> <span class="n">links</span><span class="p">[</span><span class="n">link_index</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">link</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Link.get_href_val"><a class="viewcode-back" href="../../../../datagorri.controller.content_types.html#datagorri.controller.content_types.link.Link.get_href_val">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_href_val</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">link_index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the to a link corresponding href value or False if the value is not available</span>
+
+<span class="sd">        :param tag: (Column or ListElement) the column or list element</span>
+<span class="sd">        :param link_index: (int) position of the link</span>
+<span class="sd">        :return: (string or False)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">links</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">get_links</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">links</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">link_index</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">link</span> <span class="o">=</span> <span class="n">links</span><span class="p">[</span><span class="n">link_index</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">link</span><span class="p">[</span><span class="s1">&#39;href&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">Datagorri</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">datagorri</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Julian Hackinger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

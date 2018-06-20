@@ -9,6 +9,7 @@ class Linklist:
     def on_update(func):
         """
         Appends a specified observer function to the observers list
+
         :param func:
         :return: (boolean)
 
@@ -20,6 +21,7 @@ class Linklist:
     def add(link):
         """
         Executes the all observer functions in the osservers list with the given link parameter
+
         :param link:
         :return: (boolean)
 

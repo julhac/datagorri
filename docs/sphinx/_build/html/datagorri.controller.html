@@ -1,0 +1,713 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>datagorri.controller package &#8212; Datagorri 1.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="datagorri.controller.content_types package" href="datagorri.controller.content_types.html" />
+    <link rel="prev" title="DataGorri module" href="DataGorri.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="datagorri-controller-package">
+<h1>datagorri.controller package<a class="headerlink" href="#datagorri-controller-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="datagorri.controller.content_types.html">datagorri.controller.content_types package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.controller.content_types.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.controller.content_types.html#module-datagorri.controller.content_types.content_type">datagorri.controller.content_types.content_type module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.controller.content_types.html#module-datagorri.controller.content_types.img">datagorri.controller.content_types.img module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.controller.content_types.html#module-datagorri.controller.content_types.link">datagorri.controller.content_types.link</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.controller.content_types.html#module-datagorri.controller.content_types.text">datagorri.controller.content_types.text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.controller.content_types.html#module-datagorri.controller.content_types">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-datagorri.controller.controller">
+<span id="datagorri-controller-controller-module"></span><h2>datagorri.controller.controller module<a class="headerlink" href="#module-datagorri.controller.controller" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-controller"></span><dl class="class">
+<dt id="datagorri.controller.controller.Controller">
+<em class="property">class </em><code class="descclassname">datagorri.controller.controller.</code><code class="descname">Controller</code><a class="reference internal" href="_modules/datagorri/controller/controller.html#Controller"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.controller.Controller" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="staticmethod">
+<dt id="datagorri.controller.controller.Controller.load_page_model">
+<em class="property">static </em><code class="descname">load_page_model</code><span class="sig-paren">(</span><em>file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/controller.html#Controller.load_page_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.controller.Controller.load_page_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the page model from the given file. Error handling has to be done by the caller</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Params file:</th><td class="field-body">path to the page model file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(dict or False) dict representing the content of the json file</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datagorri.controller.controller.Controller.on_route">
+<code class="descname">on_route</code><span class="sig-paren">(</span><em>view_class</em>, <em>master_frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/controller.html#Controller.on_route"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.controller.Controller.on_route" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-datagorri.controller.linklist">
+<span id="datagorri-controller-linklist-module"></span><h2>datagorri.controller.linklist module<a class="headerlink" href="#module-datagorri.controller.linklist" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datagorri.controller.linklist.Linklist">
+<em class="property">class </em><code class="descclassname">datagorri.controller.linklist.</code><code class="descname">Linklist</code><a class="reference internal" href="_modules/datagorri/controller/linklist.html#Linklist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.linklist.Linklist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This is a helper class to manage link list additions from outside the view.</p>
+<dl class="staticmethod">
+<dt id="datagorri.controller.linklist.Linklist.add">
+<em class="property">static </em><code class="descname">add</code><span class="sig-paren">(</span><em>link</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/linklist.html#Linklist.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.linklist.Linklist.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes the all observer functions in the osservers list with the given link parameter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>link</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(boolean)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datagorri.controller.linklist.Linklist.observers">
+<code class="descname">observers</code><em class="property"> = [&lt;bound method Scraper.add_link_to_linklist of &lt;datagorri.controller.scraper.Scraper object&gt;&gt;]</em><a class="headerlink" href="#datagorri.controller.linklist.Linklist.observers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.linklist.Linklist.on_update">
+<em class="property">static </em><code class="descname">on_update</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/linklist.html#Linklist.on_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.linklist.Linklist.on_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends a specified observer function to the observers list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>func</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(boolean)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-datagorri.controller.modeler">
+<span id="datagorri-controller-modeler-module"></span><h2>datagorri.controller.modeler module<a class="headerlink" href="#module-datagorri.controller.modeler" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datagorri.controller.modeler.Modeler">
+<em class="property">class </em><code class="descclassname">datagorri.controller.modeler.</code><code class="descname">Modeler</code><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datagorri.controller.controller.Controller" title="datagorri.controller.controller.Controller"><code class="xref py py-class docutils literal"><span class="pre">datagorri.controller.controller.Controller</span></code></a></p>
+<p>The class provides methods defining the Modeler’s behavior.</p>
+<dl class="attribute">
+<dt id="datagorri.controller.modeler.Modeler.amount_summarized_examples">
+<code class="descname">amount_summarized_examples</code><em class="property"> = 3</em><a class="headerlink" href="#datagorri.controller.modeler.Modeler.amount_summarized_examples" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="datagorri.controller.modeler.Modeler.content_types">
+<code class="descname">content_types</code><em class="property"> = [&lt;class 'datagorri.controller.content_types.text.Text'&gt;, &lt;class 'datagorri.controller.content_types.img.Img'&gt;, &lt;class 'datagorri.controller.content_types.link.Link'&gt;]</em><a class="headerlink" href="#datagorri.controller.modeler.Modeler.content_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="datagorri.controller.modeler.Modeler.create_model">
+<code class="descname">create_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler.create_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler.create_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>This methods creates a Json file containing a page model in the page model directory</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(object) the self object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.modeler.Modeler.create_view_child_table_from_html">
+<em class="property">static </em><code class="descname">create_view_child_table_from_html</code><span class="sig-paren">(</span><em>master_frame</em>, <em>table</em>, <em>child_index</em>, <em>col_index</em>, <em>row_index</em>, <em>is_repetitive=False</em>, <em>on_repetition_change=None</em>, <em>on_link_adder_click=None</em>, <em>hide_repetition_changer=False</em>, <em>parent_controller_table_id=None</em>, <em>parent_is_repetitive=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler.create_view_child_table_from_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler.create_view_child_table_from_html" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.modeler.Modeler.create_view_nested_list_from_html">
+<em class="property">static </em><code class="descname">create_view_nested_list_from_html</code><span class="sig-paren">(</span><em>master_frame</em>, <em>list</em>, <em>child_index</em>, <em>parent_element_index</em>, <em>is_repetitive</em>, <em>on_repetition_change=None</em>, <em>parent_controller_list_id=None</em>, <em>parent_is_repetitive=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler.create_view_nested_list_from_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler.create_view_nested_list_from_html" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="datagorri.controller.modeler.Modeler.dropdown_to_update">
+<code class="descname">dropdown_to_update</code><em class="property"> = None</em><a class="headerlink" href="#datagorri.controller.modeler.Modeler.dropdown_to_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="datagorri.controller.modeler.Modeler.list_repetition_change">
+<code class="descname">list_repetition_change</code><span class="sig-paren">(</span><em>controller_list_id</em>, <em>is_repetitive</em>, <em>change_list_elements_to</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler.list_repetition_change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler.list_repetition_change" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="datagorri.controller.modeler.Modeler.load_page_dom">
+<code class="descname">load_page_dom</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler.load_page_dom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler.load_page_dom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the page DOM of the URL and shows tables and lists (if they are included)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="datagorri.controller.modeler.Modeler.load_page_model">
+<code class="descname">load_page_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler.load_page_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler.load_page_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the selected page model and fills in all values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="datagorri.controller.modeler.Modeler.on_route">
+<code class="descname">on_route</code><span class="sig-paren">(</span><em>view_class</em>, <em>master_frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler.on_route"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler.on_route" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="datagorri.controller.modeler.Modeler.scrape_links_for_linklist">
+<code class="descname">scrape_links_for_linklist</code><span class="sig-paren">(</span><em>controller_table_id</em>, <em>is_repetitive</em>, <em>col_index</em>, <em>link_index</em>, <em>row_index=None</em>, <em>parent_controller_table_id=None</em>, <em>parent_is_repetitive=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler.scrape_links_for_linklist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler.scrape_links_for_linklist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="datagorri.controller.modeler.Modeler.select_and_fill_child_tables">
+<code class="descname">select_and_fill_child_tables</code><span class="sig-paren">(</span><em>table_component</em>, <em>tables</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler.select_and_fill_child_tables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler.select_and_fill_child_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>selects cell to scrape and fills output label textfield for child tables</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>table_component</strong> – (Table) component of the parent table containing list of child tables</li>
+<li><strong>tables</strong> – (dict) content of the childTables key of the page model</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datagorri.controller.modeler.Modeler.select_and_fill_nested_lists">
+<code class="descname">select_and_fill_nested_lists</code><span class="sig-paren">(</span><em>list_component</em>, <em>lists</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler.select_and_fill_nested_lists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler.select_and_fill_nested_lists" title="Permalink to this definition">¶</a></dt>
+<dd><p>selects elements to scrape and fills output label textfields for nested lists</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>list_component</strong> – (List) component of the parent list containing list of nested lists</li>
+<li><strong>lists</strong> – (dict) content of the nestedLists key of the page model</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.modeler.Modeler.summarize_elements_for_page_dom">
+<em class="property">static </em><code class="descname">summarize_elements_for_page_dom</code><span class="sig-paren">(</span><em>elements</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler.summarize_elements_for_page_dom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler.summarize_elements_for_page_dom" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.modeler.Modeler.summarize_rows_for_page_dom">
+<em class="property">static </em><code class="descname">summarize_rows_for_page_dom</code><span class="sig-paren">(</span><em>rows</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler.summarize_rows_for_page_dom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler.summarize_rows_for_page_dom" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="datagorri.controller.modeler.Modeler.table_repetition_change">
+<code class="descname">table_repetition_change</code><span class="sig-paren">(</span><em>controller_table_id</em>, <em>is_repetitive</em>, <em>change_table_rows_to</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/modeler.html#Modeler.table_repetition_change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.modeler.Modeler.table_repetition_change" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-datagorri.controller.scraper">
+<span id="datagorri-controller-scraper-module"></span><h2>datagorri.controller.scraper module<a class="headerlink" href="#module-datagorri.controller.scraper" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datagorri.controller.scraper.Scraper">
+<em class="property">class </em><code class="descclassname">datagorri.controller.scraper.</code><code class="descname">Scraper</code><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datagorri.controller.controller.Controller" title="datagorri.controller.controller.Controller"><code class="xref py py-class docutils literal"><span class="pre">datagorri.controller.controller.Controller</span></code></a></p>
+<p>The class scraper provides the methods to scrape the content of tables on specified websites using the previously
+generated page models</p>
+<dl class="method">
+<dt id="datagorri.controller.scraper.Scraper.add_link_to_linklist">
+<code class="descname">add_link_to_linklist</code><span class="sig-paren">(</span><em>link</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.add_link_to_linklist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.add_link_to_linklist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="datagorri.controller.scraper.Scraper.do_on_log_update">
+<code class="descname">do_on_log_update</code><em class="property"> = []</em><a class="headerlink" href="#datagorri.controller.scraper.Scraper.do_on_log_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.get_default_link_list_file_name">
+<em class="property">static </em><code class="descname">get_default_link_list_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.get_default_link_list_file_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.get_default_link_list_file_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.get_default_link_list_text">
+<em class="property">static </em><code class="descname">get_default_link_list_text</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.get_default_link_list_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.get_default_link_list_text" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(string=</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.get_default_result_filename">
+<em class="property">static </em><code class="descname">get_default_result_filename</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.get_default_result_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.get_default_result_filename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.get_link_lists">
+<em class="property">static </em><code class="descname">get_link_lists</code><span class="sig-paren">(</span><em>dir='link_lists/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.get_link_lists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.get_link_lists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all link_lists at the given path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dir</strong> – (string) the directory containing the list of links</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(list) a list containing the link lists</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.get_linklist">
+<em class="property">static </em><code class="descname">get_linklist</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.get_linklist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.get_linklist" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method reads from a given filename in the link_list directory and writes the content into a list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> – (string) the name of the file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(list) a list containing the urls</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.get_links_by_range">
+<em class="property">static </em><code class="descname">get_links_by_range</code><span class="sig-paren">(</span><em>base_url</em>, <em>range_from</em>, <em>range_to</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.get_links_by_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.get_links_by_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method generates and return a list of URLs based on a given base url and a range of id values appended
+to the end of the url</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>base_url</strong> – (string) the url</li>
+<li><strong>range_from</strong> – (int) lowest url id</li>
+<li><strong>range_to</strong> – (int) highest url id</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(list) list of the generated urls</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.get_list_scrape_val">
+<em class="property">static </em><code class="descname">get_list_scrape_val</code><span class="sig-paren">(</span><em>list</em>, <em>url</em>, <em>list_index</em>, <em>element_index</em>, <em>type</em>, <em>failures</em>, <em>warnings</em>, <em>link_index=None</em>, <em>img_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.get_list_scrape_val"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.get_list_scrape_val" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.get_page_models">
+<em class="property">static </em><code class="descname">get_page_models</code><span class="sig-paren">(</span><em>dir='models/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.get_page_models"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.get_page_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all page_models at the given path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dir</strong> – (string) the directory containing the page_models</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(list) a list containing the page models</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.get_table_scrape_val">
+<em class="property">static </em><code class="descname">get_table_scrape_val</code><span class="sig-paren">(</span><em>table</em>, <em>url</em>, <em>table_index</em>, <em>col_index</em>, <em>row_index</em>, <em>type</em>, <em>failures</em>, <em>warnings</em>, <em>link_index=None</em>, <em>img_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.get_table_scrape_val"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.get_table_scrape_val" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="datagorri.controller.scraper.Scraper.links_from_modeler">
+<code class="descname">links_from_modeler</code><em class="property"> = []</em><a class="headerlink" href="#datagorri.controller.scraper.Scraper.links_from_modeler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.load_page">
+<em class="property">static </em><code class="descname">load_page</code><span class="sig-paren">(</span><em>url</em>, <em>failures</em>, <em>warnings</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.load_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.load_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method tries to load the given page and return it</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>url</strong> – (string) the url of the page</li>
+<li><strong>failures</strong> – (list) list of failures</li>
+<li><strong>warnings</strong> – (list) list of warnings</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(Page)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.load_page_model">
+<em class="property">static </em><code class="descname">load_page_model</code><span class="sig-paren">(</span><em>file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.load_page_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.load_page_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.log_report">
+<em class="property">static </em><code class="descname">log_report</code><span class="sig-paren">(</span><em>failures</em>, <em>warnings</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.log_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.log_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method writes the content of failures of warnings to the log file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>failures</strong> – (list) list of failures</li>
+<li><strong>warnings</strong> – (list) list of warnings</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Returns always True</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.merge_non_repetitive_parent_with_repetitive_nested_list">
+<em class="property">static </em><code class="descname">merge_non_repetitive_parent_with_repetitive_nested_list</code><span class="sig-paren">(</span><em>parent_result</em>, <em>scraped_result</em>, <em>parent_labels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.merge_non_repetitive_parent_with_repetitive_nested_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.merge_non_repetitive_parent_with_repetitive_nested_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges the non repetitive parent with the repetitive nested list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>parent_result</strong> – (list) list of scraped data from the parent list (might be combined with earlier nested lists)</li>
+<li><strong>scraped_result</strong> – (list) list of scraped data from the nested list</li>
+<li><strong>parent_labels</strong> – (list) list of labels which are from the parent list</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(list) combination of parent_result and scraped_result</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.merge_results">
+<em class="property">static </em><code class="descname">merge_results</code><span class="sig-paren">(</span><em>results</em>, <em>url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.merge_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.merge_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges all scraped table rows/list elements from one page to a scraping result for this page
+All repetitive rows/elements are just put one after another. The non-repetitive rows/elements are added to each repetitive row/element.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>results</strong> – (list) list of dicts containing the scraped table rows/list elements (repetitive and non-repetitive)</li>
+<li><strong>url</strong> – (string) url the data came from</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(list) list of dicts containing the merged result</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.on_log_update">
+<em class="property">static </em><code class="descname">on_log_update</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.on_log_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.on_log_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends a given function to the do_on_log_update list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>func</strong> – (function)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datagorri.controller.scraper.Scraper.on_route">
+<code class="descname">on_route</code><span class="sig-paren">(</span><em>view_class</em>, <em>master_frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.on_route"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.on_route" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.save_linklist">
+<em class="property">static </em><code class="descname">save_linklist</code><span class="sig-paren">(</span><em>urls</em>, <em>name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.save_linklist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.save_linklist" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method saves a list of links in a .txt file at the link_list directory</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>urls</strong> – (list) list of urls</li>
+<li><strong>name</strong> – (string) the filename</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(string) return the filename of the created file</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.scrape">
+<em class="property">static </em><code class="descname">scrape</code><span class="sig-paren">(</span><em>page_model_file</em>, <em>urls</em>, <em>filename</em>, <em>extension</em>, <em>delimiter</em>, <em>encoding</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.scrape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.scrape" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method takes a page_model a list of urls and scrapes the content of the specified websites according
+to the model. The content is then saved in a .csv file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>page_model_file</strong> – (string) path to the page_model file</li>
+<li><strong>urls</strong> – (list) list of urls to scrape</li>
+<li><strong>filename</strong> – (string) the filename of the generated file</li>
+<li><strong>extension</strong> – (string) the file extension</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(boolean) Returns True</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.scrape_child_table">
+<em class="property">static </em><code class="descname">scrape_child_table</code><span class="sig-paren">(</span><em>row</em>, <em>pm_child_table</em>, <em>url</em>, <em>failures</em>, <em>warnings</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.scrape_child_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.scrape_child_table" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.scrape_list">
+<em class="property">static </em><code class="descname">scrape_list</code><span class="sig-paren">(</span><em>list1</em>, <em>repetitive</em>, <em>to_scrape</em>, <em>url</em>, <em>list_index</em>, <em>failures</em>, <em>warnings</em>, <em>pm_nested_lists</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.scrape_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.scrape_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method scrapes a list and returns a list of dicts</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>list1</strong> – (List) the list to scrape</li>
+<li><strong>repetitive</strong> – (boolean) is list repetitive</li>
+<li><strong>to_scrape</strong> – (dict) elements to scrape according to the model</li>
+<li><strong>url</strong> – (string) the url to scrape</li>
+<li><strong>list_index</strong> – (integer) the index of the list to scrape</li>
+<li><strong>failures</strong> – (list) list of current failures</li>
+<li><strong>warnings</strong> – (list) list of current warnings</li>
+<li><strong>pm_nested_lists</strong> – (list) list of nested lists</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(list) list of dicts to print in the result file</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.scrape_nested_list">
+<em class="property">static </em><code class="descname">scrape_nested_list</code><span class="sig-paren">(</span><em>element</em>, <em>pm_nested_list</em>, <em>url</em>, <em>failures</em>, <em>warnings</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.scrape_nested_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.scrape_nested_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.scrape_table">
+<em class="property">static </em><code class="descname">scrape_table</code><span class="sig-paren">(</span><em>table</em>, <em>is_repetitive</em>, <em>to_scrape</em>, <em>url</em>, <em>table_index</em>, <em>failures</em>, <em>warnings</em>, <em>pm_child_tables=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.scrape_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.scrape_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method scrapes a table and returns a list of dicts</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>table</strong> – </li>
+<li><strong>is_repetitive</strong> – (boolean)</li>
+<li><strong>to_scrape</strong> – </li>
+<li><strong>url</strong> – (string) the url to scrape</li>
+<li><strong>table_index</strong> – </li>
+<li><strong>failures</strong> – (list) list of failures</li>
+<li><strong>warnings</strong> – (list) list of warnings</li>
+<li><strong>pm_child_tables</strong> – (list)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">will return a list of dicts</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="datagorri.controller.scraper.Scraper.update_log">
+<em class="property">static </em><code class="descname">update_log</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/controller/scraper.html#Scraper.update_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datagorri.controller.scraper.Scraper.update_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a string and updates the log with it</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> – (string) text</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(boolean) True</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-datagorri.controller">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-datagorri.controller" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Datagorri</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">datagorri</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="DataGorri.html">DataGorri module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">datagorri.controller package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.view.html">datagorri.view package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.util.html">datagorri.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.html">datagorri.model package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">datagorri</a><ul>
+      <li>Previous: <a href="DataGorri.html" title="previous chapter">DataGorri module</a></li>
+      <li>Next: <a href="datagorri.controller.content_types.html" title="next chapter">datagorri.controller.content_types package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Julian Hackinger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/datagorri.controller.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

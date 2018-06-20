@@ -1,0 +1,207 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>datagorri.view.modeler.urlbar &#8212; Datagorri 1.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for datagorri.view.modeler.urlbar</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tkinter</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.component</span> <span class="k">import</span> <span class="n">Component</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.style.analyzer</span> <span class="k">import</span> <span class="n">style</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.page_model_dropdown</span> <span class="k">import</span> <span class="n">PageModelDropDown</span>
+
+<span class="n">style</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s1">&#39;urlbar&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Urlbar"><a class="viewcode-back" href="../../../../datagorri.view.modeler.html#datagorri.view.modeler.urlbar.Urlbar">[docs]</a><span class="k">class</span> <span class="nc">Urlbar</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class represents the URL bar. It contains a textfield for the URL, a checkbox to in-/exclude lists and a button</span>
+<span class="sd">    to load the tables from that URL.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master_frame</span><span class="p">,</span> <span class="n">default_url</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="n">Component</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master_frame</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_input_text</span> <span class="o">=</span> <span class="n">default_url</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">StringVar</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_lists</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">BooleanVar</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">change_bg</span><span class="p">(</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;bg&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;pady&#39;</span><span class="p">],</span> <span class="n">padx</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;padx&#39;</span><span class="p">])</span>
+
+        <span class="c1"># textfield to enter the URL</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="n">Urlbar</span><span class="o">.</span><span class="n">create_input</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">default_url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;nswe&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">columnconfigure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># checkbox to in-/exclude lists</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lists_checkbox</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Checkbutton</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;include lists&quot;</span><span class="p">,</span> <span class="n">variable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">include_lists</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lists_checkbox</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        
+        <span class="c1"># button to start load action</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span> <span class="o">=</span> <span class="n">Urlbar</span><span class="o">.</span><span class="n">create_button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span> <span class="s1">&#39;START&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">error_label</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="c1"># dropdown to choose existing page model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pm_drop_down</span> <span class="o">=</span> <span class="n">PageModelDropDown</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pm_drop_down</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;news&quot;</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        
+        <span class="c1"># button to load selected page model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_button</span> <span class="o">=</span> <span class="n">Urlbar</span><span class="o">.</span><span class="n">create_button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span> <span class="s1">&#39;LOAD&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_button</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Urlbar.get"><a class="viewcode-back" href="../../../../datagorri.view.modeler.html#datagorri.view.modeler.urlbar.Urlbar.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="Urlbar.set"><a class="viewcode-back" href="../../../../datagorri.view.modeler.html#datagorri.view.modeler.urlbar.Urlbar.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="Urlbar.get_selected"><a class="viewcode-back" href="../../../../datagorri.view.modeler.html#datagorri.view.modeler.urlbar.Urlbar.get_selected">[docs]</a>    <span class="k">def</span> <span class="nf">get_selected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pm_drop_down</span><span class="o">.</span><span class="n">get_selected</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Urlbar.is_include_lists"><a class="viewcode-back" href="../../../../datagorri.view.modeler.html#datagorri.view.modeler.urlbar.Urlbar.is_include_lists">[docs]</a>    <span class="k">def</span> <span class="nf">is_include_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_lists</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
+                
+<div class="viewcode-block" id="Urlbar.select_include_lists"><a class="viewcode-back" href="../../../../datagorri.view.modeler.html#datagorri.view.modeler.urlbar.Urlbar.select_include_lists">[docs]</a>    <span class="k">def</span> <span class="nf">select_include_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lists_checkbox</span><span class="o">.</span><span class="n">select</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Urlbar.on_click"><a class="viewcode-back" href="../../../../datagorri.view.modeler.html#datagorri.view.modeler.urlbar.Urlbar.on_click">[docs]</a>    <span class="k">def</span> <span class="nf">on_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s1">&#39;&lt;Button-1&gt;&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="n">func</span><span class="p">())</span></div>
+        
+<div class="viewcode-block" id="Urlbar.on_load_click"><a class="viewcode-back" href="../../../../datagorri.view.modeler.html#datagorri.view.modeler.urlbar.Urlbar.on_load_click">[docs]</a>    <span class="k">def</span> <span class="nf">on_load_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_button</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s1">&#39;&lt;Button-1&gt;&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="n">func</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Urlbar.view_load_error"><a class="viewcode-back" href="../../../../datagorri.view.modeler.html#datagorri.view.modeler.urlbar.Urlbar.view_load_error">[docs]</a>    <span class="k">def</span> <span class="nf">view_load_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="s1">&#39;page&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error_label</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span>
+            <span class="n">text</span><span class="o">=</span><span class="s1">&#39;Could not load &#39;</span> <span class="o">+</span> <span class="n">what</span><span class="p">,</span>
+            <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#b24444&#39;</span><span class="p">,</span>
+            <span class="n">padx</span><span class="o">=</span><span class="mi">10</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error_label</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;news&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Urlbar.hide_status"><a class="viewcode-back" href="../../../../datagorri.view.modeler.html#datagorri.view.modeler.urlbar.Urlbar.hide_status">[docs]</a>    <span class="k">def</span> <span class="nf">hide_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">error_label</span><span class="o">.</span><span class="n">grid_forget</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Urlbar.create_button"><a class="viewcode-back" href="../../../../datagorri.view.modeler.html#datagorri.view.modeler.urlbar.Urlbar.create_button">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_button</span><span class="p">(</span><span class="n">master_frame</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span>
+            <span class="n">master_frame</span><span class="p">,</span>
+            <span class="n">cursor</span><span class="o">=</span><span class="s1">&#39;hand2&#39;</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
+            <span class="n">bg</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;button&#39;</span><span class="p">][</span><span class="s1">&#39;bg&#39;</span><span class="p">],</span>
+            <span class="n">fg</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;button&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">],</span>
+            <span class="n">font</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;button&#39;</span><span class="p">][</span><span class="s1">&#39;font&#39;</span><span class="p">],</span>
+            <span class="n">padx</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;button&#39;</span><span class="p">][</span><span class="s1">&#39;padx&#39;</span><span class="p">],</span>
+            <span class="n">pady</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;button&#39;</span><span class="p">][</span><span class="s1">&#39;pady&#39;</span><span class="p">]</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Urlbar.create_input"><a class="viewcode-back" href="../../../../datagorri.view.modeler.html#datagorri.view.modeler.urlbar.Urlbar.create_input">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_input</span><span class="p">(</span><span class="n">master_frame</span><span class="p">,</span> <span class="n">variable</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Entry</span><span class="p">(</span>
+            <span class="n">master_frame</span><span class="p">,</span>
+            <span class="n">textvariable</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
+            <span class="n">bg</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">][</span><span class="s1">&#39;bg&#39;</span><span class="p">],</span>
+            <span class="n">fg</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">],</span>
+            <span class="n">bd</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">][</span><span class="s1">&#39;border_width&#39;</span><span class="p">],</span>
+            <span class="n">selectborderwidth</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">][</span><span class="s1">&#39;border_width_select&#39;</span><span class="p">],</span>
+            <span class="n">highlightthickness</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+
+        <span class="n">variable</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">entry</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">Datagorri</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">datagorri</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Julian Hackinger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

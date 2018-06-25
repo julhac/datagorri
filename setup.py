@@ -11,7 +11,7 @@ if sys.platform == "win32":
     base = "Win32GUI"
 
 setup(name="DataGorri",         # Edited by JH
-      version="1.1",            # Edited by JH
+      version="1.2",            # Edited by JH
       options={"build_exe": build_exe_options},
       executables=[Executable("DataGorri.py",
                               shortcutName="DataGorri",

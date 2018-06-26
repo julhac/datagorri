@@ -1,0 +1,442 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>datagorri.view.modeler.page_dom.list package &#8212; Datagorri 1.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="datagorri.view.modeler.page_dom.table package" href="datagorri.view.modeler.page_dom.table.html" />
+    <link rel="prev" title="datagorri.view.modeler.page_dom package" href="datagorri.view.modeler.page_dom.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="datagorri-view-modeler-page-dom-list-package">
+<h1>datagorri.view.modeler.page_dom.list package<a class="headerlink" href="#datagorri-view-modeler-page-dom-list-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="datagorri-view-modeler-page-dom-list-element-module">
+<h2>datagorri.view.modeler.page_dom.list.element module<a class="headerlink" href="#datagorri-view-modeler-page-dom-list-element-module" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">datagorri.view.modeler.page_dom.list.element.</code><code class="descname">Element</code><span class="sig-paren">(</span><em>master_frame</em>, <em>index</em>, <em>type</em>, <em>value</em>, <em>at_grid_row</em>, <em>img_index=None</em>, <em>link_index=None</em>, <em>is_repetitive=None</em>, <em>controller_list_id=None</em>, <em>parent_controller_list_id=None</em>, <em>parent_is_repetitive=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/element.html#Element"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class represents a line of the elements (including, id, type, value, scrape checkbox and output label textfield)</p>
+<dl class="method">
+<dt>
+<code class="descname">get_label</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/element.html#Element.get_label"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">handle_scrape_all</code><span class="sig-paren">(</span><em>select</em>, <em>level</em>, <em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/element.html#Element.handle_scrape_all"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Selects/deselects the scrape checkbutton and fills the output label</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>select</strong> – (boolean) True if the checkbutton will be selected, False otherwise</li>
+<li><strong>level</strong> – (integer) number showing the level</li>
+<li><strong>number</strong> – (integer) the number the output label should show</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">is_to_scrape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/element.html#Element.is_to_scrape"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">select_to_scrape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/element.html#Element.select_to_scrape"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">set_label</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/element.html#Element.set_label"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="datagorri-view-modeler-page-dom-list-elements-module">
+<h2>datagorri.view.modeler.page_dom.list.elements module<a class="headerlink" href="#datagorri-view-modeler-page-dom-list-elements-module" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">datagorri.view.modeler.page_dom.list.elements.</code><code class="descname">Elements</code><span class="sig-paren">(</span><em>master_frame</em>, <em>elements</em>, <em>repetitive=True</em>, <em>on_repetition_change=None</em>, <em>controller_list_id=None</em>, <em>parent_controller_list_id=None</em>, <em>parent_is_repetitive=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/elements.html#Elements"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="datagorri.view.html#datagorri.view.component.Component" title="datagorri.view.component.Component"><code class="xref py py-class docutils literal"><span class="pre">datagorri.view.component.Component</span></code></a></p>
+<p>This class builds all elements of the list as GUI objects</p>
+<dl class="method">
+<dt>
+<code class="descname">change_repetition_style</code><span class="sig-paren">(</span><em>repetitive</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/elements.html#Elements.change_repetition_style"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><code class="descname">create_contents_header</code><span class="sig-paren">(</span><em>master_frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/elements.html#Elements.create_contents_header"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><code class="descname">create_elem_frame</code><span class="sig-paren">(</span><em>master_frame</em>, <em>label</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/elements.html#Elements.create_elem_frame"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">find_element</code><span class="sig-paren">(</span><em>element_index</em>, <em>type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/elements.html#Elements.find_element"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Finds an element within the list of elements by index and type of the element</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>element_index</strong> – (Integer) index of the searched element</li>
+<li><strong>type</strong> – (string) type of the searched element</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the element with index and type or False</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">find_nested_list</code><span class="sig-paren">(</span><em>list_index</em>, <em>parent_element_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/elements.html#Elements.find_nested_list"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Finds a nested list within the list of nested lists by index of the list and index of the parent element</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>list_index</strong> – (Integer) index of the searched list</li>
+<li><strong>parent_element_index</strong> – (Integer) index of the parent list of the searched list</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the list with index and parent element index or False</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">handle_scrape_all</code><span class="sig-paren">(</span><em>select</em>, <em>level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/elements.html#Elements.handle_scrape_all"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Selects/Deselects all scrape checkboxes and enumerates the output labels</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>select</strong> – (boolean) True if the checkbutton was selected, False otherwise</li>
+<li><strong>level</strong> – (integer) number showing the level (count of nested lists)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">show_content</code><span class="sig-paren">(</span><em>elements</em>, <em>repetitive</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/elements.html#Elements.show_content"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Builds the components to show for the given list elements</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Params elements:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">(dict) containing elements in prepared way</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Params repetitive:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">(boolean) is the list repetitive</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="datagorri-view-modeler-page-dom-list-header-module">
+<h2>datagorri.view.modeler.page_dom.list.header module<a class="headerlink" href="#datagorri-view-modeler-page-dom-list-header-module" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">datagorri.view.modeler.page_dom.list.header.</code><code class="descname">Header</code><span class="sig-paren">(</span><em>master_frame</em>, <em>label</em>, <em>repetitive=True</em>, <em>on_repetition_change=None</em>, <em>on_scrape_all=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/header.html#Header"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="datagorri.view.html#datagorri.view.component.Component" title="datagorri.view.component.Component"><code class="xref py py-class docutils literal"><span class="pre">datagorri.view.component.Component</span></code></a></p>
+<p>This class represents the clickable header content for lists</p>
+<dl class="method">
+<dt>
+<code class="descname">add_repetition_change_handler</code><span class="sig-paren">(</span><em>function</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/header.html#Header.add_repetition_change_handler"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">add_scrape_all_handler</code><span class="sig-paren">(</span><em>function</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/header.html#Header.add_scrape_all_handler"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">change_bg</code><span class="sig-paren">(</span><em>bg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/header.html#Header.change_bg"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">change_bg_on_hover</code><span class="sig-paren">(</span><em>bg_color</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/header.html#Header.change_bg_on_hover"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">is_repetitive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/header.html#Header.is_repetitive"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">on_click</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/header.html#Header.on_click"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">on_hover</code><span class="sig-paren">(</span><em>frame</em>, <em>bg_color=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/header.html#Header.on_hover"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">on_hover_leave</code><span class="sig-paren">(</span><em>frame</em>, <em>bg_color=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/header.html#Header.on_hover_leave"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">select_repetitive</code><span class="sig-paren">(</span><em>repetitive</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/header.html#Header.select_repetitive"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">set_repetitive</code><span class="sig-paren">(</span><em>repetitive=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/header.html#Header.set_repetitive"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="datagorri-view-modeler-page-dom-list-list-module">
+<h2>datagorri.view.modeler.page_dom.list.list module<a class="headerlink" href="#datagorri-view-modeler-page-dom-list-list-module" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">datagorri.view.modeler.page_dom.list.list.</code><code class="descname">List</code><span class="sig-paren">(</span><em>master_frame</em>, <em>list</em>, <em>list_index</em>, <em>on_repetition_change=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/list.html#List"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="datagorri.view.html#datagorri.view.component.Component" title="datagorri.view.component.Component"><code class="xref py py-class docutils literal"><span class="pre">datagorri.view.component.Component</span></code></a></p>
+<p>This class represents a list. It builds a clickable row for a list.</p>
+<dl class="method">
+<dt>
+<code class="descname">change_bg_on_hover</code><span class="sig-paren">(</span><em>bg_color</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/list.html#List.change_bg_on_hover"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Event function changing the background color of the element when the mouse enters the component</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">change_header_text</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/list.html#List.change_header_text"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">expand</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/list.html#List.expand"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>shows the Elements part</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">get_page_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/list.html#List.get_page_model"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Gathers all information selected to create the page model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(Hash) all selected information</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">handle_header_click</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/list.html#List.handle_header_click"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>expands or collapses the Elements part of the table</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">handle_repetition_change</code><span class="sig-paren">(</span><em>new_elems</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/list.html#List.handle_repetition_change"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">handle_scrape_all</code><span class="sig-paren">(</span><em>select</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/list.html#List.handle_scrape_all"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Selects/Deselects all scrape checkboxes and enumerates the output labels</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>select</strong> – (boolean) True if the seclect checkboxes should be selected, False otherwise</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">handled_lists</code><em class="property"> = 0</em></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">narrow</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/list.html#List.narrow"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Hides the Elements part</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">on_hover</code><span class="sig-paren">(</span><em>frame</em>, <em>bg_color=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/list.html#List.on_hover"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="datagorri-view-modeler-page-dom-list-nested-list-module">
+<h2>datagorri.view.modeler.page_dom.list.nested_list module<a class="headerlink" href="#datagorri-view-modeler-page-dom-list-nested-list-module" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">datagorri.view.modeler.page_dom.list.nested_list.</code><code class="descname">NestedList</code><span class="sig-paren">(</span><em>master_frame</em>, <em>list</em>, <em>child_index</em>, <em>parent_element_index</em>, <em>on_repetition_change=None</em>, <em>parent_is_repetitive=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/nested_list.html#NestedList"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="datagorri.view.modeler.page_dom.table.html#datagorri.view.modeler.page_dom.list.list.List" title="datagorri.view.modeler.page_dom.list.list.List"><code class="xref py py-class docutils literal"><span class="pre">datagorri.view.modeler.page_dom.list.list.List</span></code></a></p>
+<p>This class represents nested lists. It builds a list view within the Elements view.</p>
+<dl class="method">
+<dt>
+<code class="descname">get_index</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/nested_list.html#NestedList.get_index"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">get_parent_element_index</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datagorri/view/modeler/page_dom/list/nested_list.html#NestedList.get_parent_element_index"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-datagorri.view.modeler.page_dom.list">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-datagorri.view.modeler.page_dom.list" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Datagorri</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">datagorri</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="DataGorri.html">DataGorri module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.controller.html">datagorri.controller package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="datagorri.view.html">datagorri.view package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.util.html">datagorri.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagorri.model.html">datagorri.model package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">datagorri</a><ul>
+  <li><a href="datagorri.view.html">datagorri.view package</a><ul>
+  <li><a href="datagorri.view.modeler.html">datagorri.view.modeler package</a><ul>
+  <li><a href="datagorri.view.modeler.page_dom.html">datagorri.view.modeler.page_dom package</a><ul>
+      <li>Previous: <a href="datagorri.view.modeler.page_dom.html" title="previous chapter">datagorri.view.modeler.page_dom package</a></li>
+      <li>Next: <a href="datagorri.view.modeler.page_dom.table.html" title="next chapter">datagorri.view.modeler.page_dom.table package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Julian Hackinger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/datagorri.view.modeler.page_dom.list.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

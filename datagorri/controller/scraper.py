@@ -45,6 +45,7 @@ class Scraper(Controller):
     def get_page_models(dir=config['page_models_dir']):
         """
         Returns a list of all page_models at the given path
+
         :param dir: (string) the directory containing the page_models
         :return: (list) a list containing the page models
 
@@ -55,6 +56,7 @@ class Scraper(Controller):
     def get_link_lists(dir=config['link_lists_dir']):
         """
         Returns a list of all link_lists at the given path
+
         :param dir: (string) the directory containing the list of links
         :return: (list) a list containing the link lists
 
@@ -111,6 +113,7 @@ class Scraper(Controller):
     def load_page(url, failures, warnings):
         """
         This method tries to load the given page and return it
+
         :param url: (string) the url of the page
         :param failures: (list) list of failures
         :param warnings: (list) list of warnings
@@ -679,6 +682,7 @@ class Scraper(Controller):
     def on_log_update(func):
         """
         Appends a given function to the do_on_log_update list
+
         :param func: (function)
         :return: -
 
@@ -689,6 +693,7 @@ class Scraper(Controller):
     def update_log(text):
         """
         Takes a string and updates the log with it
+
         :param text: (string) text
         :return: (boolean) True
 
@@ -703,6 +708,7 @@ class Scraper(Controller):
         """
         This method generates and return a list of URLs based on a given base url and a range of id values appended
         to the end of the url
+
         :param base_url: (string) the url
         :param range_from: (int) lowest url id
         :param range_to: (int) highest url id
@@ -725,6 +731,7 @@ class Scraper(Controller):
     def save_linklist(urls, name=""):
         """
         This method saves a list of links in a .txt file at the link_list directory
+
         :param urls: (list) list of urls
         :param name: (string) the filename
         :return: (string) return the filename of the created file
@@ -755,6 +762,7 @@ class Scraper(Controller):
     def get_linklist(name):
         """
         This method reads from a given filename in the link_list directory and writes the content into a list.
+
         :param name: (string) the name of the file
         :return: (list) a list containing the urls
 

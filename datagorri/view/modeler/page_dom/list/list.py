@@ -30,6 +30,7 @@ class List(Component):
     def get_page_model(self):
         """
         Gathers all information selected to create the page model
+
         :returns: (Hash) all selected information
         """
         to_scrape = []
@@ -73,6 +74,7 @@ class List(Component):
     def handle_scrape_all(self, select):
         """
         Selects/Deselects all scrape checkboxes and enumerates the output labels
+
         :param select: (boolean) True if the seclect checkboxes should be selected, False otherwise
         """
         self.elements.handle_scrape_all(select, List.handled_lists)

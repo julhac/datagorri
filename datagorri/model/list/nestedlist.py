@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from datagorri.model.list.list import List
 from datagorri.model.list.listelement import ListElement
 
+
 class Nestedlist(List):
     def __init__(self, index, parent_index, parent_element_index):
         List.__init__(self)

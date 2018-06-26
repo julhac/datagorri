@@ -61,6 +61,7 @@ class LinkList(Component):
     def on_save(self, func):
         """
         Handles the process after the user clicked on save
+
         :param func: (function)
         :return: (object)
         """

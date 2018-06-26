@@ -93,6 +93,7 @@ class Contents(Component):
     def handle_scrape_all(self, select, level):
         """
         selects/deselects all scrape checkbuttons and enumerates the output labels
+
         :param select: (boolean) True if the checkbutton was selected, False otherwise
         :param level: (number) number of previously selected tables
         """
@@ -115,7 +116,9 @@ class Contents(Component):
 
     def find_child_table(self, table_index, parent_col_index, parent_row_index=None):
         """
-        Finds a child table by index of the table, index of the column in parent as well as a optional index of the row in the parent
+        Finds a child table by index of the table, index of the column in parent as well as a optional index of the row
+        in the parent
+
         :param table_index: (Integer) index of the child table
         :param parent_col_index: (Integer) index of the column in the parent table
         :param parent_row_index: (Integer) optional index of the row in the parent table, used for non-repetitive tables
@@ -129,6 +132,7 @@ class Contents(Component):
     def find_content(self, type, col_index, row_index=None):
         """
         Finds a cell within the list of cells by index and type of the cell
+
         :param type: (string) type of the searched cell
         :param col_index: (Integer) index of the column of the searched cell
         :param row_index: (Integer) optional index of the row of the searched cell

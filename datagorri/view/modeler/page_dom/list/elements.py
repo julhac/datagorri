@@ -86,6 +86,7 @@ class Elements(Component):
     def handle_scrape_all(self, select, level):
         """
         Selects/Deselects all scrape checkboxes and enumerates the output labels
+
         :param select: (boolean) True if the checkbutton was selected, False otherwise
         :param level: (integer) number showing the level (count of nested lists) 
         """
@@ -97,6 +98,7 @@ class Elements(Component):
     def find_nested_list(self, list_index, parent_element_index):
         """
         Finds a nested list within the list of nested lists by index of the list and index of the parent element
+
         :param list_index: (Integer) index of the searched list
         :param parent_element_index: (Integer) index of the parent list of the searched list
         :returns: the list with index and parent element index or False
@@ -109,6 +111,7 @@ class Elements(Component):
     def find_element(self, element_index, type):
         """
         Finds an element within the list of elements by index and type of the element
+
         :param element_index: (Integer) index of the searched element
         :param type: (string) type of the searched element
         :returns: the element with index and type or False

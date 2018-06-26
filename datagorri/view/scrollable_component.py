@@ -30,6 +30,7 @@ class ScrollableComponent:
     def _bound_to_mousewheel(self, event):
         """
         This method is called if the mouse focus is inside the canvas frame to enable scrolling
+
         :param event: event
         :return: -
         """
@@ -38,6 +39,7 @@ class ScrollableComponent:
     def _unbound_to_mousewheel(self, event):
         """
         THis method is called to release the mousewheel if the focus is again outside the canvas frame
+
         :param event: event
         :return: -
         """
@@ -46,6 +48,7 @@ class ScrollableComponent:
     def on_mousewheel(self, event):
         """
         Handles the scrolling mechanism
+
         :param event: scrolling event
         :return: -
         """
@@ -56,6 +59,7 @@ class ScrollableComponent:
         """
         Updates the scrollregion of the canvas_frame to meet the new requirements
         TODO: Some widgets are doubled when scrolling, here are probably changes required.
+
         :param event: scrolling event
         :return: -
         """
@@ -67,6 +71,7 @@ class ScrollableComponent:
     def configure_canvas(self, event):
         """
         Adjusts the widgets to have the required width to span the whole screen
+
         :param event:
         :return: -
         """
@@ -76,6 +81,7 @@ class ScrollableComponent:
     def get_frame(self):
         """
         Returns the canvas frame
+
         :return: the canvas_frame
         """
         return self.canvas_frame

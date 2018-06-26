@@ -1,0 +1,187 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>datagorri.view.scraper.range_adder &#8212; Datagorri 1.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for datagorri.view.scraper.range_adder</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tkinter</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.component</span> <span class="k">import</span> <span class="n">Component</span>
+<span class="kn">from</span> <span class="nn">datagorri.view.style.scraper</span> <span class="k">import</span> <span class="n">style</span>
+
+
+<span class="n">style</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s1">&#39;scraper&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="RangeAdder"><a class="viewcode-back" href="../../../../datagorri.view.scraper.html#datagorri.view.scraper.range_adder.RangeAdder">[docs]</a><span class="k">class</span> <span class="nc">RangeAdder</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master_frame</span><span class="p">):</span>
+        <span class="n">Component</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master_frame</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">change_bg</span><span class="p">(</span><span class="s1">&#39;#cccccc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">padx</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">columnconfigure</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">tkinter</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;ADD MULTIPLE URLS BY RANGE:&quot;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="s2">&quot;-weight bold&quot;</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#cccccc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">columnspan</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;NW&quot;</span><span class="p">)</span>
+        <span class="n">empty_space</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span> <span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#cccccc&#39;</span><span class="p">)</span>
+        <span class="n">empty_space</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">tkinter</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span> <span class="n">text</span><span class="o">=</span><span class="s1">&#39;URL:&#39;</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#cccccc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s1">&#39;NW&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">Entry</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span>
+            <span class="n">font</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;urlentry&#39;</span><span class="p">][</span><span class="s1">&#39;font&#39;</span><span class="p">],</span>
+            <span class="n">width</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+            <span class="n">selectborderwidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">bd</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">highlightthickness</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">columnspan</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;news&quot;</span><span class="p">,</span> <span class="n">ipady</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;http://example.example/?id=</span><span class="si">{X}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">empty_space</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span> <span class="n">height</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#cccccc&#39;</span><span class="p">)</span>
+        <span class="n">empty_space</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">tkinter</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span> <span class="n">text</span><span class="o">=</span><span class="s1">&#39;FROM:&#39;</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#cccccc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s1">&#39;NW&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">Entry</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span>
+            <span class="n">font</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;urlentry&#39;</span><span class="p">][</span><span class="s1">&#39;font&#39;</span><span class="p">],</span>
+            <span class="n">width</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>
+            <span class="n">selectborderwidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">bd</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">highlightthickness</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;news&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span>
+
+        <span class="n">tkinter</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span> <span class="n">text</span><span class="o">=</span><span class="s1">&#39;TO:&#39;</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#cccccc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s1">&#39;NW&#39;</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to</span><span class="o">=</span><span class="n">tkinter</span><span class="o">.</span><span class="n">Entry</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span>
+            <span class="n">font</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;urlentry&#39;</span><span class="p">][</span><span class="s1">&#39;font&#39;</span><span class="p">],</span>
+            <span class="n">width</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>
+            <span class="n">selectborderwidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">bd</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">highlightthickness</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;news&quot;</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;20&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_btn</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(),</span>
+            <span class="n">text</span><span class="o">=</span><span class="s1">&#39;ADD&#39;</span><span class="p">,</span>
+            <span class="n">cursor</span><span class="o">=</span><span class="s1">&#39;hand2&#39;</span><span class="p">,</span>
+            <span class="n">bg</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;button&#39;</span><span class="p">][</span><span class="s1">&#39;bg&#39;</span><span class="p">],</span>
+            <span class="n">fg</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;button&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">],</span>
+            <span class="n">font</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;button&#39;</span><span class="p">][</span><span class="s1">&#39;font&#39;</span><span class="p">],</span>
+            <span class="n">padx</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;button&#39;</span><span class="p">][</span><span class="s1">&#39;padx&#39;</span><span class="p">],</span>
+            <span class="n">pady</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="s1">&#39;button&#39;</span><span class="p">][</span><span class="s1">&#39;pady&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_btn</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;NEWS&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RangeAdder.on_addition"><a class="viewcode-back" href="../../../../datagorri.view.scraper.html#datagorri.view.scraper.range_adder.RangeAdder.on_addition">[docs]</a>    <span class="k">def</span> <span class="nf">on_addition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">handle_click</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clickSimulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_add_btn</span><span class="p">)</span>
+            <span class="n">func</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.15</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clickSimulateEnd</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_add_btn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_btn</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s1">&#39;&lt;Button-1&gt;&#39;</span><span class="p">,</span> <span class="n">handle_click</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RangeAdder.get_url"><a class="viewcode-back" href="../../../../datagorri.view.scraper.html#datagorri.view.scraper.range_adder.RangeAdder.get_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="RangeAdder.get_range"><a class="viewcode-back" href="../../../../datagorri.view.scraper.html#datagorri.view.scraper.range_adder.RangeAdder.get_range">[docs]</a>    <span class="k">def</span> <span class="nf">get_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_from</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+            <span class="s1">&#39;to&#39;</span><span class="p">:</span>   <span class="bp">self</span><span class="o">.</span><span class="n">_to</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="p">}</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">Datagorri</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">datagorri</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Julian Hackinger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

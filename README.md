@@ -51,9 +51,11 @@ Further, the following persons (in alphabetical order) have contributed to the c
 * Matthias Franze
 * Julian Hackinger
 * Stefan Hentschel
+* Lukas Holzner
 * Florian Kreitmair
 * Daniel Krieger
 * Michael Legenc
+* Marc Müller
 
 See also the list of [contributors](https://github.com/julhac/datagorri/graphs/contributors) who participated in this project.
 

@@ -32,7 +32,8 @@ class Modeler(View):
         """
         Shows the page DOM as result of parsing the URLs page.
         
-        params (): page DOM to show
+        :param page_dom_tables: page DOM tables to show
+        :param page_dom_lists: page DOM lists to show
         """
         self.url.hide_status()
         if self.page_dom is not None:
@@ -62,7 +63,8 @@ class Modeler(View):
 
     def get_page_model(self):
         """
-        Gathers all information from the subcomponents which are necessary for the page model.
+        Gathers all information from the subcomponents which are necessary for the page model
+
         :returns: (Hash or boolean) the list of elements or False
         """
         result = dict()

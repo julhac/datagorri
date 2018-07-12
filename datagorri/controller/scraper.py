@@ -437,31 +437,29 @@ class Scraper(Controller):
         
         # merge repetitive results with non-repetitive result
         result = []
-        
+
         if not repetitives and not non_repetitive_result:
             pass
 
         elif not repetitives:
-            print('Repetitives is empty')
             new_entry = non_repetitive_result.copy()
-            print('New entry: ' + str(new_entry))
             new_entry['from_url'] = url
-            print('New entry' + str(new_entry))
             del new_entry['is_repetitive']
             result.append(new_entry)
 
-        for repetitive_entry in repetitives:
-            new_entry = non_repetitive_result.copy()
-            new_entry.update(repetitive_entry)
-            # add missing labels (as empty) so from_url is always the last element
-            for label in repetitive_labels:
-                if label not in new_entry:
-                    new_entry[label] = ''
-            # set url data came from
-            new_entry['from_url'] = url
-            # remove is_repetitive
-            del new_entry['is_repetitive']
-            result.append(new_entry)
+        else:
+            for repetitive_entry in repetitives:
+                new_entry = non_repetitive_result.copy()
+                new_entry.update(repetitive_entry)
+                # add missing labels (as empty) so from_url is always the last element
+                for label in repetitive_labels:
+                    if label not in new_entry:
+                        new_entry[label] = ''
+                # set url data came from
+                new_entry['from_url'] = url
+                # remove is_repetitive
+                del new_entry['is_repetitive']
+                result.append(new_entry)
         
         return result
         
